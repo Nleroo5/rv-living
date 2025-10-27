@@ -207,6 +207,151 @@ const DateUtils = {
   }
 };
 
+// Data Export/Import Utilities
+const DataManager = {
+  // Export all data to JSON file
+  exportAllData() {
+    const allData = {
+      version: '1.0',
+      exportDate: new Date().toISOString(),
+      destinations: Storage.get('destinations', []),
+      checklistItems: Storage.get('checklistItems', []),
+      budgetData: Storage.get('budgetData', {}),
+      uploadedFiles: Storage.get('uploadedFiles', []),
+      weeklyProgress: Storage.get('weeklyProgress', {})
+    };
+
+    const dataStr = JSON.stringify(allData, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `rv-adventures-backup-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    showToast('Data exported successfully!', 'success');
+  },
+
+  // Export specific page data
+  exportPageData(pageName, dataKey) {
+    const data = {
+      version: '1.0',
+      exportDate: new Date().toISOString(),
+      page: pageName,
+      data: Storage.get(dataKey, [])
+    };
+
+    const dataStr = JSON.stringify(data, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${pageName}-backup-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    showToast(`${pageName} data exported!`, 'success');
+  },
+
+  // Import data from JSON file
+  async importData(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = async (e) => {
+        try {
+          const data = JSON.parse(e.target.result);
+
+          // Validate data structure
+          if (!data.version) {
+            throw new Error('Invalid backup file format');
+          }
+
+          // Show confirmation dialog
+          const confirmed = await confirmDialog(
+            `Import data from ${data.exportDate ? new Date(data.exportDate).toLocaleDateString() : 'backup file'}?\n\nThis will REPLACE your current data. Make sure you have a backup first!`
+          );
+
+          if (!confirmed) {
+            resolve(false);
+            return;
+          }
+
+          // Import all data
+          if (data.destinations) Storage.set('destinations', data.destinations);
+          if (data.checklistItems) Storage.set('checklistItems', data.checklistItems);
+          if (data.budgetData) Storage.set('budgetData', data.budgetData);
+          if (data.uploadedFiles) Storage.set('uploadedFiles', data.uploadedFiles);
+          if (data.weeklyProgress) Storage.set('weeklyProgress', data.weeklyProgress);
+
+          // If it's page-specific data
+          if (data.page && data.data) {
+            const keyMap = {
+              'destinations': 'destinations',
+              'checklist': 'checklistItems',
+              'budget': 'budgetData'
+            };
+            const storageKey = keyMap[data.page];
+            if (storageKey) {
+              Storage.set(storageKey, data.data);
+            }
+          }
+
+          showToast('Data imported successfully! Reloading page...', 'success');
+
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
+
+          resolve(true);
+        } catch (error) {
+          console.error('Import error:', error);
+          showToast('Error importing data. Please check the file format.', 'error');
+          reject(error);
+        }
+      };
+
+      reader.onerror = () => {
+        showToast('Error reading file', 'error');
+        reject(new Error('File read error'));
+      };
+
+      reader.readAsText(file);
+    });
+  },
+
+  // Get storage usage info
+  getStorageInfo() {
+    let totalSize = 0;
+    for (let key in localStorage) {
+      if (localStorage.hasOwnProperty(key)) {
+        totalSize += localStorage[key].length + key.length;
+      }
+    }
+
+    // Rough estimate: localStorage is typically 5-10MB
+    const maxSize = 10 * 1024 * 1024; // 10MB estimate
+    const usedMB = (totalSize / (1024 * 1024)).toFixed(2);
+    const maxMB = (maxSize / (1024 * 1024)).toFixed(0);
+    const percentUsed = ((totalSize / maxSize) * 100).toFixed(1);
+
+    return {
+      used: totalSize,
+      usedMB,
+      maxMB,
+      percentUsed,
+      remaining: maxSize - totalSize
+    };
+  }
+};
+
 // Export for use in other files
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
@@ -220,6 +365,7 @@ if (typeof module !== 'undefined' && module.exports) {
     isValidEmail,
     sanitizeHTML,
     getFormData,
-    DateUtils
+    DateUtils,
+    DataManager
   };
 }

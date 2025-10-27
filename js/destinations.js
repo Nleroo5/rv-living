@@ -2,6 +2,8 @@
 
 let destinations = [];
 let currentFilter = 'all';
+let currentSearch = '';
+let currentSort = 'date-desc';
 
 document.addEventListener('DOMContentLoaded', () => {
   // Load destinations
@@ -10,6 +12,24 @@ document.addEventListener('DOMContentLoaded', () => {
   // Add destination form
   const addForm = document.getElementById('add-destination-form');
   addForm.addEventListener('submit', handleAddDestination);
+
+  // Search input
+  const searchInput = document.getElementById('destinations-search');
+  if (searchInput) {
+    searchInput.addEventListener('input', debounce(() => {
+      currentSearch = searchInput.value.trim().toLowerCase();
+      renderDestinations();
+    }, 300));
+  }
+
+  // Sort select
+  const sortSelect = document.getElementById('destinations-sort');
+  if (sortSelect) {
+    sortSelect.addEventListener('change', () => {
+      currentSort = sortSelect.value;
+      renderDestinations();
+    });
+  }
 
   // Filter buttons
   const filterButtons = document.querySelectorAll('.dest-filter-btn');
@@ -33,6 +53,30 @@ document.addEventListener('DOMContentLoaded', () => {
       quickAddDestination(name, state, type);
     });
   });
+
+  // Export/Import buttons
+  const exportBtn = document.getElementById('export-destinations-btn');
+  if (exportBtn) {
+    exportBtn.addEventListener('click', () => {
+      DataManager.exportPageData('destinations', 'destinations');
+    });
+  }
+
+  const importBtn = document.getElementById('import-destinations-btn');
+  const importInput = document.getElementById('import-destinations-input');
+  if (importBtn && importInput) {
+    importBtn.addEventListener('click', () => {
+      importInput.click();
+    });
+
+    importInput.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        await DataManager.importData(file);
+      }
+      e.target.value = ''; // Reset input
+    });
+  }
 });
 
 // Load destinations from storage
@@ -120,11 +164,24 @@ function renderDestinations() {
   // Filter destinations
   let filtered = destinations;
 
+  // Apply category filter
   if (currentFilter === 'visited') {
-    filtered = destinations.filter(d => d.visited);
+    filtered = filtered.filter(d => d.visited);
   } else if (currentFilter !== 'all') {
-    filtered = destinations.filter(d => d.type === currentFilter);
+    filtered = filtered.filter(d => d.type === currentFilter);
   }
+
+  // Apply search
+  if (currentSearch) {
+    filtered = filtered.filter(d =>
+      d.name.toLowerCase().includes(currentSearch) ||
+      d.state.toLowerCase().includes(currentSearch) ||
+      (d.notes && d.notes.toLowerCase().includes(currentSearch))
+    );
+  }
+
+  // Apply sort
+  filtered = sortDestinations(filtered, currentSort);
 
   // Clear container
   const cards = container.querySelectorAll('.card:not(#empty-destinations)');
@@ -132,9 +189,13 @@ function renderDestinations() {
 
   if (filtered.length === 0) {
     emptyMessage.style.display = 'block';
-    emptyMessage.querySelector('p').textContent = currentFilter === 'all'
-      ? 'Start adding places you want to visit!'
-      : 'No destinations in this category yet.';
+    if (currentSearch) {
+      emptyMessage.querySelector('p').textContent = `No destinations match "${currentSearch}"`;
+    } else {
+      emptyMessage.querySelector('p').textContent = currentFilter === 'all'
+        ? 'Start adding places you want to visit!'
+        : 'No destinations in this category yet.';
+    }
   } else {
     emptyMessage.style.display = 'none';
 
@@ -142,6 +203,27 @@ function renderDestinations() {
       const card = createDestinationCard(destination);
       container.appendChild(card);
     });
+  }
+}
+
+// Sort destinations
+function sortDestinations(items, sortBy) {
+  const sorted = [...items];
+
+  switch (sortBy) {
+    case 'date-desc':
+      return sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    case 'date-asc':
+      return sorted.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+    case 'name-asc':
+      return sorted.sort((a, b) => a.name.localeCompare(b.name));
+    case 'name-desc':
+      return sorted.sort((a, b) => b.name.localeCompare(a.name));
+    case 'priority-high':
+      const priorityOrder = { high: 0, medium: 1, low: 2, wishlist: 3 };
+      return sorted.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+    default:
+      return sorted;
   }
 }
 

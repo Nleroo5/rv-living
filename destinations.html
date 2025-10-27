@@ -67,6 +67,11 @@
               <p class="text-secondary">On Wishlist</p>
             </div>
           </div>
+          <div class="mt-4 flex flex-center gap-2 flex-wrap">
+            <button class="btn btn-small btn-outline" id="export-destinations-btn">📥 Export Destinations</button>
+            <button class="btn btn-small btn-outline" id="import-destinations-btn">📤 Import Destinations</button>
+            <input type="file" id="import-destinations-input" accept=".json" style="display: none;">
+          </div>
         </div>
       </div>
 
@@ -153,15 +158,28 @@
         </div>
       </div>
 
-      <!-- Filters -->
+      <!-- Search & Filters -->
       <div class="card mb-4">
         <div class="card-body">
-          <div class="flex flex-wrap gap-2 flex-center">
+          <div class="form-group mb-3">
+            <input type="text" id="destinations-search" class="form-input" placeholder="🔍 Search destinations...">
+          </div>
+          <div class="flex flex-wrap gap-2 flex-center mb-3">
             <button class="btn btn-small btn-outline dest-filter-btn active" data-filter="all">All</button>
             <button class="btn btn-small btn-outline dest-filter-btn" data-filter="national-park">National Parks</button>
             <button class="btn btn-small btn-outline dest-filter-btn" data-filter="state-park">State Parks</button>
             <button class="btn btn-small btn-outline dest-filter-btn" data-filter="campground">Campgrounds</button>
             <button class="btn btn-small btn-outline dest-filter-btn" data-filter="visited">Visited</button>
+          </div>
+          <div class="form-group">
+            <label for="destinations-sort" class="form-label">Sort by:</label>
+            <select id="destinations-sort" class="form-select">
+              <option value="date-desc">Newest First</option>
+              <option value="date-asc">Oldest First</option>
+              <option value="name-asc">Name (A-Z)</option>
+              <option value="name-desc">Name (Z-A)</option>
+              <option value="priority-high">High Priority First</option>
+            </select>
           </div>
         </div>
       </div>
