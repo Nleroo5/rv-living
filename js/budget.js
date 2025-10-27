@@ -9,6 +9,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // Load budget data
   loadBudgetData();
 
+  // Setup budget templates
+  setupBudgetTemplates();
+
+  // Setup collapsible sections
+  setupCollapsibleSections();
+
   // Income form inputs
   const incomeInputs = document.querySelectorAll('#income-form input');
   incomeInputs.forEach(input => {
@@ -25,6 +31,167 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 500));
   });
 });
+
+// Setup collapsible sections
+function setupCollapsibleSections() {
+  const collapsibleHeaders = document.querySelectorAll('.collapsible-header');
+
+  collapsibleHeaders.forEach(header => {
+    header.addEventListener('click', () => {
+      const section = header.parentElement;
+      section.classList.toggle('open');
+    });
+  });
+}
+
+// Budget Templates - EXAMPLES ONLY, adjust for your situation
+const BUDGET_TEMPLATES = {
+  digitalNomad: {
+    name: 'Digital Nomad',
+    income: {
+      'income-remote': 4000 // Example remote work income
+    },
+    expenses: {
+      'exp-rv-payment': 800,
+      'exp-rv-insurance': 180,
+      'exp-maintenance': 200,
+      'exp-registration': 25,
+      'exp-campground': 600, // Mix of paid/free sites
+      'exp-fuel': 300,
+      'exp-tolls': 30,
+      'exp-memberships': 20,
+      'exp-internet': 150, // Research Starlink current pricing
+      'exp-propane': 40,
+      'exp-laundry': 40,
+      'exp-utilities-other': 0,
+      'exp-groceries': 500,
+      'exp-dining': 150,
+      'exp-health': 400,
+      'exp-medical': 50,
+      'exp-entertainment': 150,
+      'exp-pets': 0,
+      'exp-personal': 75,
+      'exp-subscriptions': 50,
+      'exp-emergency': 200,
+      'exp-other': 100
+    }
+  },
+  budget: {
+    name: 'Budget Traveler',
+    income: {
+      'income-remote': 3000
+    },
+    expenses: {
+      'exp-rv-payment': 600,
+      'exp-rv-insurance': 150,
+      'exp-maintenance': 150,
+      'exp-registration': 25,
+      'exp-campground': 200, // Mostly free/BLM camping
+      'exp-fuel': 250,
+      'exp-tolls': 10,
+      'exp-memberships': 15,
+      'exp-internet': 100, // Mobile hotspot instead of Starlink
+      'exp-propane': 30,
+      'exp-laundry': 30,
+      'exp-utilities-other': 0,
+      'exp-groceries': 400,
+      'exp-dining': 50,
+      'exp-health': 300,
+      'exp-medical': 50,
+      'exp-entertainment': 75,
+      'exp-pets': 0,
+      'exp-personal': 50,
+      'exp-subscriptions': 20,
+      'exp-emergency': 150,
+      'exp-other': 50
+    }
+  },
+  comfortable: {
+    name: 'Comfortable Travel',
+    income: {
+      'income-remote': 6000
+    },
+    expenses: {
+      'exp-rv-payment': 1000,
+      'exp-rv-insurance': 200,
+      'exp-maintenance': 250,
+      'exp-registration': 30,
+      'exp-campground': 1200, // Full hookup RV parks
+      'exp-fuel': 500,
+      'exp-tolls': 75,
+      'exp-memberships': 40,
+      'exp-internet': 200, // Starlink + backup
+      'exp-propane': 50,
+      'exp-laundry': 50,
+      'exp-utilities-other': 50,
+      'exp-groceries': 700,
+      'exp-dining': 400,
+      'exp-health': 500,
+      'exp-medical': 100,
+      'exp-entertainment': 400,
+      'exp-pets': 150,
+      'exp-personal': 150,
+      'exp-subscriptions': 100,
+      'exp-emergency': 300,
+      'exp-other': 200
+    }
+  }
+};
+
+function setupBudgetTemplates() {
+  // Digital Nomad template
+  document.getElementById('template-digital-nomad')?.addEventListener('click', () => {
+    applyBudgetTemplate(BUDGET_TEMPLATES.digitalNomad);
+  });
+
+  // Budget template
+  document.getElementById('template-budget')?.addEventListener('click', () => {
+    applyBudgetTemplate(BUDGET_TEMPLATES.budget);
+  });
+
+  // Comfortable template
+  document.getElementById('template-comfortable')?.addEventListener('click', () => {
+    applyBudgetTemplate(BUDGET_TEMPLATES.comfortable);
+  });
+
+  // Clear budget button
+  document.getElementById('clear-budget')?.addEventListener('click', () => {
+    if (confirm('Clear all budget data and start fresh?')) {
+      clearBudget();
+    }
+  });
+}
+
+function applyBudgetTemplate(template) {
+  // Apply income values
+  Object.keys(template.income).forEach(key => {
+    const input = document.getElementById(key);
+    if (input) input.value = template.income[key];
+  });
+
+  // Apply expense values
+  Object.keys(template.expenses).forEach(key => {
+    const input = document.getElementById(key);
+    if (input) input.value = template.expenses[key];
+  });
+
+  // Update calculations
+  updateBudget();
+
+  showToast(`⚠️ Applied "${template.name}" template - These are EXAMPLES! Adjust for your actual situation.`, 'warning');
+}
+
+function clearBudget() {
+  // Clear all inputs
+  document.querySelectorAll('#income-form input, #expenses-form input').forEach(input => {
+    input.value = 0;
+  });
+
+  // Update calculations
+  updateBudget();
+
+  showToast('Budget cleared! Start entering your actual numbers.', 'success');
+}
 
 // Load budget data from storage
 function loadBudgetData() {

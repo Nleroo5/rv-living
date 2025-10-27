@@ -52,15 +52,74 @@
     <!-- Hero Section -->
     <section class="hero">
       <div class="container hero-content">
-        <h1 class="hero-title">Our Journey to Full-Time RV Living</h1>
+        <h1 class="hero-title">Chaz & Nicolas: Our RV Adventure Begins!</h1>
+
+        <!-- Launch Countdown -->
+        <div class="launch-countdown">
+          <div class="countdown-label">Launch Date: February 28, 2026</div>
+          <div class="countdown-timer">
+            <div class="countdown-unit">
+              <span class="countdown-number" id="countdown-days">---</span>
+              <span class="countdown-text">Days</span>
+            </div>
+            <div class="countdown-unit">
+              <span class="countdown-number" id="countdown-hours">--</span>
+              <span class="countdown-text">Hours</span>
+            </div>
+            <div class="countdown-unit">
+              <span class="countdown-number" id="countdown-minutes">--</span>
+              <span class="countdown-text">Minutes</span>
+            </div>
+            <div class="countdown-unit">
+              <span class="countdown-number" id="countdown-seconds">--</span>
+              <span class="countdown-text">Seconds</span>
+            </div>
+          </div>
+          <div class="countdown-subtitle" id="countdown-message">Until we hit the road in our Winnebago Minnie Winnie 22R!</div>
+        </div>
+
         <p class="hero-subtitle">
-          Welcome to our personal planning hub! This is where we organize everything we need
-          to make our dream of full-time RV living a reality. Track finances, plan destinations,
-          manage checklists, and prepare for the adventure ahead.
+          Your command center for preparing to leave on February 28, 2026. We're tracking everything
+          you need for full-time RV living with Starlink, working on the road, and exploring America.
         </p>
         <div class="hero-cta">
-          <a href="calculator.html" class="btn btn-primary btn-large">RV Finance Calculator</a>
-          <a href="checklist.html" class="btn btn-outline btn-large">View Prep Checklist</a>
+          <a href="calculator.html" class="btn btn-primary btn-large">Minnie Winnie 22R Calculator</a>
+          <a href="checklist.html" class="btn btn-outline btn-large">Essential Prep Checklist</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Important Disclaimer -->
+    <section class="section" style="padding-top: 0; padding-bottom: var(--space-4);">
+      <div class="container">
+        <div class="alert alert-info" style="max-width: 900px; margin: 0 auto;">
+          <strong>📌 Important:</strong> This site provides guidance, estimates, and planning tools based on general RV living information.
+          All pricing, costs, and recommendations should be verified with current sources. Market conditions, prices, and availability
+          change frequently. Always do your own research and consult professionals before making major decisions.
+        </div>
+      </div>
+    </section>
+
+    <!-- Weekly Focus Widget -->
+    <section class="section" style="padding-top: var(--space-8); padding-bottom: var(--space-8);">
+      <div class="container">
+        <div class="weekly-focus-card">
+          <div class="weekly-focus-header">
+            <div class="weekly-focus-badge">Week <span id="week-number">--</span> of 17</div>
+            <h2 class="weekly-focus-title">This Week's Priority</h2>
+          </div>
+          <div class="weekly-focus-content">
+            <div class="weekly-focus-main" id="weekly-focus-task">
+              Loading your focus for this week...
+            </div>
+            <div class="weekly-focus-details" id="weekly-focus-details">
+              Calculating where you are in your timeline...
+            </div>
+          </div>
+          <div class="weekly-focus-actions">
+            <button class="btn btn-primary" id="mark-focus-complete">Mark as Complete</button>
+            <a href="#" class="btn btn-outline" id="view-all-tasks">View Full Timeline</a>
+          </div>
         </div>
       </div>
     </section>
@@ -163,42 +222,69 @@
       </div>
     </section>
 
-    <!-- Getting Started Section -->
+    <!-- Key Resources Section -->
     <section class="section">
       <div class="container">
         <div class="section-header">
-          <h2 class="section-title">Getting Started</h2>
-          <p class="section-subtitle">Not sure where to begin? Follow these steps</p>
+          <h2 class="section-title">Essential Research Resources</h2>
+          <p class="section-subtitle">Verified sources for planning your RV adventure</p>
         </div>
 
         <div class="grid grid-3">
           <div class="card">
             <div class="card-header">
-              <div class="badge badge-primary">Step 1</div>
-              <h3 class="card-title">Calculate Your Budget</h3>
+              <h3 class="card-title">🚐 RV Shopping</h3>
             </div>
             <div class="card-body">
-              <p>Use the RV Finance Calculator to determine what you can afford, including purchase price, monthly payments, and ongoing costs.</p>
+              <ul style="list-style: none; padding: 0;">
+                <li style="margin-bottom: var(--space-2);">
+                  <a href="https://www.rvtrader.com" target="_blank" rel="noopener" style="color: var(--color-primary); font-weight: var(--font-weight-semibold);">RVTrader.com</a> - Browse RVs for sale
+                </li>
+                <li style="margin-bottom: var(--space-2);">
+                  <a href="https://www.campingworld.com" target="_blank" rel="noopener" style="color: var(--color-primary); font-weight: var(--font-weight-semibold);">Camping World</a> - New & used RVs
+                </li>
+                <li>
+                  <a href="https://www.winnebago.com" target="_blank" rel="noopener" style="color: var(--color-primary); font-weight: var(--font-weight-semibold);">Winnebago.com</a> - Official Minnie Winnie specs
+                </li>
+              </ul>
             </div>
           </div>
 
           <div class="card">
             <div class="card-header">
-              <div class="badge badge-primary">Step 2</div>
-              <h3 class="card-title">Create Your Checklist</h3>
+              <h3 class="card-title">📍 Campgrounds & Travel</h3>
             </div>
             <div class="card-body">
-              <p>Start building your preparation checklist. What do you need to buy? What do you need to sell? What needs to be organized?</p>
+              <ul style="list-style: none; padding: 0;">
+                <li style="margin-bottom: var(--space-2);">
+                  <a href="https://www.campendium.com" target="_blank" rel="noopener" style="color: var(--color-primary); font-weight: var(--font-weight-semibold);">Campendium</a> - Campground reviews
+                </li>
+                <li style="margin-bottom: var(--space-2);">
+                  <a href="https://thedyrt.com" target="_blank" rel="noopener" style="color: var(--color-primary); font-weight: var(--font-weight-semibold);">The Dyrt</a> - Find campsites
+                </li>
+                <li>
+                  <a href="https://www.harvesthosts.com" target="_blank" rel="noopener" style="color: var(--color-primary); font-weight: var(--font-weight-semibold);">Harvest Hosts</a> - Free camping at farms/wineries
+                </li>
+              </ul>
             </div>
           </div>
 
           <div class="card">
             <div class="card-header">
-              <div class="badge badge-primary">Step 3</div>
-              <h3 class="card-title">Plan Your Route</h3>
+              <h3 class="card-title">🌐 Remote Work Setup</h3>
             </div>
             <div class="card-body">
-              <p>Dream big! Add all the destinations you want to visit, research campgrounds, and start mapping your adventure.</p>
+              <ul style="list-style: none; padding: 0;">
+                <li style="margin-bottom: var(--space-2);">
+                  <a href="https://www.starlink.com" target="_blank" rel="noopener" style="color: var(--color-primary); font-weight: var(--font-weight-semibold);">Starlink.com</a> - Satellite internet for RVs
+                </li>
+                <li style="margin-bottom: var(--space-2);">
+                  <a href="https://www.reddit.com/r/GoRVing/" target="_blank" rel="noopener" style="color: var(--color-primary); font-weight: var(--font-weight-semibold);">r/GoRVing</a> - RV community on Reddit
+                </li>
+                <li>
+                  <a href="https://www.reddit.com/r/vandwellers/" target="_blank" rel="noopener" style="color: var(--color-primary); font-weight: var(--font-weight-semibold);">r/vandwellers</a> - Nomad lifestyle tips
+                </li>
+              </ul>
             </div>
           </div>
         </div>

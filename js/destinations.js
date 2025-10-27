@@ -73,6 +73,8 @@ function handleAddDestination(e) {
     priority,
     season,
     visited: false,
+    visitedDates: null,
+    visitedNotes: '',
     createdAt: new Date().toISOString()
   };
 
@@ -84,6 +86,7 @@ function handleAddDestination(e) {
   e.target.reset();
 
   showToast('Destination added!', 'success');
+  showSaveIndicator();
 }
 
 // Quick add destination
@@ -97,6 +100,8 @@ function quickAddDestination(name, state, type) {
     priority: 'wishlist',
     season: 'any',
     visited: false,
+    visitedDates: null,
+    visitedNotes: '',
     createdAt: new Date().toISOString()
   };
 
@@ -208,7 +213,20 @@ function createDestinationCard(dest) {
         ` : ''}
         ${dest.visited ? '<span class="badge badge-success">✓ Visited</span>' : ''}
       </div>
-      ${dest.notes ? `<p style="color: var(--color-text-secondary); font-size: var(--text-sm);">${sanitizeHTML(dest.notes)}</p>` : ''}
+      ${dest.notes ? `<p style="color: var(--color-text-secondary); font-size: var(--text-sm); margin-bottom: var(--space-2);">${sanitizeHTML(dest.notes)}</p>` : ''}
+
+      ${dest.visited && dest.visitedDates ? `
+        <div style="background-color: var(--color-background-alt); padding: var(--space-2); border-radius: var(--radius-md); margin-top: var(--space-2);">
+          <div style="font-weight: var(--font-weight-semibold); color: var(--color-success); font-size: var(--text-sm); margin-bottom: var(--space-1);">
+            📅 Visited: ${dest.visitedDates}
+          </div>
+          ${dest.visitedNotes ? `
+            <div style="color: var(--color-text-secondary); font-size: var(--text-sm); font-style: italic;">
+              "${sanitizeHTML(dest.visitedNotes)}"
+            </div>
+          ` : ''}
+        </div>
+      ` : ''}
     </div>
     <div class="card-footer">
       <div style="display: flex; gap: var(--space-2); width: 100%;">
@@ -247,14 +265,54 @@ function createDestinationCard(dest) {
 }
 
 // Toggle visited status
-function toggleVisited(destId) {
+async function toggleVisited(destId) {
   const dest = destinations.find(d => d.id === destId);
-  if (dest) {
-    dest.visited = !dest.visited;
-    saveDestinations();
-    renderDestinations();
-    showToast(dest.visited ? 'Marked as visited!' : 'Marked as not visited', 'success');
+  if (!dest) return;
+
+  if (!dest.visited) {
+    // Marking as visited - use modal form
+    const result = await formDialog(`Mark "${dest.name}" as Visited`, [
+      {
+        id: 'visitedDates',
+        label: 'When did you visit?',
+        type: 'text',
+        placeholder: 'e.g., June 5-7, 2026 or July 2026',
+        value: ''
+      },
+      {
+        id: 'visitedNotes',
+        label: 'Memorable moments or tips (optional)',
+        type: 'textarea',
+        placeholder: 'Share your experience...',
+        value: ''
+      }
+    ]);
+
+    if (result) {
+      dest.visited = true;
+      dest.visitedDates = result.visitedDates || 'Visited';
+      dest.visitedNotes = result.visitedNotes || '';
+      showToast('Marked as visited! 🎉', 'success');
+    } else {
+      return;
+    }
+  } else {
+    // Unmarking as visited - clear the data
+    const confirmed = await confirmDialog(`Remove visited status for ${dest.name}?\n\nThis will clear dates and notes.`);
+
+    if (confirmed) {
+      dest.visited = false;
+      dest.visitedDates = null;
+      dest.visitedNotes = '';
+      showToast('Marked as not visited', 'info');
+    } else {
+      return;
+    }
   }
+
+  saveDestinations();
+  renderDestinations();
+  showSaveIndicator();
 }
 
 // Edit destination
@@ -298,4 +356,213 @@ function updateStats() {
   document.getElementById('destinations-total').textContent = total;
   document.getElementById('destinations-visited').textContent = visited;
   document.getElementById('destinations-wishlist').textContent = wishlist;
+
+  // Update map stats
+  updateMapStats();
 }
+
+// Load destinations from database
+function loadDestinationsFromDatabase(categoryData, categoryName) {
+  let addedCount = 0;
+  let skippedCount = 0;
+
+  categoryData.forEach(item => {
+    // Check if destination already exists
+    const exists = destinations.some(d =>
+      d.name.toLowerCase() === item.name.toLowerCase() &&
+      d.state.toLowerCase() === item.state.toLowerCase()
+    );
+
+    if (!exists) {
+      const newDestination = {
+        id: generateId(),
+        name: item.name,
+        state: item.state,
+        type: item.type,
+        notes: item.notes || '',
+        priority: 'wishlist',
+        season: 'any',
+        visited: false,
+        visitedDates: null,
+        visitedNotes: '',
+        createdAt: new Date().toISOString()
+      };
+
+      destinations.unshift(newDestination);
+      addedCount++;
+    } else {
+      skippedCount++;
+    }
+  });
+
+  if (addedCount > 0) {
+    saveDestinations();
+    renderDestinations();
+    updateMapVisualization();
+
+    if (skippedCount > 0) {
+      showToast(`Added ${addedCount} new destinations! (${skippedCount} already in your list)`, 'success');
+    } else {
+      showToast(`Added ${addedCount} ${categoryName} to your list!`, 'success');
+    }
+  } else {
+    showToast(`All ${categoryName} are already in your list!`, 'info');
+  }
+}
+
+// Load category button handlers
+document.addEventListener('DOMContentLoaded', () => {
+  // National Parks button
+  const nationalParksBtn = document.getElementById('load-national-parks-btn');
+  if (nationalParksBtn) {
+    nationalParksBtn.addEventListener('click', () => {
+      if (typeof NATIONAL_PARKS !== 'undefined') {
+        loadDestinationsFromDatabase(NATIONAL_PARKS, 'National Parks');
+      } else {
+        showToast('Database not loaded. Please refresh the page.', 'error');
+      }
+    });
+  }
+
+  // State Parks button
+  const stateParksBtn = document.getElementById('load-state-parks-btn');
+  if (stateParksBtn) {
+    stateParksBtn.addEventListener('click', () => {
+      if (typeof STATE_PARKS !== 'undefined') {
+        loadDestinationsFromDatabase(STATE_PARKS, 'State Parks');
+      } else {
+        showToast('Database not loaded. Please refresh the page.', 'error');
+      }
+    });
+  }
+
+  // Attractions button
+  const attractionsBtn = document.getElementById('load-attractions-btn');
+  if (attractionsBtn) {
+    attractionsBtn.addEventListener('click', () => {
+      if (typeof MUST_SEE_ATTRACTIONS !== 'undefined') {
+        loadDestinationsFromDatabase(MUST_SEE_ATTRACTIONS, 'Attractions');
+      } else {
+        showToast('Database not loaded. Please refresh the page.', 'error');
+      }
+    });
+  }
+
+  // RV-Friendly button
+  const rvFriendlyBtn = document.getElementById('load-rv-friendly-btn');
+  if (rvFriendlyBtn) {
+    rvFriendlyBtn.addEventListener('click', () => {
+      if (typeof RV_FRIENDLY !== 'undefined') {
+        loadDestinationsFromDatabase(RV_FRIENDLY, 'RV-Friendly Destinations');
+      } else {
+        showToast('Database not loaded. Please refresh the page.', 'error');
+      }
+    });
+  }
+
+  // Load ALL button
+  const loadAllBtn = document.getElementById('load-all-destinations-btn');
+  if (loadAllBtn) {
+    loadAllBtn.addEventListener('click', async () => {
+      const confirmed = await confirmDialog(
+        'Add ALL 160+ destinations to your list?\n\nThis includes all National Parks, State Parks, attractions, and RV-friendly spots!'
+      );
+
+      if (confirmed) {
+        let totalAdded = 0;
+
+        if (typeof NATIONAL_PARKS !== 'undefined') {
+          const before = destinations.length;
+          loadDestinationsFromDatabase(NATIONAL_PARKS, 'destinations');
+          totalAdded += destinations.length - before;
+        }
+
+        if (typeof STATE_PARKS !== 'undefined') {
+          const before = destinations.length;
+          loadDestinationsFromDatabase(STATE_PARKS, 'destinations');
+          totalAdded += destinations.length - before;
+        }
+
+        if (typeof MUST_SEE_ATTRACTIONS !== 'undefined') {
+          const before = destinations.length;
+          loadDestinationsFromDatabase(MUST_SEE_ATTRACTIONS, 'destinations');
+          totalAdded += destinations.length - before;
+        }
+
+        if (typeof RV_FRIENDLY !== 'undefined') {
+          const before = destinations.length;
+          loadDestinationsFromDatabase(RV_FRIENDLY, 'destinations');
+          totalAdded += destinations.length - before;
+        }
+
+        showToast(`Added ${totalAdded} destinations to your list! 🎉`, 'success');
+      }
+    });
+  }
+});
+
+// Map visualization functions
+function updateMapStats() {
+  const mapStats = document.getElementById('map-stats');
+  if (mapStats) {
+    const count = destinations.length;
+    mapStats.textContent = count === 1 ? '1 destination' : `${count} destinations`;
+  }
+}
+
+function updateMapVisualization() {
+  const mapContainer = document.getElementById('map-container');
+  if (!mapContainer || destinations.length === 0) return;
+
+  // Simple visual representation using dots on a stylized US map
+  mapContainer.innerHTML = `
+    <div style="position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+      <div style="text-align: center;">
+        <div style="font-size: var(--text-6xl); margin-bottom: var(--space-3);">🗺️</div>
+        <div style="font-size: var(--text-xl); font-weight: var(--font-weight-bold); color: var(--color-primary); margin-bottom: var(--space-2);">
+          ${destinations.length} Destinations Added!
+        </div>
+        <div style="display: flex; gap: var(--space-2); flex-wrap: wrap; justify-content: center; max-width: 600px; margin: 0 auto;">
+          ${getDestinationBreakdown()}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function getDestinationBreakdown() {
+  const types = {
+    'national-park': { icon: '🏔️', label: 'National Parks', count: 0 },
+    'state-park': { icon: '🌲', label: 'State Parks', count: 0 },
+    'campground': { icon: '🏕️', label: 'Campgrounds', count: 0 },
+    'attraction': { icon: '🎡', label: 'Attractions', count: 0 },
+    'city': { icon: '🏙️', label: 'Cities', count: 0 },
+    'scenic': { icon: '🛣️', label: 'Scenic Routes', count: 0 },
+    'other': { icon: '📍', label: 'Other', count: 0 }
+  };
+
+  destinations.forEach(d => {
+    if (types[d.type]) {
+      types[d.type].count++;
+    }
+  });
+
+  return Object.entries(types)
+    .filter(([_, data]) => data.count > 0)
+    .map(([_, data]) => `
+      <div style="background: white; padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
+        <div style="font-size: var(--text-2xl);">${data.icon}</div>
+        <div style="font-size: var(--text-sm); font-weight: var(--font-weight-semibold); margin-top: var(--space-1);">${data.count}</div>
+        <div style="font-size: var(--text-xs); color: var(--color-text-secondary);">${data.label}</div>
+      </div>
+    `).join('');
+}
+
+// Initialize map on page load
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    if (destinations.length > 0) {
+      updateMapVisualization();
+    }
+  }, 500);
+});

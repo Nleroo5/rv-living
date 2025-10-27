@@ -43,6 +43,19 @@ const Storage = {
       return true;
     } catch (error) {
       console.error('Error writing to localStorage:', error);
+
+      // Handle quota exceeded specifically
+      if (error.name === 'QuotaExceededError' || error.code === 22) {
+        if (typeof showToast === 'function') {
+          showToast('Storage is full! Please clear some data or remove old items.', 'error');
+        } else {
+          alert('Storage is full! Please clear some data.');
+        }
+      } else {
+        if (typeof showToast === 'function') {
+          showToast('Error saving data. Please try again.', 'error');
+        }
+      }
       return false;
     }
   },

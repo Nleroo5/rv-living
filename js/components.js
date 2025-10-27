@@ -294,12 +294,166 @@ function createModal(title, content, buttons = []) {
   return overlay;
 }
 
+// Back to Top Button
+document.addEventListener('DOMContentLoaded', () => {
+  const backToTopBtn = document.createElement('button');
+  backToTopBtn.className = 'back-to-top';
+  backToTopBtn.innerHTML = '↑';
+  backToTopBtn.setAttribute('aria-label', 'Back to top');
+  document.body.appendChild(backToTopBtn);
+
+  // Show/hide based on scroll position
+  window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 300) {
+      backToTopBtn.classList.add('visible');
+    } else {
+      backToTopBtn.classList.remove('visible');
+    }
+  });
+
+  // Scroll to top on click
+  backToTopBtn.addEventListener('click', () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+});
+
+// Save Indicator
+function showSaveIndicator(message = 'Saved!') {
+  let indicator = document.querySelector('.save-indicator');
+
+  if (!indicator) {
+    indicator = document.createElement('div');
+    indicator.className = 'save-indicator';
+    document.body.appendChild(indicator);
+  }
+
+  indicator.textContent = message;
+  indicator.classList.add('show');
+
+  setTimeout(() => {
+    indicator.classList.remove('show');
+  }, 2000);
+}
+
+// Enhanced confirm dialog with modal
+function confirmDialog(message) {
+  return new Promise((resolve) => {
+    const modal = createModal('Confirm', `<p>${sanitizeHTML(message)}</p>`, [
+      { text: 'Cancel', class: 'btn-outline', action: 'cancel' },
+      { text: 'Confirm', class: 'btn-primary', action: 'confirm' }
+    ]);
+
+    const buttons = modal.querySelectorAll('[data-action]');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const action = btn.dataset.action;
+        modal.remove();
+        resolve(action === 'confirm');
+      });
+    });
+  });
+}
+
+// Prompt dialog with modal (replacement for window.prompt)
+function promptDialog(title, message, defaultValue = '') {
+  return new Promise((resolve) => {
+    const content = `
+      <p style="margin-bottom: var(--space-3);">${sanitizeHTML(message)}</p>
+      <input type="text" class="form-input" id="prompt-input" value="${sanitizeHTML(defaultValue)}" autofocus>
+    `;
+
+    const modal = createModal(title, content, [
+      { text: 'Cancel', class: 'btn-outline', action: 'cancel' },
+      { text: 'OK', class: 'btn-primary', action: 'ok' }
+    ]);
+
+    const input = modal.querySelector('#prompt-input');
+    const buttons = modal.querySelectorAll('[data-action]');
+
+    // Focus input
+    setTimeout(() => input.focus(), 100);
+
+    // Handle enter key
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        modal.remove();
+        resolve(input.value.trim() || null);
+      }
+    });
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const action = btn.dataset.action;
+        modal.remove();
+        if (action === 'ok') {
+          resolve(input.value.trim() || null);
+        } else {
+          resolve(null);
+        }
+      });
+    });
+  });
+}
+
+// Multi-field form dialog (for visited destinations)
+function formDialog(title, fields) {
+  return new Promise((resolve) => {
+    const fieldsHTML = fields.map(field => `
+      <div class="form-group">
+        <label for="${field.id}" class="form-label">${sanitizeHTML(field.label)}</label>
+        ${field.type === 'textarea' ? `
+          <textarea id="${field.id}" class="form-textarea" placeholder="${sanitizeHTML(field.placeholder || '')}">${sanitizeHTML(field.value || '')}</textarea>
+        ` : `
+          <input type="${field.type || 'text'}" id="${field.id}" class="form-input" placeholder="${sanitizeHTML(field.placeholder || '')}" value="${sanitizeHTML(field.value || '')}">
+        `}
+      </div>
+    `).join('');
+
+    const modal = createModal(title, fieldsHTML, [
+      { text: 'Cancel', class: 'btn-outline', action: 'cancel' },
+      { text: 'Save', class: 'btn-primary', action: 'save' }
+    ]);
+
+    const buttons = modal.querySelectorAll('[data-action]');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const action = btn.dataset.action;
+
+        if (action === 'save') {
+          const values = {};
+          fields.forEach(field => {
+            const input = modal.querySelector(`#${field.id}`);
+            values[field.id] = input.value.trim();
+          });
+          modal.remove();
+          resolve(values);
+        } else {
+          modal.remove();
+          resolve(null);
+        }
+      });
+    });
+
+    // Focus first input
+    setTimeout(() => {
+      const firstInput = modal.querySelector('input, textarea');
+      if (firstInput) firstInput.focus();
+    }, 100);
+  });
+}
+
 // Export for use in other files
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     validateForm,
     setLoading,
     confirmDialog,
-    createModal
+    promptDialog,
+    formDialog,
+    createModal,
+    showSaveIndicator
   };
 }

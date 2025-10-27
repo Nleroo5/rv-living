@@ -7,6 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Load saved values if any
   loadSavedValues();
 
+  // Quick fill buttons for Minnie Winnie 22R
+  setupQuickFillButtons();
+
   // Form submission
   form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -21,6 +24,44 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 500));
   });
 });
+
+// Quick fill buttons for Minnie Winnie 22R pricing
+function setupQuickFillButtons() {
+  const fillNewBtn = document.getElementById('fill-new');
+  const fillUsedBtn = document.getElementById('fill-used');
+
+  if (fillNewBtn) {
+    fillNewBtn.addEventListener('click', () => {
+      // ESTIMATE ONLY - Starting point for calculations (verify current market pricing)
+      document.getElementById('rv-price').value = 85000; // ESTIMATE - Check RVTrader.com for actual pricing
+      document.getElementById('down-payment').value = 17000; // 20% down example
+      document.getElementById('interest-rate').value = 6.5; // ESTIMATE - Check current lending rates
+      document.getElementById('insurance').value = 180; // ESTIMATE - Get real insurance quotes
+      document.getElementById('maintenance').value = 200; // ESTIMATE
+
+      showToast('⚠️ Filled with ESTIMATES ONLY - Verify all numbers!', 'warning');
+
+      // Auto-calculate
+      calculateRVFinance();
+    });
+  }
+
+  if (fillUsedBtn) {
+    fillUsedBtn.addEventListener('click', () => {
+      // ESTIMATE ONLY - Starting point for calculations (verify current market pricing)
+      document.getElementById('rv-price').value = 65000; // ESTIMATE - Check RVTrader.com for actual pricing
+      document.getElementById('down-payment').value = 13000; // 20% down example
+      document.getElementById('interest-rate').value = 7.5; // ESTIMATE - Check current lending rates
+      document.getElementById('insurance').value = 150; // ESTIMATE - Get real insurance quotes
+      document.getElementById('maintenance').value = 250; // ESTIMATE
+
+      showToast('⚠️ Filled with ESTIMATES ONLY - Verify all numbers!', 'warning');
+
+      // Auto-calculate
+      calculateRVFinance();
+    });
+  }
+}
 
 // Load saved form values
 function loadSavedValues() {

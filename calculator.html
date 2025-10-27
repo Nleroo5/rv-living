@@ -48,11 +48,53 @@
 
   <!-- Main Content -->
   <main id="main-content" class="page-content">
-    <h1 class="page-title">RV Finance Calculator</h1>
+    <h1 class="page-title">Winnebago Minnie Winnie 22R Calculator</h1>
 
     <div class="calculator-container">
+      <!-- Minnie Winnie 22R Info Card -->
+      <div class="rv-info-card mb-4">
+        <div class="rv-info-header">
+          <h2>🚐 Your Target RV: Winnebago Minnie Winnie 22R</h2>
+        </div>
+        <div class="rv-info-body">
+          <div class="rv-specs">
+            <div class="rv-spec-item">
+              <strong>Class:</strong> C Motorhome
+            </div>
+            <div class="rv-spec-item">
+              <strong>Length:</strong> ~24-25 feet
+            </div>
+            <div class="rv-spec-item">
+              <strong>Sleeps:</strong> 4-5 people
+            </div>
+            <div class="rv-spec-item">
+              <strong>MPG:</strong> Est. 10-12
+            </div>
+          </div>
+          <div class="rv-pricing">
+            <div class="pricing-row">
+              <span class="pricing-label">Typical New Range:</span>
+              <span class="pricing-value">Research Current Pricing</span>
+            </div>
+            <div class="pricing-row">
+              <span class="pricing-label">Typical Used Range:</span>
+              <span class="pricing-value">Varies by Year/Condition</span>
+            </div>
+          </div>
+          <div class="alert alert-warning" style="margin-top: var(--space-3); font-size: var(--text-sm);">
+            <strong>⚠️ Important:</strong> Use these quick-fill buttons as STARTING ESTIMATES only.
+            Always verify current market prices on RVTrader.com, Camping World, and local dealers.
+            Prices vary significantly by location, season, condition, and options.
+          </div>
+          <div class="rv-quick-fills">
+            <button type="button" class="btn btn-sm btn-outline" id="fill-new">Use Estimate: New RV</button>
+            <button type="button" class="btn btn-sm btn-outline" id="fill-used">Use Estimate: Used RV</button>
+          </div>
+        </div>
+      </div>
+
       <p class="text-center text-secondary mb-4">
-        Calculate your RV affordability, monthly payments, and total cost of ownership
+        Calculate your exact affordability, monthly payments, and total cost of ownership
       </p>
 
       <form id="rv-calculator-form">
