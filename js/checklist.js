@@ -2,6 +2,8 @@
 
 let checklistItems = [];
 let currentFilter = 'all';
+let currentSearch = '';
+let currentSort = 'date-desc';
 
 document.addEventListener('DOMContentLoaded', () => {
   // Load checklist from storage
@@ -14,6 +16,24 @@ document.addEventListener('DOMContentLoaded', () => {
   const addForm = document.getElementById('add-checklist-form');
   addForm.addEventListener('submit', handleAddItem);
 
+  // Search input
+  const searchInput = document.getElementById('checklist-search');
+  if (searchInput) {
+    searchInput.addEventListener('input', debounce(() => {
+      currentSearch = searchInput.value.trim().toLowerCase();
+      renderChecklist();
+    }, 300));
+  }
+
+  // Sort select
+  const sortSelect = document.getElementById('checklist-sort');
+  if (sortSelect) {
+    sortSelect.addEventListener('change', () => {
+      currentSort = sortSelect.value;
+      renderChecklist();
+    });
+  }
+
   // Filter buttons
   const filterButtons = document.querySelectorAll('.filter-btn');
   filterButtons.forEach(btn => {
@@ -25,8 +45,35 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Export/Import buttons
+  const exportBtn = document.getElementById('export-checklist-btn');
+  if (exportBtn) {
+    exportBtn.addEventListener('click', () => {
+      DataManager.exportPageData('checklist', 'checklistItems');
+    });
+  }
+
+  const importBtn = document.getElementById('import-checklist-btn');
+  const importInput = document.getElementById('import-checklist-input');
+  if (importBtn && importInput) {
+    importBtn.addEventListener('click', () => {
+      importInput.click();
+    });
+
+    importInput.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        await DataManager.importData(file);
+      }
+      e.target.value = ''; // Reset input
+    });
+  }
+
   // File upload
   setupFileUpload();
+
+  // Update storage display
+  updateStorageDisplay();
 });
 
 // Essential RV Items - Research prompts
@@ -354,11 +401,23 @@ function renderChecklist() {
   // Filter items
   let filteredItems = checklistItems;
 
+  // Apply category filter
   if (currentFilter === 'completed') {
-    filteredItems = checklistItems.filter(item => item.completed);
+    filteredItems = filteredItems.filter(item => item.completed);
   } else if (currentFilter !== 'all') {
-    filteredItems = checklistItems.filter(item => item.category === currentFilter);
+    filteredItems = filteredItems.filter(item => item.category === currentFilter);
   }
+
+  // Apply search
+  if (currentSearch) {
+    filteredItems = filteredItems.filter(item =>
+      item.title.toLowerCase().includes(currentSearch) ||
+      (item.description && item.description.toLowerCase().includes(currentSearch))
+    );
+  }
+
+  // Apply sort
+  filteredItems = sortChecklist(filteredItems, currentSort);
 
   // Clear container (except empty message)
   const items = container.querySelectorAll('.checklist-item');
@@ -366,9 +425,13 @@ function renderChecklist() {
 
   if (filteredItems.length === 0) {
     emptyMessage.classList.remove('hidden');
-    emptyMessage.textContent = currentFilter === 'all'
-      ? 'No items yet. Add your first checklist item above!'
-      : 'No items in this category yet.';
+    if (currentSearch) {
+      emptyMessage.textContent = `No items match "${currentSearch}"`;
+    } else {
+      emptyMessage.textContent = currentFilter === 'all'
+        ? 'No items yet. Add your first checklist item above!'
+        : 'No items in this category yet.';
+    }
   } else {
     emptyMessage.classList.add('hidden');
 
@@ -376,6 +439,31 @@ function renderChecklist() {
       const li = createChecklistItemElement(item);
       container.appendChild(li);
     });
+  }
+}
+
+// Sort checklist items
+function sortChecklist(items, sortBy) {
+  const sorted = [...items];
+
+  switch (sortBy) {
+    case 'date-desc':
+      return sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    case 'date-asc':
+      return sorted.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+    case 'title-asc':
+      return sorted.sort((a, b) => a.title.localeCompare(b.title));
+    case 'title-desc':
+      return sorted.sort((a, b) => b.title.localeCompare(a.title));
+    case 'priority-high':
+      const priorityOrder = { high: 0, medium: 1, low: 2 };
+      return sorted.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+    case 'completed':
+      return sorted.sort((a, b) => (b.completed ? 1 : 0) - (a.completed ? 1 : 0));
+    case 'incomplete':
+      return sorted.sort((a, b) => (a.completed ? 1 : 0) - (b.completed ? 1 : 0));
+    default:
+      return sorted;
   }
 }
 
@@ -609,9 +697,22 @@ function handleFileUpload(files) {
   const uploadedFiles = Storage.get('uploadedFiles', []);
   const maxSize = 5 * 1024 * 1024; // 5MB
 
+  // Check storage before upload
+  const storageInfo = DataManager.getStorageInfo();
+  if (parseFloat(storageInfo.percentUsed) > 80) {
+    showToast(`⚠️ Storage is ${storageInfo.percentUsed}% full (${storageInfo.usedMB}MB / ${storageInfo.maxMB}MB). Consider deleting old files.`, 'warning');
+  }
+
   Array.from(files).forEach(file => {
     if (file.size > maxSize) {
       showToast(`File "${file.name}" is too large (max 5MB)`, 'error');
+      return;
+    }
+
+    // Warn about storage impact
+    const estimatedSize = file.size * 1.37; // base64 encoding adds ~37% overhead
+    if (estimatedSize > storageInfo.remaining) {
+      showToast(`⚠️ File may not fit in remaining storage. Free up space by deleting old files or exporting data.`, 'error');
       return;
     }
 
@@ -630,13 +731,44 @@ function handleFileUpload(files) {
       };
 
       uploadedFiles.push(fileData);
-      Storage.set('uploadedFiles', uploadedFiles);
-      renderFileList(uploadedFiles);
-      showToast(`File "${file.name}" uploaded successfully`, 'success');
+      const saved = Storage.set('uploadedFiles', uploadedFiles);
+
+      if (saved) {
+        renderFileList(uploadedFiles);
+        showToast(`File "${file.name}" uploaded successfully`, 'success');
+
+        // Update storage info display
+        updateStorageDisplay();
+      }
     };
 
     reader.readAsDataURL(file);
   });
+}
+
+// Update storage display
+function updateStorageDisplay() {
+  const storageInfo = DataManager.getStorageInfo();
+  const storageDisplay = document.getElementById('storage-info');
+
+  if (storageDisplay) {
+    const percentUsed = parseFloat(storageInfo.percentUsed);
+    let statusClass = 'success';
+    if (percentUsed > 80) {
+      statusClass = 'error';
+    } else if (percentUsed > 60) {
+      statusClass = 'warning';
+    }
+
+    storageDisplay.innerHTML = `
+      <div style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-1);">
+        Storage: ${storageInfo.usedMB}MB / ${storageInfo.maxMB}MB (${storageInfo.percentUsed}%)
+      </div>
+      <div class="progress" style="height: 8px;">
+        <div class="progress-bar" style="width: ${storageInfo.percentUsed}%; background-color: var(--color-${statusClass});"></div>
+      </div>
+    `;
+  }
 }
 
 // Render file list
