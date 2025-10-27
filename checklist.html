@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="RV preparation checklist with file uploads and document management.">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Preparation Checklist - RV Adventures</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚐</text></svg>">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  <a href="#main-content" class="sr-only">Skip to main content</a>
+
+  <!-- Header & Navigation -->
+  <header class="header">
+    <nav class="nav container">
+      <a href="index.html" class="nav-brand" aria-label="RV Adventures Home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        <span>RV Adventures</span>
+      </a>
+
+      <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+
+      <div class="nav-menu">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="calculator.html" class="nav-link">RV Calculator</a>
+        <a href="checklist.html" class="nav-link active">Prep Checklist</a>
+        <a href="destinations.html" class="nav-link">Destinations</a>
+        <a href="budget.html" class="nav-link">Budget Tracker</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main-content" class="page-content">
+    <h1 class="page-title">RV Preparation Checklist</h1>
+
+    <div class="container" style="max-width: 900px; margin: 0 auto;">
+      <div class="card mb-4">
+        <div class="card-body text-center">
+          <div class="flex flex-center gap-4 flex-wrap">
+            <div>
+              <div style="font-size: var(--text-3xl); font-weight: var(--font-weight-bold); color: var(--color-primary);" id="checklist-stats-completed">0</div>
+              <p class="text-secondary">Completed</p>
+            </div>
+            <div>
+              <div style="font-size: var(--text-3xl); font-weight: var(--font-weight-bold); color: var(--color-accent);" id="checklist-stats-remaining">0</div>
+              <p class="text-secondary">Remaining</p>
+            </div>
+            <div>
+              <div style="font-size: var(--text-3xl); font-weight: var(--font-weight-bold); color: var(--color-secondary);" id="checklist-stats-total">0</div>
+              <p class="text-secondary">Total Items</p>
+            </div>
+          </div>
+          <div class="progress mt-4">
+            <div class="progress-bar" id="checklist-progress-bar" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add New Item Form -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h2 class="card-title">Add New Item</h2>
+        </div>
+        <div class="card-body">
+          <form id="add-checklist-form">
+            <div class="form-group">
+              <label for="item-title" class="form-label">Item Title</label>
+              <input
+                type="text"
+                id="item-title"
+                class="form-input"
+                placeholder="e.g., Buy camping chairs"
+                required
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="item-description" class="form-label">Description (optional)</label>
+              <textarea
+                id="item-description"
+                class="form-textarea"
+                placeholder="Add notes, links, or details..."
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="item-category" class="form-label">Category</label>
+              <select id="item-category" class="form-select">
+                <option value="purchase">To Purchase</option>
+                <option value="organize">To Organize</option>
+                <option value="sell">To Sell/Donate</option>
+                <option value="research">Research Needed</option>
+                <option value="documents">Documents/Paperwork</option>
+                <option value="maintenance">RV Maintenance</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="item-priority" class="form-label">Priority</label>
+              <select id="item-priority" class="form-select">
+                <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+              Add to Checklist
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="flex flex-wrap gap-2 flex-center">
+            <button class="btn btn-small btn-outline filter-btn active" data-filter="all">All</button>
+            <button class="btn btn-small btn-outline filter-btn" data-filter="purchase">To Purchase</button>
+            <button class="btn btn-small btn-outline filter-btn" data-filter="organize">To Organize</button>
+            <button class="btn btn-small btn-outline filter-btn" data-filter="sell">To Sell</button>
+            <button class="btn btn-small btn-outline filter-btn" data-filter="research">Research</button>
+            <button class="btn btn-small btn-outline filter-btn" data-filter="documents">Documents</button>
+            <button class="btn btn-small btn-outline filter-btn" data-filter="completed">Completed</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Checklist Items -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Your Checklist</h2>
+        </div>
+        <div class="card-body">
+          <ul class="checklist" id="checklist-container">
+            <!-- Checklist items will be dynamically inserted here -->
+            <li class="text-center text-secondary" id="empty-message" style="padding: var(--space-6);">
+              No items yet. Add your first checklist item above!
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- File Upload Section -->
+      <div class="card mt-4">
+        <div class="card-header">
+          <h2 class="card-title">Document Storage</h2>
+          <p class="card-subtitle">Upload and organize important files (RV manuals, receipts, insurance, etc.)</p>
+        </div>
+        <div class="card-body">
+          <div class="file-upload" id="file-upload-zone">
+            <input
+              type="file"
+              id="file-upload-input"
+              class="file-upload-input"
+              multiple
+              accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt"
+            >
+            <div class="file-upload-icon">📁</div>
+            <div class="file-upload-text">
+              <p><strong>Click to upload</strong> or drag and drop</p>
+              <p class="text-secondary" style="font-size: var(--text-sm);">
+                PDF, DOC, JPG, PNG, TXT (Max 5MB per file)
+              </p>
+            </div>
+          </div>
+
+          <div class="file-list" id="file-list">
+            <!-- Uploaded files will appear here -->
+          </div>
+
+          <div class="alert alert-info mt-4">
+            <strong>📌 Note:</strong> Files are stored locally in your browser. For permanent storage,
+            consider uploading important documents to Google Drive or Dropbox and adding links to your checklist items.
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>RV Adventures</h3>
+          <p style="color: rgba(255, 255, 255, 0.8); font-size: var(--text-sm);">
+            Our personal planning hub for full-time RV living.
+          </p>
+        </div>
+
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <div class="footer-links">
+            <a href="index.html" class="footer-link">Home</a>
+            <a href="calculator.html" class="footer-link">RV Calculator</a>
+            <a href="checklist.html" class="footer-link">Prep Checklist</a>
+            <a href="destinations.html" class="footer-link">Destinations</a>
+            <a href="budget.html" class="footer-link">Budget Tracker</a>
+          </div>
+        </div>
+
+        <div class="footer-section">
+          <h3>About Us</h3>
+          <p style="color: rgba(255, 255, 255, 0.8); font-size: var(--text-sm);">
+            Planning our adventure together - getting ready to hit the road!
+          </p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2025 RV Adventures. Built with planning and excitement for the journey ahead.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script src="js/utils.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/checklist.js"></script>
+</body>
+</html>

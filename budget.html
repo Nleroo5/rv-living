@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Track RV living expenses, monthly budget, and financial planning.">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Budget Tracker - RV Adventures</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚐</text></svg>">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  <a href="#main-content" class="sr-only">Skip to main content</a>
+
+  <!-- Header & Navigation -->
+  <header class="header">
+    <nav class="nav container">
+      <a href="index.html" class="nav-brand" aria-label="RV Adventures Home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        <span>RV Adventures</span>
+      </a>
+
+      <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+
+      <div class="nav-menu">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="calculator.html" class="nav-link">RV Calculator</a>
+        <a href="checklist.html" class="nav-link">Prep Checklist</a>
+        <a href="destinations.html" class="nav-link">Destinations</a>
+        <a href="budget.html" class="nav-link active">Budget Tracker</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main-content" class="page-content">
+    <h1 class="page-title">Monthly Budget & Expense Tracker</h1>
+
+    <div class="container" style="max-width: 1200px; margin: 0 auto;">
+      <!-- Budget Overview -->
+      <div class="grid grid-3 mb-4">
+        <div class="card">
+          <div class="card-body text-center">
+            <div style="font-size: var(--text-3xl); font-weight: var(--font-weight-bold); color: var(--color-primary);" id="monthly-income">$0</div>
+            <p class="text-secondary">Monthly Income</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body text-center">
+            <div style="font-size: var(--text-3xl); font-weight: var(--font-weight-bold); color: var(--color-error);" id="monthly-expenses">$0</div>
+            <p class="text-secondary">Monthly Expenses</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body text-center">
+            <div style="font-size: var(--text-3xl); font-weight: var(--font-weight-bold); color: var(--color-success);" id="monthly-surplus">$0</div>
+            <p class="text-secondary">Surplus/Deficit</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Income Section -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h2 class="card-title">Monthly Income</h2>
+        </div>
+        <div class="card-body">
+          <form id="income-form" class="grid grid-2">
+            <div class="form-group">
+              <label for="income-salary" class="form-label">Salary/Wages</label>
+              <input type="number" id="income-salary" class="form-input" placeholder="0" min="0" step="100" value="0">
+            </div>
+
+            <div class="form-group">
+              <label for="income-remote" class="form-label">Remote Work Income</label>
+              <input type="number" id="income-remote" class="form-input" placeholder="0" min="0" step="100" value="0">
+            </div>
+
+            <div class="form-group">
+              <label for="income-passive" class="form-label">Passive Income</label>
+              <input type="number" id="income-passive" class="form-input" placeholder="0" min="0" step="100" value="0">
+            </div>
+
+            <div class="form-group">
+              <label for="income-other" class="form-label">Other Income</label>
+              <input type="number" id="income-other" class="form-input" placeholder="0" min="0" step="100" value="0">
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Expense Categories -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h2 class="card-title">Monthly Expenses</h2>
+          <p class="card-subtitle">Estimate your typical monthly costs for RV living</p>
+        </div>
+        <div class="card-body">
+          <form id="expenses-form">
+            <!-- RV Related -->
+            <h3 style="font-size: var(--text-lg); margin-bottom: var(--space-3); color: var(--color-primary);">RV Related</h3>
+            <div class="grid grid-2 mb-4">
+              <div class="form-group">
+                <label for="exp-rv-payment" class="form-label">RV Payment</label>
+                <input type="number" id="exp-rv-payment" class="form-input" placeholder="0" min="0" step="50" value="0">
+              </div>
+
+              <div class="form-group">
+                <label for="exp-rv-insurance" class="form-label">RV Insurance</label>
+                <input type="number" id="exp-rv-insurance" class="form-input" placeholder="200" min="0" step="10" value="0">
+              </div>
+
+              <div class="form-group">
+                <label for="exp-maintenance" class="form-label">Maintenance/Repairs</label>
+                <input type="number" id="exp-maintenance" class="form-input" placeholder="150" min="0" step="10" value="0">
+              </div>
+
+              <div class="form-group">
+                <label for="exp-registration" class="form-label">Registration/Tags (monthly avg)</label>
+                <input type="number" id="exp-registration" class="form-input" placeholder="25" min="0" step="5" value="0">
+              </div>
+            </div>
+
+            <!-- Campground & Travel -->
+            <h3 style="font-size: var(--text-lg); margin-bottom: var(--space-3); color: var(--color-primary);">Campground & Travel</h3>
+            <div class="grid grid-2 mb-4">
+              <div class="form-group">
+                <label for="exp-campground" class="form-label">Campground Fees</label>
+                <input type="number" id="exp-campground" class="form-input" placeholder="600" min="0" step="50" value="0">
+                <p class="form-help">$20-60/night average</p>
+              </div>
+
+              <div class="form-group">
+                <label for="exp-fuel" class="form-label">Fuel/Gas</label>
+                <input type="number" id="exp-fuel" class="form-input" placeholder="400" min="0" step="50" value="0">
+              </div>
+
+              <div class="form-group">
+                <label for="exp-tolls" class="form-label">Tolls & Parking</label>
+                <input type="number" id="exp-tolls" class="form-input" placeholder="50" min="0" step="10" value="0">
+              </div>
+
+              <div class="form-group">
+                <label for="exp-memberships" class="form-label">Memberships (KOA, Passport America, etc.)</label>
+                <input type="number" id="exp-memberships" class="form-input" placeholder="0" min="0" step="10" value="0">
+              </div>
+            </div>
+
+            <!-- Utilities & Services -->
+            <h3 style="font-size: var(--text-lg); margin-bottom: var(--space-3); color: var(--color-primary);">Utilities & Services</h3>
+            <div class="grid grid-2 mb-4">
+              <div class="form-group">
+                <label for="exp-internet" class="form-label">Internet/Cell Phone</label>
+                <input type="number" id="exp-internet" class="form-input" placeholder="150" min="0" step="10" value="0">
+              </div>
+
+              <div class="form-group">
+                <label for="exp-propane" class="form-label">Propane</label>
+                <input type="number" id="exp-propane" class="form-input" placeholder="50" min="0" step="10" value="0">
+              </div>
+
+              <div class="form-group">
+                <label for="exp-laundry" class="form-label">Laundry</label>
+                <input type="number" id="exp-laundry" class="form-input" placeholder="40" min="0" step="5" value="0">
+              </div>
+
+              <div class="form-group">
+                <label for="exp-utilities-other" class="form-label">Other Utilities</label>
+                <input type="number" id="exp-utilities-other" class="form-input" placeholder="0" min="0" step="10" value="0">
+              </div>
+            </div>
+
+            <!-- Living Expenses -->
+            <h3 style="font-size: var(--text-lg); margin-bottom: var(--space-3); color: var(--color-primary);">Living Expenses</h3>
+            <div class="grid grid-2 mb-4">
+              <div class="form-group">
+                <label for="exp-groceries" class="form-label">Groceries</label>
+                <input type="number" id="exp-groceries" class="form-input" placeholder="500" min="0" step="50" value="0">
+              </div>
+
+              <div class="form-group">
+                <label for="exp-dining" class="form-label">Dining Out</label>
+                <input type="number" id="exp-dining" class="form-input" placeholder="200" min="0" step="25" value="0">
+              </div>
+
+              <div class="form-group">
+                <label for="exp-health" class="form-label">Health Insurance</label>
+                <input type="number" id="exp-health" class="form-input" placeholder="400" min="0" step="50" value="0">
+              </div>
+
+              <div class="form-group">
+                <label for="exp-medical" class="form-label">Medical/Prescriptions</label>
+                <input type="number" id="exp-medical" class="form-input" placeholder="100" min="0" step="25" value="0">
+              </div>
+
+              <div class="form-group">
+                <label for="exp-entertainment" class="form-label">Entertainment/Activities</label>
+                <input type="number" id="exp-entertainment" class="form-input" placeholder="200" min="0" step="25" value="0">
+              </div>
+
+              <div class="form-group">
+                <label for="exp-pets" class="form-label">Pets</label>
+                <input type="number" id="exp-pets" class="form-input" placeholder="100" min="0" step="25" value="0">
+              </div>
+
+              <div class="form-group">
+                <label for="exp-personal" class="form-label">Personal Care</label>
+                <input type="number" id="exp-personal" class="form-input" placeholder="75" min="0" step="10" value="0">
+              </div>
+
+              <div class="form-group">
+                <label for="exp-subscriptions" class="form-label">Subscriptions (Netflix, etc.)</label>
+                <input type="number" id="exp-subscriptions" class="form-input" placeholder="50" min="0" step="5" value="0">
+              </div>
+            </div>
+
+            <!-- Other -->
+            <h3 style="font-size: var(--text-lg); margin-bottom: var(--space-3); color: var(--color-primary);">Other</h3>
+            <div class="grid grid-2">
+              <div class="form-group">
+                <label for="exp-emergency" class="form-label">Emergency Fund Contribution</label>
+                <input type="number" id="exp-emergency" class="form-input" placeholder="200" min="0" step="50" value="0">
+              </div>
+
+              <div class="form-group">
+                <label for="exp-other" class="form-label">Miscellaneous</label>
+                <input type="number" id="exp-other" class="form-input" placeholder="100" min="0" step="25" value="0">
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Budget Summary -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Budget Summary</h2>
+        </div>
+        <div class="card-body">
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th style="text-align: right;">Monthly Cost</th>
+                  <th style="text-align: right;">% of Total</th>
+                </tr>
+              </thead>
+              <tbody id="budget-summary-body">
+                <!-- Will be populated by JavaScript -->
+              </tbody>
+              <tfoot style="border-top: 2px solid var(--color-border); background-color: var(--color-background-alt);">
+                <tr>
+                  <td><strong>Total Monthly Expenses</strong></td>
+                  <td style="text-align: right;"><strong id="summary-total">$0.00</strong></td>
+                  <td style="text-align: right;"><strong>100%</strong></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <div class="mt-4" id="budget-status">
+            <!-- Budget status message will appear here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Tips Section -->
+      <div class="section">
+        <h2 class="section-title">Budgeting Tips for RV Living</h2>
+
+        <div class="grid grid-3">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Track Everything</h3>
+            </div>
+            <div class="card-body">
+              <p>
+                Keep receipts and track actual spending for 2-3 months. Your estimates may not match reality.
+                Adjust your budget based on real data.
+              </p>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Build an Emergency Fund</h3>
+            </div>
+            <div class="card-body">
+              <p>
+                RVs need repairs. Aim for $3,000-5,000 emergency fund minimum. Unexpected breakdowns
+                happen - be prepared!
+              </p>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Free Camping Options</h3>
+            </div>
+            <div class="card-body">
+              <p>
+                Use apps like iOverlander, FreeRoam, and Campendium to find free camping spots
+                (BLM land, national forests, Walmart parking, etc.)
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>RV Adventures</h3>
+          <p style="color: rgba(255, 255, 255, 0.8); font-size: var(--text-sm);">
+            Our personal planning hub for full-time RV living.
+          </p>
+        </div>
+
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <div class="footer-links">
+            <a href="index.html" class="footer-link">Home</a>
+            <a href="calculator.html" class="footer-link">RV Calculator</a>
+            <a href="checklist.html" class="footer-link">Prep Checklist</a>
+            <a href="destinations.html" class="footer-link">Destinations</a>
+            <a href="budget.html" class="footer-link">Budget Tracker</a>
+          </div>
+        </div>
+
+        <div class="footer-section">
+          <h3>About Us</h3>
+          <p style="color: rgba(255, 255, 255, 0.8); font-size: var(--text-sm);">
+            Planning our adventure together - getting ready to hit the road!
+          </p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2025 RV Adventures. Built with planning and excitement for the journey ahead.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script src="js/utils.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/budget.js"></script>
+</body>
+</html>

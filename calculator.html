@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="RV finance calculator to estimate affordability, monthly payments, and total cost of ownership.">
+  <meta name="robots" content="noindex, nofollow">
+  <title>RV Finance Calculator - RV Adventures</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚐</text></svg>">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  <a href="#main-content" class="sr-only">Skip to main content</a>
+
+  <!-- Header & Navigation -->
+  <header class="header">
+    <nav class="nav container">
+      <a href="index.html" class="nav-brand" aria-label="RV Adventures Home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        <span>RV Adventures</span>
+      </a>
+
+      <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+
+      <div class="nav-menu">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="calculator.html" class="nav-link active">RV Calculator</a>
+        <a href="checklist.html" class="nav-link">Prep Checklist</a>
+        <a href="destinations.html" class="nav-link">Destinations</a>
+        <a href="budget.html" class="nav-link">Budget Tracker</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main-content" class="page-content">
+    <h1 class="page-title">RV Finance Calculator</h1>
+
+    <div class="calculator-container">
+      <p class="text-center text-secondary mb-4">
+        Calculate your RV affordability, monthly payments, and total cost of ownership
+      </p>
+
+      <form id="rv-calculator-form">
+        <!-- Purchase Details -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h2 class="card-title">Purchase Details</h2>
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+              <label for="rv-price" class="form-label">RV Purchase Price ($)</label>
+              <input
+                type="number"
+                id="rv-price"
+                class="form-input"
+                placeholder="75000"
+                min="0"
+                step="1000"
+                required
+              >
+              <p class="form-help">Enter the total purchase price of the RV</p>
+            </div>
+
+            <div class="form-group">
+              <label for="down-payment" class="form-label">Down Payment ($)</label>
+              <input
+                type="number"
+                id="down-payment"
+                class="form-input"
+                placeholder="15000"
+                min="0"
+                step="500"
+                required
+              >
+              <p class="form-help">How much can you put down? (Typically 10-20%)</p>
+            </div>
+
+            <div class="form-group">
+              <label for="trade-in" class="form-label">Trade-In Value ($)</label>
+              <input
+                type="number"
+                id="trade-in"
+                class="form-input"
+                placeholder="0"
+                min="0"
+                step="500"
+                value="0"
+              >
+              <p class="form-help">Value of any vehicle you're trading in</p>
+            </div>
+
+            <div class="form-group">
+              <label for="sales-tax" class="form-label">Sales Tax Rate (%)</label>
+              <input
+                type="number"
+                id="sales-tax"
+                class="form-input"
+                placeholder="7.5"
+                min="0"
+                max="15"
+                step="0.1"
+                value="7.5"
+              >
+              <p class="form-help">Your state/local sales tax rate</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Loan Details -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h2 class="card-title">Loan Details</h2>
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+              <label for="interest-rate" class="form-label">Interest Rate (%)</label>
+              <input
+                type="number"
+                id="interest-rate"
+                class="form-input"
+                placeholder="6.5"
+                min="0"
+                max="20"
+                step="0.1"
+                required
+              >
+              <p class="form-help">Annual interest rate (RV loans typically 4-8%)</p>
+            </div>
+
+            <div class="form-group">
+              <label for="loan-term" class="form-label">Loan Term (Years)</label>
+              <select id="loan-term" class="form-select" required>
+                <option value="5">5 Years</option>
+                <option value="10">10 Years</option>
+                <option value="15" selected>15 Years</option>
+                <option value="20">20 Years</option>
+              </select>
+              <p class="form-help">How long do you want to finance?</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ongoing Costs -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h2 class="card-title">Ongoing Monthly Costs</h2>
+            <p class="card-subtitle">Estimate your recurring expenses</p>
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+              <label for="insurance" class="form-label">Insurance ($/month)</label>
+              <input
+                type="number"
+                id="insurance"
+                class="form-input"
+                placeholder="200"
+                min="0"
+                step="10"
+                value="200"
+              >
+              <p class="form-help">Typical RV insurance: $100-300/month</p>
+            </div>
+
+            <div class="form-group">
+              <label for="maintenance" class="form-label">Maintenance & Repairs ($/month)</label>
+              <input
+                type="number"
+                id="maintenance"
+                class="form-input"
+                placeholder="150"
+                min="0"
+                step="10"
+                value="150"
+              >
+              <p class="form-help">Set aside for maintenance, repairs, and upkeep</p>
+            </div>
+
+            <div class="form-group">
+              <label for="storage" class="form-label">Storage Fees ($/month)</label>
+              <input
+                type="number"
+                id="storage"
+                class="form-input"
+                placeholder="0"
+                min="0"
+                step="10"
+                value="0"
+              >
+              <p class="form-help">If not living in it full-time or need storage</p>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">
+          Calculate
+        </button>
+      </form>
+
+      <!-- Results Section -->
+      <div id="calculator-results" class="hidden">
+        <div class="divider"></div>
+
+        <h2 class="text-center mb-4" style="font-size: var(--text-2xl); color: var(--color-secondary);">Your Results</h2>
+
+        <div class="grid grid-2 mb-4">
+          <div class="calculator-result">
+            <div class="calculator-result-amount" id="monthly-payment">$0</div>
+            <div class="calculator-result-label">Monthly Loan Payment</div>
+          </div>
+
+          <div class="calculator-result">
+            <div class="calculator-result-amount" id="total-monthly">$0</div>
+            <div class="calculator-result-label">Total Monthly Cost</div>
+            <p style="font-size: var(--text-sm); opacity: 0.8; margin-top: var(--space-1);">
+              (Including insurance, maintenance, storage)
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Cost Breakdown</h3>
+          </div>
+          <div class="card-body">
+            <div class="table-container">
+              <table>
+                <tbody>
+                  <tr>
+                    <td><strong>RV Purchase Price</strong></td>
+                    <td class="text-right" id="result-price">$0</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Down Payment</strong></td>
+                    <td class="text-right" id="result-down">$0</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Trade-In Value</strong></td>
+                    <td class="text-right" id="result-trade">$0</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Sales Tax</strong></td>
+                    <td class="text-right" id="result-tax">$0</td>
+                  </tr>
+                  <tr style="border-top: 2px solid var(--color-border);">
+                    <td><strong>Loan Amount</strong></td>
+                    <td class="text-right" id="result-loan">$0</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Total Interest Paid</strong></td>
+                    <td class="text-right" id="result-interest">$0</td>
+                  </tr>
+                  <tr style="border-top: 2px solid var(--color-border);">
+                    <td><strong>Total Cost of Ownership</strong></td>
+                    <td class="text-right" id="result-total">$0</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="mt-4">
+              <h4 style="margin-bottom: var(--space-2);">Monthly Cost Breakdown</h4>
+              <div class="progress mb-2">
+                <div class="progress-bar" id="payment-progress" style="width: 0%"></div>
+              </div>
+              <div style="font-size: var(--text-sm); color: var(--color-text-secondary);">
+                <div class="flex flex-between mb-1">
+                  <span>Loan Payment:</span>
+                  <span id="breakdown-payment">$0</span>
+                </div>
+                <div class="flex flex-between mb-1">
+                  <span>Insurance:</span>
+                  <span id="breakdown-insurance">$0</span>
+                </div>
+                <div class="flex flex-between mb-1">
+                  <span>Maintenance:</span>
+                  <span id="breakdown-maintenance">$0</span>
+                </div>
+                <div class="flex flex-between">
+                  <span>Storage:</span>
+                  <span id="breakdown-storage">$0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert alert-info mt-4">
+          <strong>💡 Tip:</strong> This calculator provides estimates. Actual costs may vary based on credit score,
+          lender terms, RV condition, and location. Always get pre-approved before making a purchase decision.
+        </div>
+      </div>
+    </div>
+
+    <!-- Tips Section -->
+    <div class="section">
+      <div class="container">
+        <h2 class="section-title">RV Financing Tips</h2>
+
+        <div class="grid grid-3">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Down Payment</h3>
+            </div>
+            <div class="card-body">
+              <p>
+                A larger down payment (20% or more) can help you get better interest rates,
+                lower monthly payments, and potentially avoid being upside-down on your loan.
+              </p>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Interest Rates</h3>
+            </div>
+            <div class="card-body">
+              <p>
+                RV loan rates vary by credit score, loan term, and RV age. New RVs typically
+                get better rates (4-7%) than used RVs. Shop around with multiple lenders.
+              </p>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Hidden Costs</h3>
+            </div>
+            <div class="card-body">
+              <p>
+                Don't forget: registration fees, campground memberships, fuel costs,
+                maintenance, winterization, and unexpected repairs. Budget for the unexpected!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>RV Adventures</h3>
+          <p style="color: rgba(255, 255, 255, 0.8); font-size: var(--text-sm);">
+            Our personal planning hub for full-time RV living.
+          </p>
+        </div>
+
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <div class="footer-links">
+            <a href="index.html" class="footer-link">Home</a>
+            <a href="calculator.html" class="footer-link">RV Calculator</a>
+            <a href="checklist.html" class="footer-link">Prep Checklist</a>
+            <a href="destinations.html" class="footer-link">Destinations</a>
+            <a href="budget.html" class="footer-link">Budget Tracker</a>
+          </div>
+        </div>
+
+        <div class="footer-section">
+          <h3>About Us</h3>
+          <p style="color: rgba(255, 255, 255, 0.8); font-size: var(--text-sm);">
+            Planning our adventure together - getting ready to hit the road!
+          </p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2025 RV Adventures. Built with planning and excitement for the journey ahead.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script src="js/utils.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/calculator.js"></script>
+</body>
+</html>

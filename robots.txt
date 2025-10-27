@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /
+
+# This is a private website for personal RV planning
+# Not intended for public indexing
