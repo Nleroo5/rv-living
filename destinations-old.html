@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Plan RV travel destinations, campgrounds, and bucket list locations.">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Travel Destinations - RV Adventures</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'></text></svg>">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  <a href="#main-content" class="sr-only">Skip to main content</a>
+
+  <!-- Header & Navigation -->
+  <header class="header">
+    <nav class="nav container">
+      <a href="index.html" class="nav-brand" aria-label="RV Adventures Home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        <span>RV Adventures</span>
+      </a>
+
+      <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+
+      <div class="nav-menu">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="calculator.html" class="nav-link">RV Calculator</a>
+        <a href="checklist.html" class="nav-link">Prep Checklist</a>
+        <a href="destinations.html" class="nav-link active">Destinations</a>
+        <a href="budget.html" class="nav-link">Budget Tracker</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main-content" class="page-content">
+    <h1 class="page-title">Travel Destinations & Bucket List</h1>
+
+    <div class="container" style="max-width: 1000px; margin: 0 auto;">
+      <div class="card mb-4">
+        <div class="card-body text-center">
+          <div class="flex flex-center gap-4 flex-wrap">
+            <div>
+              <div style="font-size: var(--text-3xl); font-weight: var(--font-weight-bold); color: var(--color-primary);" id="destinations-total">0</div>
+              <p class="text-secondary">Destinations</p>
+            </div>
+            <div>
+              <div style="font-size: var(--text-3xl); font-weight: var(--font-weight-bold); color: var(--color-success);" id="destinations-visited">0</div>
+              <p class="text-secondary">Visited</p>
+            </div>
+            <div>
+              <div style="font-size: var(--text-3xl); font-weight: var(--font-weight-bold); color: var(--color-accent);" id="destinations-wishlist">0</div>
+              <p class="text-secondary">On Wishlist</p>
+            </div>
+          </div>
+          <div class="mt-4 flex flex-center gap-2 flex-wrap">
+            <button class="btn btn-small btn-outline" id="export-destinations-btn">Export Destinations</button>
+            <button class="btn btn-small btn-outline" id="import-destinations-btn">Import Destinations</button>
+            <input type="file" id="import-destinations-input" accept=".json" style="display: none;">
+          </div>
+        </div>
+      </div>
+
+      <!-- Add New Destination Form -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h2 class="card-title">Add New Destination</h2>
+        </div>
+        <div class="card-body">
+          <form id="add-destination-form">
+            <div class="grid grid-2">
+              <div class="form-group">
+                <label for="dest-name" class="form-label">Location Name</label>
+                <input
+                  type="text"
+                  id="dest-name"
+                  class="form-input"
+                  placeholder="e.g., Yellowstone National Park"
+                  required
+                >
+              </div>
+
+              <div class="form-group">
+                <label for="dest-state" class="form-label">State/Province</label>
+                <input
+                  type="text"
+                  id="dest-state"
+                  class="form-input"
+                  placeholder="e.g., Wyoming"
+                  required
+                >
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="dest-type" class="form-label">Type</label>
+              <select id="dest-type" class="form-select">
+                <option value="national-park">National Park</option>
+                <option value="state-park">State Park</option>
+                <option value="campground">Campground/RV Park</option>
+                <option value="city">City/Town</option>
+                <option value="scenic">Scenic Route/Drive</option>
+                <option value="attraction">Attraction/Landmark</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="dest-notes" class="form-label">Notes & Details</label>
+              <textarea
+                id="dest-notes"
+                class="form-textarea"
+                placeholder="Add campground info, activities, must-sees, travel tips, etc."
+              ></textarea>
+            </div>
+
+            <div class="grid grid-2">
+              <div class="form-group">
+                <label for="dest-priority" class="form-label">Priority</label>
+                <select id="dest-priority" class="form-select">
+                  <option value="wishlist">Wishlist</option>
+                  <option value="high">High Priority</option>
+                  <option value="medium" selected>Medium Priority</option>
+                  <option value="low">Low Priority</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="dest-season" class="form-label">Best Season</label>
+                <select id="dest-season" class="form-select">
+                  <option value="any">Any Time</option>
+                  <option value="spring">Spring</option>
+                  <option value="summer">Summer</option>
+                  <option value="fall">Fall</option>
+                  <option value="winter">Winter</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+              Add Destination
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Search & Filters -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="form-group mb-3">
+            <input type="text" id="destinations-search" class="form-input" placeholder="Search destinations...">
+          </div>
+          <div class="flex flex-wrap gap-2 flex-center mb-3">
+            <button class="btn btn-small btn-outline dest-filter-btn active" data-filter="all">All</button>
+            <button class="btn btn-small btn-outline dest-filter-btn" data-filter="national-park">National Parks</button>
+            <button class="btn btn-small btn-outline dest-filter-btn" data-filter="state-park">State Parks</button>
+            <button class="btn btn-small btn-outline dest-filter-btn" data-filter="campground">Campgrounds</button>
+            <button class="btn btn-small btn-outline dest-filter-btn" data-filter="visited">Visited</button>
+          </div>
+          <div class="form-group">
+            <label for="destinations-sort" class="form-label">Sort by:</label>
+            <select id="destinations-sort" class="form-select">
+              <option value="date-desc">Newest First</option>
+              <option value="date-asc">Oldest First</option>
+              <option value="name-asc">Name (A-Z)</option>
+              <option value="name-desc">Name (Z-A)</option>
+              <option value="priority-high">High Priority First</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Destinations Grid -->
+      <div id="destinations-container" class="grid grid-2">
+        <!-- Destination cards will be dynamically inserted here -->
+        <div class="card text-center" id="empty-destinations" style="grid-column: 1 / -1;">
+          <div class="card-body" style="padding: var(--space-8);">
+            <div style="font-size: var(--text-4xl); margin-bottom: var(--space-3);"></div>
+            <h3 style="margin-bottom: var(--space-2);">No destinations yet</h3>
+            <p class="text-secondary">Start adding places you want to visit!</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Visual Map -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h2 class="card-title"> Your Destination Map</h2>
+        </div>
+        <div class="card-body">
+          <div style="background: linear-gradient(180deg, #E8F4F8 0%, #D4E8F0 100%); border-radius: var(--radius-lg); padding: var(--space-4); min-height: 400px; position: relative;">
+            <div id="map-container" style="width: 100%; height: 400px; position: relative;">
+              <!-- Map will be rendered here by JavaScript -->
+              <div style="text-align: center; padding-top: 150px; color: var(--color-text-secondary);">
+                <div style="font-size: var(--text-3xl); margin-bottom: var(--space-2);"></div>
+                <p>Add destinations below to see them plotted on the map!</p>
+              </div>
+            </div>
+          </div>
+          <div class="mt-3 text-center">
+            <p style="font-size: var(--text-sm); color: var(--color-text-secondary);">
+              <strong id="map-stats">0 destinations</strong> added to your map
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick-Add Comprehensive Database -->
+      <div class="card mb-4" style="border: 2px solid var(--color-accent);">
+        <div class="card-header" style="background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));">
+          <h2 class="card-title" style="color: var(--color-secondary); margin: 0;"> Quick-Add Complete Destinations Database</h2>
+        </div>
+        <div class="card-body">
+          <div class="alert alert-info mb-4">
+            <strong> 150+ Pre-Loaded Destinations:</strong> All 63 National Parks, 50+ top State Parks, iconic landmarks, and RV-friendly spots!
+          </div>
+
+          <div class="grid grid-2" style="gap: var(--space-3);">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title" style="font-size: var(--text-base); margin: 0;">🏔️ All National Parks (63)</h3>
+              </div>
+              <div class="card-body">
+                <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-2);">
+                  Every US National Park from Acadia to Zion
+                </p>
+                <button class="btn btn-primary btn-sm dest-category-btn" id="load-national-parks-btn" style="width: 100%;">
+                  Add All 63 Parks
+                </button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title" style="font-size: var(--text-base); margin: 0;">🌲 Top State Parks (50+)</h3>
+              </div>
+              <div class="card-body">
+                <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-2);">
+                  Highest-rated state parks nationwide
+                </p>
+                <button class="btn btn-primary btn-sm dest-category-btn" id="load-state-parks-btn" style="width: 100%;">
+                  Add State Parks
+                </button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title" style="font-size: var(--text-base); margin: 0;">🎡 Must-See Attractions (30+)</h3>
+              </div>
+              <div class="card-body">
+                <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-2);">
+                  Iconic landmarks perfect for RV trips
+                </p>
+                <button class="btn btn-primary btn-sm dest-category-btn" id="load-attractions-btn" style="width: 100%;">
+                  Add Attractions
+                </button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title" style="font-size: var(--text-base); margin: 0;">🏕️ RV-Friendly Spots (20+)</h3>
+              </div>
+              <div class="card-body">
+                <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-2);">
+                  Highly-rated RV parks and campgrounds
+                </p>
+                <button class="btn btn-primary btn-sm dest-category-btn" id="load-rv-friendly-btn" style="width: 100%;">
+                  Add RV Favorites
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 text-center">
+            <button class="btn btn-accent dest-category-btn" id="load-all-destinations-btn" style="font-weight: var(--font-weight-bold);">
+               Add ALL DESTINATIONS (160+ total)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Browse Sample -->
+      <div class="section">
+        <h2 class="section-title">Popular RV Destinations (Preview)</h2>
+        <p class="text-center text-secondary mb-4">Sample from our database - use buttons above to add all</p>
+
+        <div class="grid grid-3">
+          <div class="card">
+            <div class="card-body">
+              <h3 style="font-size: var(--text-lg); margin-bottom: var(--space-2);">🏔️ Yellowstone NP</h3>
+              <p class="text-secondary" style="font-size: var(--text-sm); margin-bottom: var(--space-2);">Wyoming - National Park</p>
+              <button class="btn btn-small btn-primary quick-add-btn"
+                data-name="Yellowstone National Park"
+                data-state="Wyoming"
+                data-type="national-park">
+                Quick Add
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              <h3 style="font-size: var(--text-lg); margin-bottom: var(--space-2);">🌲 Yosemite NP</h3>
+              <p class="text-secondary" style="font-size: var(--text-sm); margin-bottom: var(--space-2);">California - National Park</p>
+              <button class="btn btn-small btn-primary quick-add-btn"
+                data-name="Yosemite National Park"
+                data-state="California"
+                data-type="national-park">
+                Quick Add
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              <h3 style="font-size: var(--text-lg); margin-bottom: var(--space-2);">🏜️ Grand Canyon NP</h3>
+              <p class="text-secondary" style="font-size: var(--text-sm); margin-bottom: var(--space-2);">Arizona - National Park</p>
+              <button class="btn btn-small btn-primary quick-add-btn"
+                data-name="Grand Canyon National Park"
+                data-state="Arizona"
+                data-type="national-park">
+                Quick Add
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              <h3 style="font-size: var(--text-lg); margin-bottom: var(--space-2);">🌊 Acadia NP</h3>
+              <p class="text-secondary" style="font-size: var(--text-sm); margin-bottom: var(--space-2);">Maine - National Park</p>
+              <button class="btn btn-small btn-primary quick-add-btn"
+                data-name="Acadia National Park"
+                data-state="Maine"
+                data-type="national-park">
+                Quick Add
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              <h3 style="font-size: var(--text-lg); margin-bottom: var(--space-2);">⛰️ Zion NP</h3>
+              <p class="text-secondary" style="font-size: var(--text-sm); margin-bottom: var(--space-2);">Utah - National Park</p>
+              <button class="btn btn-small btn-primary quick-add-btn"
+                data-name="Zion National Park"
+                data-state="Utah"
+                data-type="national-park">
+                Quick Add
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              <h3 style="font-size: var(--text-lg); margin-bottom: var(--space-2);">🌴 Everglades NP</h3>
+              <p class="text-secondary" style="font-size: var(--text-sm); margin-bottom: var(--space-2);">Florida - National Park</p>
+              <button class="btn btn-small btn-primary quick-add-btn"
+                data-name="Everglades National Park"
+                data-state="Florida"
+                data-type="national-park">
+                Quick Add
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>RV Adventures</h3>
+          <p style="color: rgba(255, 255, 255, 0.8); font-size: var(--text-sm);">
+            Our personal planning hub for full-time RV living.
+          </p>
+        </div>
+
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <div class="footer-links">
+            <a href="index.html" class="footer-link">Home</a>
+            <a href="calculator.html" class="footer-link">RV Calculator</a>
+            <a href="checklist.html" class="footer-link">Prep Checklist</a>
+            <a href="destinations.html" class="footer-link">Destinations</a>
+            <a href="budget.html" class="footer-link">Budget Tracker</a>
+          </div>
+        </div>
+
+        <div class="footer-section">
+          <h3>About Us</h3>
+          <p style="color: rgba(255, 255, 255, 0.8); font-size: var(--text-sm);">
+            Planning our adventure together - getting ready to hit the road!
+          </p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2025 RV Adventures. Built with planning and excitement for the journey ahead.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script src="js/utils.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/destinations-database.js"></script>
+  <script src="js/destinations.js"></script>
+</body>
+</html>
