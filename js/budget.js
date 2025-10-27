@@ -178,7 +178,7 @@ function applyBudgetTemplate(template) {
   // Update calculations
   updateBudget();
 
-  showToast(`⚠️ Applied "${template.name}" template - These are EXAMPLES! Adjust for your actual situation.`, 'warning');
+  showToast(` Applied "${template.name}" template - These are EXAMPLES! Adjust for your actual situation.`, 'warning');
 }
 
 function clearBudget() {
@@ -344,7 +344,7 @@ function updateBudgetStatus(income, expenses, surplus) {
   if (income === 0 && expenses === 0) {
     statusDiv.innerHTML = `
       <div class="alert alert-info">
-        <strong>💡 Get Started:</strong> Enter your expected monthly income and expenses above to see your budget analysis.
+        <strong> Get Started:</strong> Enter your expected monthly income and expenses above to see your budget analysis.
       </div>
     `;
     return;
@@ -361,7 +361,7 @@ function updateBudgetStatus(income, expenses, surplus) {
   } else if (surplus === 0) {
     statusDiv.innerHTML = `
       <div class="alert alert-warning">
-        <strong>⚠️ Breaking Even:</strong> Your income exactly matches your expenses.
+        <strong> Breaking Even:</strong> Your income exactly matches your expenses.
         Try to build in a buffer for unexpected costs and savings.
       </div>
     `;
@@ -369,7 +369,7 @@ function updateBudgetStatus(income, expenses, surplus) {
     const deficit = Math.abs(surplus);
     statusDiv.innerHTML = `
       <div class="alert alert-error">
-        <strong>⚠️ Budget Deficit:</strong> Your expenses exceed your income by ${formatCurrency(deficit)}/month.
+        <strong> Budget Deficit:</strong> Your expenses exceed your income by ${formatCurrency(deficit)}/month.
         You'll need to either increase income or reduce expenses to make RV living sustainable.
       </div>
     `;

@@ -339,7 +339,7 @@ function loadAllCategories() {
   if (addedCount > 0) {
     saveChecklist();
     renderChecklist();
-    showToast(`🚀 Added ${addedCount} items! You're ready to prepare for Feb 28, 2026!`, 'success');
+    showToast(` Added ${addedCount} items! You're ready to prepare for Feb 28, 2026!`, 'success');
   } else {
     showToast('All items already in your checklist! You\'re all set!', 'info');
   }
@@ -509,7 +509,7 @@ function createChecklistItemElement(item) {
       </div>
     </div>
     <div style="display: flex; gap: var(--space-1); margin-left: auto;">
-      <button class="btn btn-small btn-outline edit-item-btn" aria-label="Edit item">✏️</button>
+      <button class="btn btn-small btn-outline edit-item-btn" aria-label="Edit item"></button>
       <button class="file-item-remove" aria-label="Delete item">✕</button>
     </div>
   `;
@@ -700,7 +700,7 @@ function handleFileUpload(files) {
   // Check storage before upload
   const storageInfo = DataManager.getStorageInfo();
   if (parseFloat(storageInfo.percentUsed) > 80) {
-    showToast(`⚠️ Storage is ${storageInfo.percentUsed}% full (${storageInfo.usedMB}MB / ${storageInfo.maxMB}MB). Consider deleting old files.`, 'warning');
+    showToast(` Storage is ${storageInfo.percentUsed}% full (${storageInfo.usedMB}MB / ${storageInfo.maxMB}MB). Consider deleting old files.`, 'warning');
   }
 
   Array.from(files).forEach(file => {
@@ -712,7 +712,7 @@ function handleFileUpload(files) {
     // Warn about storage impact
     const estimatedSize = file.size * 1.37; // base64 encoding adds ~37% overhead
     if (estimatedSize > storageInfo.remaining) {
-      showToast(`⚠️ File may not fit in remaining storage. Free up space by deleting old files or exporting data.`, 'error');
+      showToast(` File may not fit in remaining storage. Free up space by deleting old files or exporting data.`, 'error');
       return;
     }
 

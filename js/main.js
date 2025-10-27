@@ -54,7 +54,7 @@ function updateDashboardStats() {
   const countdownElement = document.getElementById('days-countdown');
   if (countdownElement && launchDate) {
     const days = DateUtils.daysUntil(launchDate);
-    countdownElement.textContent = days > 0 ? days : '🎉';
+    countdownElement.textContent = days > 0 ? days : '';
   }
 }
 
@@ -108,7 +108,7 @@ function updateCountdown() {
   const days = DateUtils.daysUntil(launchDate);
 
   if (days < 0) {
-    countdownElement.textContent = '🎉';
+    countdownElement.textContent = '';
     countdownElement.parentElement.querySelector('.text-secondary').textContent = 'You\'re on the road!';
   } else if (days === 0) {
     countdownElement.textContent = 'Today!';
@@ -156,7 +156,7 @@ function updateCountdownDisplay() {
     document.getElementById('countdown-hours').textContent = '00';
     document.getElementById('countdown-minutes').textContent = '00';
     document.getElementById('countdown-seconds').textContent = '00';
-    document.getElementById('countdown-message').textContent = "🎉 You're on the road! Adventure awaits!";
+    document.getElementById('countdown-message').textContent = " You're on the road! Adventure awaits!";
     return;
   }
 
@@ -179,7 +179,7 @@ function updateCountdownDisplay() {
 
 function getCountdownMessage(days) {
   if (days === 0) {
-    return "🎉 LAUNCH DAY! Time to hit the road!";
+    return " LAUNCH DAY! Time to hit the road!";
   } else if (days <= 7) {
     return "🔥 FINAL WEEK! Last-minute prep time!";
   } else if (days <= 14) {
@@ -314,7 +314,7 @@ const WEEKLY_TIMELINE = [
     dateRange: 'Feb 16 - Feb 28',
     focus: 'FINAL COUNTDOWN',
     task: 'Last-minute checks and preparations',
-    details: 'Stock pantry with 2 weeks of food. Fill propane. Check tire pressure. Test generator. Update insurance. Download offline maps. Say final goodbyes. Feb 28 = LAUNCH! 🚀'
+    details: 'Stock pantry with 2 weeks of food. Fill propane. Check tire pressure. Test generator. Update insurance. Download offline maps. Say final goodbyes. Feb 28 = LAUNCH! '
   }
 ];
 

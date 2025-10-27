@@ -8,7 +8,7 @@
   <title>Travel Destinations - RV Adventures</title>
 
   <!-- Favicon -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚐</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'></text></svg>">
 
   <!-- Stylesheets -->
   <link rel="stylesheet" href="css/reset.css">
@@ -68,8 +68,8 @@
             </div>
           </div>
           <div class="mt-4 flex flex-center gap-2 flex-wrap">
-            <button class="btn btn-small btn-outline" id="export-destinations-btn">📥 Export Destinations</button>
-            <button class="btn btn-small btn-outline" id="import-destinations-btn">📤 Import Destinations</button>
+            <button class="btn btn-small btn-outline" id="export-destinations-btn">Export Destinations</button>
+            <button class="btn btn-small btn-outline" id="import-destinations-btn">Import Destinations</button>
             <input type="file" id="import-destinations-input" accept=".json" style="display: none;">
           </div>
         </div>
@@ -162,7 +162,7 @@
       <div class="card mb-4">
         <div class="card-body">
           <div class="form-group mb-3">
-            <input type="text" id="destinations-search" class="form-input" placeholder="🔍 Search destinations...">
+            <input type="text" id="destinations-search" class="form-input" placeholder="Search destinations...">
           </div>
           <div class="flex flex-wrap gap-2 flex-center mb-3">
             <button class="btn btn-small btn-outline dest-filter-btn active" data-filter="all">All</button>
@@ -189,7 +189,7 @@
         <!-- Destination cards will be dynamically inserted here -->
         <div class="card text-center" id="empty-destinations" style="grid-column: 1 / -1;">
           <div class="card-body" style="padding: var(--space-8);">
-            <div style="font-size: var(--text-4xl); margin-bottom: var(--space-3);">🗺️</div>
+            <div style="font-size: var(--text-4xl); margin-bottom: var(--space-3);"></div>
             <h3 style="margin-bottom: var(--space-2);">No destinations yet</h3>
             <p class="text-secondary">Start adding places you want to visit!</p>
           </div>
@@ -199,14 +199,14 @@
       <!-- Interactive Visual Map -->
       <div class="card mb-4">
         <div class="card-header">
-          <h2 class="card-title">🗺️ Your Destination Map</h2>
+          <h2 class="card-title"> Your Destination Map</h2>
         </div>
         <div class="card-body">
           <div style="background: linear-gradient(180deg, #E8F4F8 0%, #D4E8F0 100%); border-radius: var(--radius-lg); padding: var(--space-4); min-height: 400px; position: relative;">
             <div id="map-container" style="width: 100%; height: 400px; position: relative;">
               <!-- Map will be rendered here by JavaScript -->
               <div style="text-align: center; padding-top: 150px; color: var(--color-text-secondary);">
-                <div style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">🗺️</div>
+                <div style="font-size: var(--text-3xl); margin-bottom: var(--space-2);"></div>
                 <p>Add destinations below to see them plotted on the map!</p>
               </div>
             </div>
@@ -222,11 +222,11 @@
       <!-- Quick-Add Comprehensive Database -->
       <div class="card mb-4" style="border: 2px solid var(--color-accent);">
         <div class="card-header" style="background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));">
-          <h2 class="card-title" style="color: var(--color-secondary); margin: 0;">🚀 Quick-Add Complete Destinations Database</h2>
+          <h2 class="card-title" style="color: var(--color-secondary); margin: 0;"> Quick-Add Complete Destinations Database</h2>
         </div>
         <div class="card-body">
           <div class="alert alert-info mb-4">
-            <strong>💡 150+ Pre-Loaded Destinations:</strong> All 63 National Parks, 50+ top State Parks, iconic landmarks, and RV-friendly spots!
+            <strong> 150+ Pre-Loaded Destinations:</strong> All 63 National Parks, 50+ top State Parks, iconic landmarks, and RV-friendly spots!
           </div>
 
           <div class="grid grid-2" style="gap: var(--space-3);">
@@ -289,7 +289,7 @@
 
           <div class="mt-4 text-center">
             <button class="btn btn-accent dest-category-btn" id="load-all-destinations-btn" style="font-weight: var(--font-weight-bold);">
-              🚀 Add ALL DESTINATIONS (160+ total)
+               Add ALL DESTINATIONS (160+ total)
             </button>
           </div>
         </div>

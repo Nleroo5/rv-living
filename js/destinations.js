@@ -318,7 +318,7 @@ function createDestinationCard(dest) {
           ${dest.visited ? '↩️ Mark as Not Visited' : '✓ Mark as Visited'}
         </button>
         <button class="btn btn-small btn-outline edit-btn" data-id="${dest.id}">
-          ✏️ Edit
+           Edit
         </button>
       </div>
     </div>
@@ -376,7 +376,7 @@ async function toggleVisited(destId) {
       dest.visited = true;
       dest.visitedDates = result.visitedDates || 'Visited';
       dest.visitedNotes = result.visitedNotes || '';
-      showToast('Marked as visited! 🎉', 'success');
+      showToast('Marked as visited! ', 'success');
     } else {
       return;
     }
@@ -580,7 +580,7 @@ document.addEventListener('DOMContentLoaded', () => {
           totalAdded += destinations.length - before;
         }
 
-        showToast(`Added ${totalAdded} destinations to your list! 🎉`, 'success');
+        showToast(`Added ${totalAdded} destinations to your list! `, 'success');
       }
     });
   }
@@ -603,7 +603,7 @@ function updateMapVisualization() {
   mapContainer.innerHTML = `
     <div style="position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
       <div style="text-align: center;">
-        <div style="font-size: var(--text-6xl); margin-bottom: var(--space-3);">🗺️</div>
+        <div style="font-size: var(--text-6xl); margin-bottom: var(--space-3);"></div>
         <div style="font-size: var(--text-xl); font-weight: var(--font-weight-bold); color: var(--color-primary); margin-bottom: var(--space-2);">
           ${destinations.length} Destinations Added!
         </div>

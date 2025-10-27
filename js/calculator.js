@@ -39,7 +39,7 @@ function setupQuickFillButtons() {
       document.getElementById('insurance').value = 180; // ESTIMATE - Get real insurance quotes
       document.getElementById('maintenance').value = 200; // ESTIMATE
 
-      showToast('⚠️ Filled with ESTIMATES ONLY - Verify all numbers!', 'warning');
+      showToast(' Filled with ESTIMATES ONLY - Verify all numbers!', 'warning');
 
       // Auto-calculate
       calculateRVFinance();
@@ -55,7 +55,7 @@ function setupQuickFillButtons() {
       document.getElementById('insurance').value = 150; // ESTIMATE - Get real insurance quotes
       document.getElementById('maintenance').value = 250; // ESTIMATE
 
-      showToast('⚠️ Filled with ESTIMATES ONLY - Verify all numbers!', 'warning');
+      showToast(' Filled with ESTIMATES ONLY - Verify all numbers!', 'warning');
 
       // Auto-calculate
       calculateRVFinance();
