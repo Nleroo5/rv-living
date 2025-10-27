@@ -125,6 +125,7 @@ function handleAddDestination(e) {
   destinations.unshift(newDestination);
   saveDestinations();
   renderDestinations();
+  updateMapVisualization();
 
   // Reset form
   e.target.reset();
@@ -152,6 +153,7 @@ function quickAddDestination(name, state, type) {
   destinations.unshift(newDestination);
   saveDestinations();
   renderDestinations();
+  updateMapVisualization();
 
   showToast(`${name} added to your list!`, 'success');
 }
@@ -424,6 +426,7 @@ function deleteDestination(destId, showMessage = true) {
   destinations = destinations.filter(d => d.id !== destId);
   saveDestinations();
   renderDestinations();
+  updateMapVisualization();
   if (showMessage) {
     showToast('Destination deleted', 'info');
   }
