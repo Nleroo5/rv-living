@@ -63,11 +63,14 @@ function updateMap() {
   // Get filtered user destinations
   const filtered = getFilteredDestinations();
 
+  console.log('updateMap: Total destinations:', destinations.length, 'Filtered:', filtered.length);
+
   // Add markers for user's destinations
   filtered.forEach(dest => {
     if (dest.latitude && dest.longitude) {
       // Green for visited, Red for bucketlist
       const color = dest.visited ? '#10b981' : '#ef4444';
+      console.log('Rendering pin for:', dest.name, 'visited:', dest.visited, 'color:', color);
       addMarker(dest, color, true);
     }
   });
@@ -242,10 +245,14 @@ function setupTabSwitching() {
 function getFilteredDestinations() {
   let filtered = destinations;
 
+  console.log('getFilteredDestinations: currentFolder:', currentFolder, 'currentTypeFilter:', currentTypeFilter, 'currentRegionFilter:', currentRegionFilter);
+
   // Filter by folder
   if (currentFolder === 'bucketlist') {
+    console.log('Filtering out visited destinations (bucketlist mode)');
     filtered = filtered.filter(d => !d.visited);
   } else if (currentFolder !== 'all') {
+    console.log('Filtering by folder:', currentFolder);
     filtered = filtered.filter(d => d.folder === currentFolder);
   }
 
@@ -982,18 +989,32 @@ window.addNationalParkToDestinations = async function(destId) {
   }
 
   // Add to destinations (automatically marked as visited - will be green pin)
-  destinations.push({
+  const newDest = {
     ...destination,
-    visited: true,
+    visited: true,  // Explicitly set as boolean true
     folder: null,
     addedDate: new Date().toISOString()
-  });
+  };
+
+  console.log('[DEBUG] Adding destination:', newDest.name, 'with visited:', newDest.visited, 'type:', typeof newDest.visited);
+  destinations.push(newDest);
 
   await saveDestinations();
+
+  // Verify it was added correctly
+  const addedDest = destinations.find(d => d.id === destId);
+  console.log('[DEBUG] After save, found in array:', addedDest?.name, 'visited:', addedDest?.visited, 'type:', typeof addedDest?.visited);
+
   renderDestinations();
   renderFolders();
   updateMap();
   renderDiscoverDestinations(); // Refresh Discover tab to show "Already Added"
+
+  // Also refresh visited tab if we're currently on it
+  if (currentTab === 'visited') {
+    renderVisitedDestinations();
+  }
+
   showToast(`${destination.name} added to your destinations!`, 'success');
 };
 
@@ -1069,8 +1090,15 @@ window.addToFolderFromDiscover = async function(destId) {
 function renderVisitedDestinations() {
   const grid = document.getElementById('visited-grid');
   const emptyState = document.getElementById('visited-empty');
-  
-  // Filter only visited destinations
+
+  console.log('[DEBUG] renderVisitedDestinations: Total destinations:', destinations.length);
+  destinations.forEach(d => {
+    if (d.visited) {
+      console.log('[DEBUG]  - Visited destination:', d.name, 'visited:', d.visited, 'type:', typeof d.visited);
+    }
+  });
+
+  // Filter only visited destinations (use truthy check instead of strict equality)
   const visitedDestinations = destinations.filter(d => d.visited === true);
   
   grid.innerHTML = '';
