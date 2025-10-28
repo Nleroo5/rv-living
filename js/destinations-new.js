@@ -828,7 +828,7 @@ function renderDiscoverDestinations() {
   const emptyState = document.getElementById('discover-empty');
 
   // If no region selected, show empty state
-  if (!currentDiscoverRegion) {
+  if (!currentDiscoverRegion || currentDiscoverRegion === '') {
     grid.style.display = 'none';
     emptyState.style.display = 'block';
     return;
@@ -844,8 +844,8 @@ function renderDiscoverDestinations() {
 
   let filtered = allDestinations;
 
-  // Filter by specific state or region
-  if (currentDiscoverRegion) {
+  // Filter by specific state or region (skip if 'all' is selected)
+  if (currentDiscoverRegion && currentDiscoverRegion !== 'all') {
     // List of valid regions
     const regions = ['southwest', 'pacific-northwest', 'rocky-mountains', 'midwest', 'southeast', 'east-coast', 'alaska', 'hawaii', 'territories'];
 
