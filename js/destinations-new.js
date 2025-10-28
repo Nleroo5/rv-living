@@ -495,6 +495,34 @@ window.viewDestinationDetails = function(destId) {
   const dest = destinations.find(d => d.id === destId);
   if (!dest) return;
 
+  // Initialize media array if it doesn't exist
+  if (!dest.media) {
+    dest.media = [];
+  }
+
+  // Generate media gallery HTML
+  const mediaGalleryHTML = dest.media && dest.media.length > 0 ? `
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: var(--space-2); margin-top: var(--space-2);">
+      ${dest.media.map((file, index) => {
+        const isVideo = file.type.startsWith('video/');
+        return `
+          <div style="position: relative; border: 1px solid var(--color-border); border-radius: var(--border-radius); overflow: hidden; aspect-ratio: 1;">
+            ${isVideo ? `
+              <video src="${file.data}" style="width: 100%; height: 100%; object-fit: cover;"></video>
+            ` : `
+              <img src="${file.data}" alt="Photo" style="width: 100%; height: 100%; object-fit: cover;">
+            `}
+            <button
+              onclick="deleteDestinationMedia('${destId}', ${index})"
+              style="position: absolute; top: 4px; right: 4px; background: rgba(239, 68, 68, 0.9); color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; line-height: 1;"
+              title="Delete"
+            >&times;</button>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  ` : '<p style="color: var(--color-text-secondary); font-size: var(--text-sm); margin-top: var(--space-2);">No photos or videos yet.</p>';
+
   const modalContent = `
     <div style="max-width: 600px;">
       <h4 style="margin: 0 0 var(--space-2) 0; color: var(--color-primary);">${dest.name}</h4>
@@ -529,6 +557,31 @@ window.viewDestinationDetails = function(destId) {
       ` : ''}
 
       <div style="margin-top: var(--space-4);">
+        <label style="display: block; font-weight: var(--font-weight-semibold); margin-bottom: var(--space-2);">
+          Photos & Videos:
+        </label>
+        <div style="margin-bottom: var(--space-2);">
+          <input
+            type="file"
+            id="media-upload-input"
+            accept="image/*,video/*"
+            multiple
+            style="display: none;"
+          >
+          <button
+            id="upload-media-btn"
+            class="btn btn-outline btn-small"
+            style="width: 100%;"
+          >
+            Upload Photos/Videos
+          </button>
+        </div>
+        <div id="media-gallery">
+          ${mediaGalleryHTML}
+        </div>
+      </div>
+
+      <div style="margin-top: var(--space-4);">
         <label for="destination-notes" style="display: block; font-weight: var(--font-weight-semibold); margin-bottom: var(--space-2);">
           Your Notes:
         </label>
@@ -543,10 +596,86 @@ window.viewDestinationDetails = function(destId) {
   `;
 
   const modal = createModal(`Visited: ${dest.name}`, modalContent, [
-    { text: 'Save Notes', action: 'save', class: 'btn-primary' },
+    { text: 'Save', action: 'save', class: 'btn-primary' },
     { text: 'Close', action: 'close', class: 'btn-outline' }
   ]);
 
+  // Handle file upload button click
+  const uploadBtn = modal.querySelector('#upload-media-btn');
+  const fileInput = modal.querySelector('#media-upload-input');
+
+  uploadBtn.addEventListener('click', () => {
+    fileInput.click();
+  });
+
+  // Handle file selection
+  fileInput.addEventListener('change', async (e) => {
+    const files = Array.from(e.target.files);
+
+    if (files.length === 0) return;
+
+    // Show loading indicator
+    uploadBtn.disabled = true;
+    uploadBtn.textContent = 'Uploading...';
+
+    for (const file of files) {
+      // Check file size (max 5MB to avoid localStorage issues)
+      if (file.size > 5 * 1024 * 1024) {
+        showToast(`${file.name} is too large (max 5MB)`, 'error');
+        continue;
+      }
+
+      // Convert to base64
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        dest.media.push({
+          name: file.name,
+          type: file.type,
+          data: event.target.result,
+          uploadedAt: new Date().toISOString()
+        });
+
+        saveDestinations();
+
+        // Refresh the gallery
+        const gallery = modal.querySelector('#media-gallery');
+        const isVideo = file.type.startsWith('video/');
+        const newMediaHTML = `
+          <div style="position: relative; border: 1px solid var(--color-border); border-radius: var(--border-radius); overflow: hidden; aspect-ratio: 1;">
+            ${isVideo ? `
+              <video src="${event.target.result}" style="width: 100%; height: 100%; object-fit: cover;"></video>
+            ` : `
+              <img src="${event.target.result}" alt="Photo" style="width: 100%; height: 100%; object-fit: cover;">
+            `}
+            <button
+              onclick="deleteDestinationMedia('${destId}', ${dest.media.length - 1})"
+              style="position: absolute; top: 4px; right: 4px; background: rgba(239, 68, 68, 0.9); color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; line-height: 1;"
+              title="Delete"
+            >&times;</button>
+          </div>
+        `;
+
+        // If gallery was empty, replace the "no photos" message
+        if (gallery.querySelector('p')) {
+          gallery.innerHTML = `<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: var(--space-2); margin-top: var(--space-2);">${newMediaHTML}</div>`;
+        } else {
+          // Append to existing grid
+          gallery.querySelector('div').insertAdjacentHTML('beforeend', newMediaHTML);
+        }
+
+        showToast('Media uploaded successfully!', 'success');
+      };
+
+      reader.readAsDataURL(file);
+    }
+
+    // Reset button
+    uploadBtn.disabled = false;
+    uploadBtn.textContent = 'Upload Photos/Videos';
+    fileInput.value = '';
+  });
+
+  // Handle save button
   const buttons = modal.querySelectorAll('[data-action]');
   buttons.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -554,7 +683,7 @@ window.viewDestinationDetails = function(destId) {
         const notes = modal.querySelector('#destination-notes').value;
         dest.notes = notes;
         saveDestinations();
-        showToast('Notes saved successfully!', 'success');
+        showToast('Saved successfully!', 'success');
         modal.remove();
       } else if (btn.dataset.action === 'close') {
         modal.remove();
@@ -563,6 +692,24 @@ window.viewDestinationDetails = function(destId) {
   });
 
   document.body.appendChild(modal);
+};
+
+// Delete media from destination
+window.deleteDestinationMedia = function(destId, mediaIndex) {
+  if (!confirm('Are you sure you want to delete this photo/video?')) {
+    return;
+  }
+
+  const dest = destinations.find(d => d.id === destId);
+  if (!dest || !dest.media) return;
+
+  // Remove the media item
+  dest.media.splice(mediaIndex, 1);
+  saveDestinations();
+
+  // Re-open the modal to refresh the view
+  viewDestinationDetails(destId);
+  showToast('Media deleted successfully', 'success');
 };
 
 // Export destinations
