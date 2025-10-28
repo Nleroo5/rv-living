@@ -66,7 +66,7 @@ function updateMap() {
   // Add markers for user's destinations
   filtered.forEach(dest => {
     if (dest.latitude && dest.longitude) {
-      // Green for visited, Red for wishlist
+      // Green for visited, Red for bucketlist
       const color = dest.visited ? '#10b981' : '#ef4444';
       addMarker(dest, color, true);
     }
@@ -243,10 +243,8 @@ function getFilteredDestinations() {
   let filtered = destinations;
 
   // Filter by folder
-  if (currentFolder === 'wishlist') {
+  if (currentFolder === 'bucketlist') {
     filtered = filtered.filter(d => !d.visited);
-  } else if (currentFolder === 'visited') {
-    filtered = filtered.filter(d => d.visited);
   } else if (currentFolder !== 'all') {
     filtered = filtered.filter(d => d.folder === currentFolder);
   }
@@ -278,7 +276,7 @@ function renderFolders() {
   const folderList = document.getElementById('folder-list');
 
   // Clear custom folders (keep default ones)
-  const customFolders = folderList.querySelectorAll('.folder-item[data-folder]:not([data-folder="all"]):not([data-folder="wishlist"]):not([data-folder="visited"])');
+  const customFolders = folderList.querySelectorAll('.folder-item[data-folder]:not([data-folder="all"]):not([data-folder="bucketlist"]):not([data-folder="visited"])');
   customFolders.forEach(folder => folder.remove());
 
   // Add custom folders
@@ -296,8 +294,6 @@ function renderFolders() {
 
   // Update counts
   document.getElementById('count-all').textContent = destinations.length;
-  document.getElementById('count-wishlist').textContent = destinations.filter(d => !d.visited).length;
-  document.getElementById('count-visited').textContent = destinations.filter(d => d.visited).length;
 }
 
 // Render destinations grid
@@ -379,7 +375,7 @@ function createDestinationCard(dest) {
 
     <div style="display: flex; gap: var(--space-2); margin-top: auto;">
       <button class="btn btn-small ${dest.visited ? 'btn-outline' : 'btn-primary'}" onclick="toggleVisited('${dest.id}')">
-        ${dest.visited ? 'Mark as Wishlist' : 'Mark as Visited'}
+        ${dest.visited ? 'Mark as Bucketlist' : 'Mark as Visited'}
       </button>
       <button class="btn btn-small btn-outline" onclick="editDestination('${dest.id}')">Edit</button>
       <button class="btn btn-small btn-outline" onclick="deleteDestination('${dest.id}')" style="margin-left: auto;">Delete</button>
@@ -467,7 +463,7 @@ async function toggleVisited(destId) {
   renderDestinations();
   renderFolders();
   updateMap();
-  showToast(dest.visited ? 'Marked as visited!' : 'Moved to wishlist', 'success');
+  showToast(dest.visited ? 'Marked as visited!' : 'Moved to bucketlist', 'success');
 }
 
 // Edit destination (placeholder - will implement full edit dialog)
@@ -911,7 +907,7 @@ function createRecommendationCard(dest) {
     <div class="destination-tags">
       <span class="destination-tag">${getTypeLabel(dest.type)}</span>
       ${dest.region ? `<span class="destination-tag">${getRegionLabel(dest.region)}</span>` : ''}
-      ${alreadyAdded ? '<span class="destination-tag" style="background-color: #10b981; color: white;">In Bucketlist</span>' : ''}
+      ${alreadyAdded ? '<span class="destination-tag" style="background-color: #10b981; color: white;">In Destinations</span>' : ''}
     </div>
 
     <div class="destination-info">
