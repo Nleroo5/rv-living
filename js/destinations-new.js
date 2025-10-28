@@ -14,12 +14,36 @@ let currentDiscoverType = 'all';
 let nationalParksData = []; // Will hold all 63 National Parks
 let discoverDestinations = []; // Will hold 200+ discover destinations (non-NP)
 
+// DEBUG: Temporary fix function - call from console to fix existing destinations
+window.fixVisitedStatus = async function() {
+  console.log('[FIX] Fixing visited status for all destinations...');
+  destinations.forEach(d => {
+    console.log(`  - ${d.name}: changing visited from ${d.visited} to true`);
+    d.visited = true;
+    if (!d.visitedDate) {
+      d.visitedDate = new Date().toISOString();
+    }
+  });
+  await saveDestinations();
+  renderDestinations();
+  updateMap();
+  renderVisitedDestinations();
+  console.log('[FIX] Done! All destinations marked as visited.');
+};
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', async () => {
   await loadDestinations();
   await loadFolders();
   loadNationalParks();
   loadDiscoverDestinations();
+
+  // DEBUG: Check current destinations
+  console.log('[DEBUG] Loaded destinations:', destinations.length);
+  destinations.forEach(d => {
+    console.log(`  - ${d.name}: visited=${d.visited} (type: ${typeof d.visited})`);
+  });
+
   initializeMap();
   setupEventListeners();
   setupTabSwitching();
