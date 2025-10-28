@@ -376,7 +376,7 @@ const DISCOVER_DESTINATIONS = [
     bestSeason: 'June-September',
     mustSee: 'Buffalo Bill Center of the West, nightly rodeo (summer), east entrance to Yellowstone',
     estimatedCost: '$45-70/night RV parks',
-    notes: ''s town. Rodeo nightly in summer. Museums. East entrance to Yellowstone (scenic drive).'
+    notes: ''
   },
   {
     id: 'devils-tower-wy',
@@ -1231,7 +1231,7 @@ const DISCOVER_DESTINATIONS = [
     bestSeason: 'June-August',
     mustSee: 'Tony Knowles Coastal Trail, Alaska Native Heritage Center, Chugach Mountains, base for exploring',
     estimatedCost: '$40-70/night RV parks',
-    notes: ''s largest city. Gateway for Alaska adventures. Mountains backdrop. Moose in city. Base camp.'
+    notes: ''
   },
   {
     id: 'seward-ak',
@@ -1306,7 +1306,7 @@ const DISCOVER_DESTINATIONS = [
     bestSeason: 'October-April (summer 100°F+)',
     mustSee: 'Fire Wave, White Domes, Elephant Rock, petroglyphs, red Aztec sandstone formations',
     estimatedCost: '$20-30/night camping + $10 day use',
-    notes: ''s oldest state park. Stunning red rock formations. 55 miles from Las Vegas. Petroglyphs. Very hot summer.'
+    notes: ''
   },
   {
     id: 'chiricahua-nm',
@@ -1426,7 +1426,7 @@ const DISCOVER_DESTINATIONS = [
     bestSeason: 'March-May or October-November',
     mustSee: 'Stockyards historic district, cattle drive, Billy Bob\'s Texas, museums, rodeo',
     estimatedCost: '$45-65/night RV parks',
-    notes: ''s honky-tonk.'
+    notes: ''
   },
   {
     id: 'marfa-tx',
@@ -1681,7 +1681,7 @@ const DISCOVER_DESTINATIONS = [
     bestSeason: 'July-September',
     mustSee: 'Alps of Oregon, Wallowa Lake, Joseph, alpine scenery, hiking, Chief Joseph history',
     estimatedCost: '$26-35/night camping',
-    notes: ''s Alps. Remote NE Oregon. Wallowa Lake. Town of Joseph. Stunning peaks. Chief Joseph country.'
+    notes: ''
   },
   {
     id: 'astoria-or',
@@ -1891,7 +1891,7 @@ const DISCOVER_DESTINATIONS = [
     bestSeason: 'February-April (wildflowers)',
     mustSee: 'Largest CA state park, desert wildflowers, badlands, slot canyons, bighorn sheep',
     estimatedCost: '$25-35/night camping',
-    notes: ''s largest state park. Wildflower super blooms (wet years). Badlands. Slot canyons. Bighorn sheep. Dark skies.'
+    notes: ''
   },
   {
     id: 'cape-ann-ma',
@@ -2041,7 +2041,7 @@ const DISCOVER_DESTINATIONS = [
     bestSeason: 'April-October',
     mustSee: 'Civil War battlefield, museum, cemetery, Eisenhower farm, historic town',
     estimatedCost: '$45-70/night RV parks',
-    notes: ''s Gettysburg Address site. Museum. Cemetery. Historic.'
+    notes: ''
   },
   {
     id: 'blue-ridge-parkway',
@@ -2191,7 +2191,7 @@ const DISCOVER_DESTINATIONS = [
     bestSeason: 'December-April',
     mustSee: 'Southernmost point, Duval Street, Hemingway House, sunset celebration, snorkeling, island vibes',
     estimatedCost: '$75-150/night camping (expensive)',
-    notes: ''s home. Sunset celebration. Island vibes. Expensive. Tropical.'
+    notes: ''
   },
   {
     id: 'fort-lauderdale-fl',
@@ -2311,7 +2311,7 @@ const DISCOVER_DESTINATIONS = [
     bestSeason: 'April-October',
     mustSee: 'Mark Twain boyhood home, Mississippi River, Tom Sawyer sites, historic downtown',
     estimatedCost: '$35-55/night RV parks',
-    notes: ''s boyhood home. Tom Sawyer/Huck Finn inspiration. Mississippi River town. Cave tours. Literary history.'
+    notes: ''
   },
   {
     id: 'mammoth-cave-area',
@@ -2386,7 +2386,7 @@ const DISCOVER_DESTINATIONS = [
     bestSeason: 'June-August',
     mustSee: 'West Edmonton Mall, Fort Edmonton Park, North Saskatchewan River valley, Alberta capital',
     estimatedCost: 'CAD $45-75/night RV parks',
-    notes: ''s largest). Fort Edmonton. Gateway to northern Alberta. Passport.'
+    notes: ''
   },
   {
     id: 'prince-rupert-bc',
@@ -2431,7 +2431,7 @@ const DISCOVER_DESTINATIONS = [
     bestSeason: 'May-October (Winterlude in February)',
     mustSee: 'Parliament Hill, Rideau Canal, museums, ByWard Market, Canada\'s capital, bilingual',
     estimatedCost: 'CAD $50-85/night RV parks',
-    notes: ''s capital. Parliament Hill. Rideau Canal (skate in winter). Museums. Bilingual. ByWard Market. Passport.'
+    notes: ''
   },
   {
     id: 'charlevoix-qc',
@@ -2476,7 +2476,7 @@ const DISCOVER_DESTINATIONS = [
     bestSeason: 'June-October (fall colors peak)',
     mustSee: '298km scenic loop, Cape Breton Highlands NP, Atlantic coast, Celtic culture, whales',
     estimatedCost: 'CAD $28-50/night camping',
-    notes: ''s most scenic drives. Cape Breton Highlands. Atlantic coast. Celtic culture. Whales. Fall colors. Passport.'
+    notes: ''
   },
   {
     id: 'peggy-cove',
@@ -2941,7 +2941,7 @@ const DISCOVER_DESTINATIONS = [
     bestSeason: 'June-September',
     mustSee: 'West entrance to Rocky Mountain NP, Grand Lake, boardwalk, water sports, mountain town',
     estimatedCost: '$40-70/night camping',
-    notes: ''s largest natural lake. Charming boardwalk. Water sports. Less crowded than Estes Park.'
+    notes: ''
   },
   {
     id: 'alamosa-co',
@@ -3016,7 +3016,7 @@ const DISCOVER_DESTINATIONS = [
     bestSeason: 'May-September',
     mustSee: 'Cowboy culture, Bighorn Mountains, King\'s Saddlery, historic downtown, cattle ranches',
     estimatedCost: '$40-60/night RV parks',
-    notes: ''s Saddlery. Cattle ranches. Western heritage. Small-town charm.'
+    notes: ''
   },
   {
     id: 'medicine-bow-nf',
@@ -3166,7 +3166,7 @@ const DISCOVER_DESTINATIONS = [
     bestSeason: 'May-September',
     mustSee: 'California\'s largest reservoir, boating, fishing, houseboating, Shasta Dam, water sports',
     estimatedCost: '$25-40/night camping',
-    notes: ''s largest reservoir. Boating paradise. Houseboating popular. Shasta Dam. Water sports. Hot summers. Northern CA.'
+    notes: ''
   },
   {
     id: 'eureka-ca',
@@ -3541,7 +3541,7 @@ const DISCOVER_DESTINATIONS = [
     bestSeason: 'April-October',
     mustSee: 'Henry Doorly Zoo (world-class), Old Market district, Missouri River, Durham Museum, Joslyn Art Museum',
     estimatedCost: '$45-70/night RV parks',
-    notes: ''s largest city. World-class zoo (often rated #1). Old Market. Missouri River. Joslyn Museum. Gateway city.'
+    notes: ''
   },
   {
     id: 'monument-rocks-ks',
@@ -3691,7 +3691,7 @@ const DISCOVER_DESTINATIONS = [
     bestSeason: 'March-May or September-November',
     mustSee: 'Civil Rights Institute, 16th Street Baptist Church, Vulcan statue, Barber Motorsports, Southern heritage',
     estimatedCost: '$40-65/night camping',
-    notes: ''s largest cast iron). Barber Motorsports. Iron city.'
+    notes: ''
   },
   {
     id: 'mobile-al',
@@ -4021,7 +4021,7 @@ const DISCOVER_DESTINATIONS = [
     bestSeason: 'May-September',
     mustSee: 'Beach boardwalk (3 miles), Thrasher\'s fries, beach, fishing pier, family resort',
     estimatedCost: '$60-100/night camping (peak season)',
-    notes: ''s fries. Very crowded summer. Family destination.'
+    notes: ''
   },
   {
     id: 'annapolis-md',
@@ -4096,7 +4096,7 @@ const DISCOVER_DESTINATIONS = [
     bestSeason: 'May-September',
     mustSee: 'UNESCO World Heritage Site, dinosaur fossils, badlands, hoodoos, richest fossil beds',
     estimatedCost: 'CAD $30/night camping',
-    notes: ''s richest dinosaur fossil beds. Badlands. Guided fossil tours. Hoodoos. SE Alberta. Stunning.'
+    notes: ''
   },
   {
     id: 'writing-on-stone',
@@ -5146,7 +5146,7 @@ const DISCOVER_DESTINATIONS = [
     bestSeason: 'April-October',
     mustSee: 'Georgia O\'Keeffe home, red rocks, Ghost Ranch, Abiquiu Lake',
     estimatedCost: '$20-50/night camping',
-    notes: ''Keeffe country. Red rock landscapes she painted. Ghost Ranch. Abiquiu Lake. High desert beauty.'
+    notes: ''
   },
   {
     id: 'park-city-ut',
@@ -5386,7 +5386,7 @@ const DISCOVER_DESTINATIONS = [
     bestSeason: 'March-November',
     mustSee: 'Jack Daniel\'s Distillery, town square, Moore County (dry county)',
     estimatedCost: '$30-60/night camping',
-    notes: ''s home. Distillery tours. Dry county ironically. Town square charming. Population 600. Tennessee hills.'
+    notes: ''
   },
   {
     id: 'mammoth-cave-area-ky',
@@ -5401,7 +5401,7 @@ const DISCOVER_DESTINATIONS = [
     bestSeason: 'Year-round',
     mustSee: 'World\'s longest cave system, cave tours, Green River',
     estimatedCost: '$25-50/night camping',
-    notes: ''s longest cave (400+ miles). Multiple tours. Green River. Underground rivers. Cool year-round.'
+    notes: ''
   },
   {
     id: 'bardstown-ky',
@@ -5476,7 +5476,7 @@ const DISCOVER_DESTINATIONS = [
     bestSeason: 'March-November',
     mustSee: 'Beaches, lighthouse, Savannah nearby, seafood, dolphins',
     estimatedCost: '$40-80/night camping',
-    notes: ''s beach. Tybee Lighthouse. Beaches. Seafood. Dolphins. Fort Pulaski nearby. Laid-back island.'
+    notes: ''
   },
   {
     id: 'sanibel-island-fl',
@@ -5671,7 +5671,7 @@ const DISCOVER_DESTINATIONS = [
     bestSeason: 'May-September',
     mustSee: 'Houseboating, water sports, Shasta Caverns boat tour, fishing, swimming',
     estimatedCost: '$35-55/night campgrounds',
-    notes: ''s largest reservoir. Excellent houseboating. 370 miles of shoreline. Beautiful mountain scenery.'
+    notes: ''
   },
   {
     id: 'mcarthur-burney-falls-sp',
@@ -5731,7 +5731,7 @@ const DISCOVER_DESTINATIONS = [
     bestSeason: 'October-April (cooler weather)',
     mustSee: 'Living cave tours, massive formations, Throne Room, Big Room (seasonal)',
     estimatedCost: '$35/night + $23-30 cave tour',
-    notes: ''s best living caves. Discovered 1974, kept secret until 1988. Two different cave tours available.'
+    notes: ''
   },
   {
     id: 'antelope-island-sp',
@@ -5761,7 +5761,7 @@ const DISCOVER_DESTINATIONS = [
     bestSeason: 'September-May (avoid summer heat)',
     mustSee: 'White gypsum sand dunes, sledding, sunset, full moon hikes (when offered)',
     estimatedCost: 'Alamogordo RV parks $35-50/night',
-    notes: ''s largest gypsum dune field. Surreal white landscape. Very hot in summer. Near Trinity nuclear test site.'
+    notes: ''
   },
   {
     id: 'carlsbad-area-nm',
@@ -5821,7 +5821,7 @@ const DISCOVER_DESTINATIONS = [
     bestSeason: 'May-September',
     mustSee: 'Lake Coeur d\'Alene, floating boardwalk, resort town, golfing, water sports',
     estimatedCost: '$45-75/night',
-    notes: ''s longest floating boardwalk. Resort destination. Popular with retirees. Expensive.'
+    notes: ''
   },
   {
     id: 'bruneau-dunes-sp',
@@ -5911,7 +5911,7 @@ const DISCOVER_DESTINATIONS = [
     bestSeason: 'April-October',
     mustSee: 'Suspension bridge over 1,000 ft drop, zip lines, gondola, Royal Gorge Route Railroad',
     estimatedCost: '$40-65/night. Park admission $32',
-    notes: ''s highest suspension bridge. 956 ft above Arkansas River. Beautiful gorge. Tourist attraction but impressive.'
+    notes: ''
   },
   {
     id: 'galveston-tx',
@@ -5956,7 +5956,7 @@ const DISCOVER_DESTINATIONS = [
     bestSeason: 'June-September (winter for skiing)',
     mustSee: 'Upscale ski resort, Ketchum arts, biking, hiking, celebrity spotting',
     estimatedCost: '$50-90/night',
-    notes: ''s first destination ski resort. Very upscale. Beautiful Sawtooth Mountains. Expensive. Summer great too.'
+    notes: ''
   },
   {
     id: 'mcCall-id',
