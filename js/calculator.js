@@ -1,209 +1,123 @@
-// RV Finance Calculator
+// Simple RV Loan Calculator
 
 document.addEventListener('DOMContentLoaded', () => {
-  const form = document.getElementById('rv-calculator-form');
-  const resultsSection = document.getElementById('calculator-results');
+  // Get all input elements
+  const purchasePrice = document.getElementById('purchase-price');
+  const downPayment = document.getElementById('down-payment');
+  const loanTerm = document.getElementById('loan-term');
+  const interestRate = document.getElementById('interest-rate');
 
-  // Load saved values if any
-  loadSavedValues();
+  // Setup collapsible section
+  const scheduleSection = document.getElementById('schedule-section');
+  const scheduleHeader = scheduleSection.querySelector('.collapsible-header');
 
-  // Quick fill buttons for Minnie Winnie 22R
-  setupQuickFillButtons();
-
-  // Form submission
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    calculateRVFinance();
+  scheduleHeader.addEventListener('click', () => {
+    scheduleSection.classList.toggle('open');
   });
 
-  // Auto-save inputs
-  const inputs = form.querySelectorAll('input, select');
-  inputs.forEach(input => {
-    input.addEventListener('change', debounce(() => {
-      saveFormValues();
-    }, 500));
+  // Add event listeners for real-time calculation
+  purchasePrice.addEventListener('input', debounce(calculate, 300));
+  downPayment.addEventListener('input', debounce(calculate, 300));
+  loanTerm.addEventListener('input', () => {
+    updateTermDisplay();
+    calculate();
   });
+  interestRate.addEventListener('input', debounce(calculate, 300));
+
+  // Update term display when slider changes
+  function updateTermDisplay() {
+    const years = loanTerm.value;
+    document.getElementById('term-display').textContent = `(${years} years)`;
+  }
+
+  // Initial calculation
+  updateTermDisplay();
+  calculate();
 });
 
-// Quick fill buttons for Minnie Winnie 22R pricing
-function setupQuickFillButtons() {
-  const fillNewBtn = document.getElementById('fill-new');
-  const fillUsedBtn = document.getElementById('fill-used');
+// Main calculation function
+function calculate() {
+  const price = parseFloat(document.getElementById('purchase-price').value) || 0;
+  const down = parseFloat(document.getElementById('down-payment').value) || 0;
+  const term = parseInt(document.getElementById('loan-term').value) || 15;
+  const rate = parseFloat(document.getElementById('interest-rate').value) || 0;
 
-  if (fillNewBtn) {
-    fillNewBtn.addEventListener('click', () => {
-      // ESTIMATE ONLY - Starting point for calculations (verify current market pricing)
-      document.getElementById('rv-price').value = 85000; // ESTIMATE - Check RVTrader.com for actual pricing
-      document.getElementById('down-payment').value = 17000; // 20% down example
-      document.getElementById('interest-rate').value = 6.5; // ESTIMATE - Check current lending rates
-      document.getElementById('insurance').value = 180; // ESTIMATE - Get real insurance quotes
-      document.getElementById('maintenance').value = 200; // ESTIMATE
+  // Calculate down payment percentage
+  const downPercent = price > 0 ? (down / price) * 100 : 0;
+  document.getElementById('down-percent').textContent = `(${downPercent.toFixed(1)}%)`;
 
-      showToast(' Filled with ESTIMATES ONLY - Verify all numbers!', 'warning');
+  // Calculate amount financed
+  const amountFinanced = price - down;
 
-      // Auto-calculate
-      calculateRVFinance();
-    });
-  }
-
-  if (fillUsedBtn) {
-    fillUsedBtn.addEventListener('click', () => {
-      // ESTIMATE ONLY - Starting point for calculations (verify current market pricing)
-      document.getElementById('rv-price').value = 65000; // ESTIMATE - Check RVTrader.com for actual pricing
-      document.getElementById('down-payment').value = 13000; // 20% down example
-      document.getElementById('interest-rate').value = 7.5; // ESTIMATE - Check current lending rates
-      document.getElementById('insurance').value = 150; // ESTIMATE - Get real insurance quotes
-      document.getElementById('maintenance').value = 250; // ESTIMATE
-
-      showToast(' Filled with ESTIMATES ONLY - Verify all numbers!', 'warning');
-
-      // Auto-calculate
-      calculateRVFinance();
-    });
-  }
-}
-
-// Load saved form values
-function loadSavedValues() {
-  const savedData = Storage.get('rvCalculatorData');
-  if (!savedData) return;
-
-  Object.keys(savedData).forEach(key => {
-    const input = document.getElementById(key);
-    if (input) {
-      input.value = savedData[key];
-    }
-  });
-}
-
-// Save form values
-function saveFormValues() {
-  const form = document.getElementById('rv-calculator-form');
-  const inputs = form.querySelectorAll('input, select');
-  const data = {};
-
-  inputs.forEach(input => {
-    data[input.id] = input.value;
-  });
-
-  Storage.set('rvCalculatorData', data);
-}
-
-// Calculate RV Finance
-function calculateRVFinance() {
-  // Get form values
-  const rvPrice = parseFloat(document.getElementById('rv-price').value) || 0;
-  const downPayment = parseFloat(document.getElementById('down-payment').value) || 0;
-  const tradeIn = parseFloat(document.getElementById('trade-in').value) || 0;
-  const salesTaxRate = parseFloat(document.getElementById('sales-tax').value) || 0;
-  const interestRate = parseFloat(document.getElementById('interest-rate').value) || 0;
-  const loanTermYears = parseInt(document.getElementById('loan-term').value) || 15;
-  const insurance = parseFloat(document.getElementById('insurance').value) || 0;
-  const maintenance = parseFloat(document.getElementById('maintenance').value) || 0;
-  const storage = parseFloat(document.getElementById('storage').value) || 0;
-
-  // Validate inputs
-  if (rvPrice <= 0) {
-    showToast('Please enter a valid RV purchase price', 'error');
-    return;
-  }
-
-  if (interestRate <= 0) {
-    showToast('Please enter a valid interest rate', 'error');
-    return;
-  }
-
-  // Calculate sales tax
-  const salesTax = rvPrice * (salesTaxRate / 100);
-
-  // Calculate loan amount
-  const totalPrice = rvPrice + salesTax;
-  const loanAmount = totalPrice - downPayment - tradeIn;
-
-  // Validate loan amount
-  if (loanAmount < 0) {
-    showToast('Down payment and trade-in exceed the total price', 'warning');
-  }
-
-  const actualLoanAmount = Math.max(0, loanAmount);
-
-  // Calculate monthly payment using loan formula: M = P[r(1+r)^n]/[(1+r)^n-1]
-  const monthlyRate = (interestRate / 100) / 12;
-  const numberOfPayments = loanTermYears * 12;
+  // Calculate monthly payment using standard loan formula
+  // M = P * [r(1+r)^n] / [(1+r)^n - 1]
+  const monthlyRate = rate / 100 / 12;
+  const numPayments = term * 12;
 
   let monthlyPayment = 0;
-  if (actualLoanAmount > 0 && monthlyRate > 0) {
-    monthlyPayment = actualLoanAmount *
-      (monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) /
-      (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
+  let totalInterest = 0;
+  let totalPaid = 0;
+
+  if (amountFinanced > 0 && rate > 0) {
+    monthlyPayment = amountFinanced * (monthlyRate * Math.pow(1 + monthlyRate, numPayments)) /
+                     (Math.pow(1 + monthlyRate, numPayments) - 1);
+    totalPaid = monthlyPayment * numPayments;
+    totalInterest = totalPaid - amountFinanced;
+  } else if (amountFinanced > 0 && rate === 0) {
+    // No interest case
+    monthlyPayment = amountFinanced / numPayments;
+    totalPaid = amountFinanced;
+    totalInterest = 0;
   }
 
-  // Calculate total interest paid
-  const totalPaid = monthlyPayment * numberOfPayments;
-  const totalInterest = totalPaid - actualLoanAmount;
+  // Update display
+  document.getElementById('monthly-payment').textContent = formatCurrency(monthlyPayment);
+  document.getElementById('amount-financed').textContent = formatCurrency(amountFinanced);
+  document.getElementById('total-interest').textContent = formatCurrency(totalInterest);
+  document.getElementById('total-paid').textContent = formatCurrency(totalPaid);
 
-  // Calculate total monthly cost
-  const totalMonthlyCost = monthlyPayment + insurance + maintenance + storage;
-
-  // Calculate total cost of ownership (over loan term)
-  const totalOwnershipCost = totalPrice + totalInterest +
-    ((insurance + maintenance + storage) * numberOfPayments);
-
-  // Display results
-  displayResults({
-    monthlyPayment,
-    totalMonthlyCost,
-    rvPrice,
-    downPayment,
-    tradeIn,
-    salesTax,
-    loanAmount: actualLoanAmount,
-    totalInterest,
-    totalOwnershipCost,
-    insurance,
-    maintenance,
-    storage
-  });
-
-  // Show results section
-  const resultsSection = document.getElementById('calculator-results');
-  resultsSection.classList.remove('hidden');
-
-  // Scroll to results
-  setTimeout(() => {
-    resultsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }, 100);
-
-  // Save results
-  Storage.set('rvCalculatorResults', {
-    monthlyPayment,
-    totalMonthlyCost,
-    calculatedAt: new Date().toISOString()
-  });
+  // Generate payment schedule
+  generatePaymentSchedule(amountFinanced, monthlyPayment, monthlyRate, term);
 }
 
-// Display calculation results
-function displayResults(data) {
-  // Main results
-  document.getElementById('monthly-payment').textContent = formatCurrency(data.monthlyPayment);
-  document.getElementById('total-monthly').textContent = formatCurrency(data.totalMonthlyCost);
+// Generate year-by-year payment schedule
+function generatePaymentSchedule(principal, monthlyPayment, monthlyRate, years) {
+  const tbody = document.getElementById('schedule-body');
+  tbody.innerHTML = '';
 
-  // Breakdown table
-  document.getElementById('result-price').textContent = formatCurrency(data.rvPrice);
-  document.getElementById('result-down').textContent = formatCurrency(data.downPayment);
-  document.getElementById('result-trade').textContent = formatCurrency(data.tradeIn);
-  document.getElementById('result-tax').textContent = formatCurrency(data.salesTax);
-  document.getElementById('result-loan').textContent = formatCurrency(data.loanAmount);
-  document.getElementById('result-interest').textContent = formatCurrency(data.totalInterest);
-  document.getElementById('result-total').textContent = formatCurrency(data.totalOwnershipCost);
+  let balance = principal;
 
-  // Monthly breakdown
-  document.getElementById('breakdown-payment').textContent = formatCurrency(data.monthlyPayment);
-  document.getElementById('breakdown-insurance').textContent = formatCurrency(data.insurance);
-  document.getElementById('breakdown-maintenance').textContent = formatCurrency(data.maintenance);
-  document.getElementById('breakdown-storage').textContent = formatCurrency(data.storage);
+  for (let year = 1; year <= years; year++) {
+    let yearPrincipal = 0;
+    let yearInterest = 0;
 
-  // Progress bar (show loan payment as percentage of total monthly)
-  const paymentPercent = (data.monthlyPayment / data.totalMonthlyCost) * 100;
-  document.getElementById('payment-progress').style.width = paymentPercent + '%';
+    // Calculate 12 months for this year
+    for (let month = 1; month <= 12; month++) {
+      if (balance <= 0) break;
+
+      const interestPayment = balance * monthlyRate;
+      const principalPayment = monthlyPayment - interestPayment;
+
+      yearPrincipal += principalPayment;
+      yearInterest += interestPayment;
+      balance -= principalPayment;
+
+      // Prevent negative balance
+      if (balance < 0) {
+        yearPrincipal += balance; // Adjust last payment
+        balance = 0;
+      }
+    }
+
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td><strong>Year ${year}</strong></td>
+      <td style="text-align: right;">${formatCurrency(yearPrincipal)}</td>
+      <td style="text-align: right;">${formatCurrency(yearInterest)}</td>
+      <td style="text-align: right;">${formatCurrency(Math.max(0, balance))}</td>
+    `;
+    tbody.appendChild(row);
+
+    if (balance <= 0) break;
+  }
 }

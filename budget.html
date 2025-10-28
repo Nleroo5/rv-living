@@ -48,84 +48,10 @@
 
   <!-- Main Content -->
   <main id="main-content" class="page-content">
-    <h1 class="page-title">Monthly Budget & Expense Tracker</h1>
+    <div class="container" style="max-width: 900px; margin: 0 auto;">
+      <h1 class="page-title">Monthly Budget Tracker</h1>
 
-    <div class="container" style="max-width: 1200px; margin: 0 auto;">
-
-      <!-- Budget Template Selection -->
-      <div class="card mb-4" style="border: 2px solid var(--color-accent);">
-        <div class="card-header" style="background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));">
-          <h2 class="card-title" style="color: var(--color-secondary); margin: 0;"> Quick Start: Budget Templates</h2>
-        </div>
-        <div class="card-body">
-          <div class="alert alert-warning mb-4">
-            <strong> Important:</strong> These are EXAMPLE budgets for reference only. Every person's situation is different.
-            Use these as starting points, then research actual costs for YOUR location, lifestyle, and needs.
-          </div>
-
-          <div class="grid grid-3">
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">Digital Nomad</h3>
-                <p class="card-subtitle">Full-time work + travel</p>
-              </div>
-              <div class="card-body">
-                <ul style="font-size: var(--text-sm); color: var(--color-text-secondary); padding-left: var(--space-4);">
-                  <li>Starlink internet setup</li>
-                  <li>Regular campground stays</li>
-                  <li>Work-focused lifestyle</li>
-                  <li>Moderate travel</li>
-                </ul>
-                <button class="btn btn-outline btn-sm mt-3" id="template-digital-nomad" style="width: 100%;">
-                  Use as Starting Point
-                </button>
-              </div>
-            </div>
-
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">Budget Traveler</h3>
-                <p class="card-subtitle">Minimize costs</p>
-              </div>
-              <div class="card-body">
-                <ul style="font-size: var(--text-sm); color: var(--color-text-secondary); padding-left: var(--space-4);">
-                  <li>Free camping (BLM, Harvest Hosts)</li>
-                  <li>Cook most meals</li>
-                  <li>Minimal subscriptions</li>
-                  <li>Boondocking focus</li>
-                </ul>
-                <button class="btn btn-outline btn-sm mt-3" id="template-budget" style="width: 100%;">
-                  Use as Starting Point
-                </button>
-              </div>
-            </div>
-
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">Comfortable Travel</h3>
-                <p class="card-subtitle">More amenities</p>
-              </div>
-              <div class="card-body">
-                <ul style="font-size: var(--text-sm); color: var(--color-text-secondary); padding-left: var(--space-4);">
-                  <li>Full hookup sites</li>
-                  <li>Dining out regularly</li>
-                  <li>Activities & attractions</li>
-                  <li>Higher comfort level</li>
-                </ul>
-                <button class="btn btn-outline btn-sm mt-3" id="template-comfortable" style="width: 100%;">
-                  Use as Starting Point
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-4 text-center">
-            <button class="btn btn-secondary" id="clear-budget">Clear All & Start Fresh</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Budget Overview -->
+      <!-- Budget Overview - Big 3 Cards -->
       <div class="grid grid-3 mb-4">
         <div class="card">
           <div class="card-body text-center">
@@ -143,7 +69,7 @@
 
         <div class="card">
           <div class="card-body text-center">
-            <div style="font-size: var(--text-3xl); font-weight: var(--font-weight-bold); color: var(--color-success);" id="monthly-surplus">$0</div>
+            <div style="font-size: var(--text-3xl); font-weight: var(--font-weight-bold);" id="monthly-surplus">$0</div>
             <p class="text-secondary">Surplus/Deficit</p>
           </div>
         </div>
@@ -155,27 +81,23 @@
           <h2 class="card-title">Monthly Income</h2>
         </div>
         <div class="card-body">
-          <form id="income-form" class="grid grid-2">
+          <div class="grid grid-2">
             <div class="form-group">
-              <label for="income-salary" class="form-label">Salary/Wages</label>
-              <input type="number" id="income-salary" class="form-input" placeholder="0" min="0" step="100" value="0">
-            </div>
-
-            <div class="form-group">
-              <label for="income-remote" class="form-label">Remote Work Income</label>
-              <input type="number" id="income-remote" class="form-input" placeholder="0" min="0" step="100" value="0">
-            </div>
-
-            <div class="form-group">
-              <label for="income-passive" class="form-label">Passive Income</label>
-              <input type="number" id="income-passive" class="form-input" placeholder="0" min="0" step="100" value="0">
+              <label for="income-primary" class="form-label">Primary Income</label>
+              <div style="position: relative;">
+                <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--color-text-secondary);">$</span>
+                <input type="number" id="income-primary" class="form-input" style="padding-left: 24px;" placeholder="0" min="0" step="100" value="0">
+              </div>
             </div>
 
             <div class="form-group">
               <label for="income-other" class="form-label">Other Income</label>
-              <input type="number" id="income-other" class="form-input" placeholder="0" min="0" step="100" value="0">
+              <div style="position: relative;">
+                <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--color-text-secondary);">$</span>
+                <input type="number" id="income-other" class="form-input" style="padding-left: 24px;" placeholder="0" min="0" step="100" value="0">
+              </div>
             </div>
-          </form>
+          </div>
         </div>
       </div>
 
@@ -183,195 +105,186 @@
       <div class="card mb-4">
         <div class="card-header">
           <h2 class="card-title">Monthly Expenses</h2>
-          <p class="card-subtitle">Estimate your typical monthly costs for RV living</p>
         </div>
         <div class="card-body">
-          <form id="expenses-form">
-            <!-- RV Related -->
-            <div class="collapsible-section open">
-              <div class="collapsible-header">
-                <h3 class="collapsible-title">RV Related (4 fields)</h3>
-                <span class="collapsible-toggle">▼</span>
-              </div>
-              <div class="collapsible-content">
-                <div class="collapsible-body">
-                  <div class="grid grid-2">
-                    <div class="form-group">
-                      <label for="exp-rv-payment" class="form-label">RV Payment</label>
-                      <input type="number" id="exp-rv-payment" class="form-input" placeholder="0" min="0" step="50" value="0">
+          <!-- RV Costs -->
+          <div class="collapsible-section" id="rv-costs-section">
+            <div class="collapsible-header">
+              <h3 class="collapsible-title">RV Costs <span id="rv-costs-total" style="color: var(--color-text-secondary); font-weight: normal;">($0)</span></h3>
+              <span class="collapsible-toggle">▼</span>
+            </div>
+            <div class="collapsible-content">
+              <div class="collapsible-body">
+                <div class="grid grid-2">
+                  <div class="form-group">
+                    <label for="exp-rv-payment" class="form-label">RV Payment</label>
+                    <div style="position: relative;">
+                      <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--color-text-secondary);">$</span>
+                      <input type="number" id="exp-rv-payment" class="form-input expense-input" data-category="rv-costs" style="padding-left: 24px;" placeholder="0" min="0" step="50" value="0">
                     </div>
+                  </div>
 
-                    <div class="form-group">
-                      <label for="exp-rv-insurance" class="form-label">RV Insurance</label>
-                      <input type="number" id="exp-rv-insurance" class="form-input" placeholder="200" min="0" step="10" value="0">
+                  <div class="form-group">
+                    <label for="exp-rv-insurance" class="form-label">RV Insurance</label>
+                    <div style="position: relative;">
+                      <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--color-text-secondary);">$</span>
+                      <input type="number" id="exp-rv-insurance" class="form-input expense-input" data-category="rv-costs" style="padding-left: 24px;" placeholder="0" min="0" step="10" value="0">
                     </div>
+                  </div>
 
-                    <div class="form-group">
-                      <label for="exp-maintenance" class="form-label">Maintenance/Repairs</label>
-                      <input type="number" id="exp-maintenance" class="form-input" placeholder="150" min="0" step="10" value="0">
+                  <div class="form-group">
+                    <label for="exp-maintenance" class="form-label">Maintenance/Repairs</label>
+                    <div style="position: relative;">
+                      <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--color-text-secondary);">$</span>
+                      <input type="number" id="exp-maintenance" class="form-input expense-input" data-category="rv-costs" style="padding-left: 24px;" placeholder="0" min="0" step="10" value="0">
                     </div>
+                  </div>
 
-                    <div class="form-group">
-                      <label for="exp-registration" class="form-label">Registration/Tags (monthly avg)</label>
-                      <input type="number" id="exp-registration" class="form-input" placeholder="25" min="0" step="5" value="0">
+                  <div class="form-group">
+                    <label for="exp-registration" class="form-label">Registration (monthly avg)</label>
+                    <div style="position: relative;">
+                      <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--color-text-secondary);">$</span>
+                      <input type="number" id="exp-registration" class="form-input expense-input" data-category="rv-costs" style="padding-left: 24px;" placeholder="0" min="0" step="5" value="0">
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
 
-            <!-- Campground & Travel -->
-            <div class="collapsible-section open">
-              <div class="collapsible-header">
-                <h3 class="collapsible-title">Campground & Travel (4 fields)</h3>
-                <span class="collapsible-toggle">▼</span>
-              </div>
-              <div class="collapsible-content">
-                <div class="collapsible-body">
-                  <div class="grid grid-2">
-                    <div class="form-group">
-                      <label for="exp-campground" class="form-label">Campground Fees</label>
-                      <input type="number" id="exp-campground" class="form-input" placeholder="0" min="0" step="50" value="0">
-                      <p class="form-help">Research rates on Campendium, The Dyrt</p>
+          <!-- Travel -->
+          <div class="collapsible-section" id="travel-section">
+            <div class="collapsible-header">
+              <h3 class="collapsible-title">Travel <span id="travel-total" style="color: var(--color-text-secondary); font-weight: normal;">($0)</span></h3>
+              <span class="collapsible-toggle">▼</span>
+            </div>
+            <div class="collapsible-content">
+              <div class="collapsible-body">
+                <div class="grid grid-2">
+                  <div class="form-group">
+                    <label for="exp-campground" class="form-label">Campground Fees</label>
+                    <div style="position: relative;">
+                      <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--color-text-secondary);">$</span>
+                      <input type="number" id="exp-campground" class="form-input expense-input" data-category="travel" style="padding-left: 24px;" placeholder="0" min="0" step="50" value="0">
                     </div>
+                  </div>
 
-                    <div class="form-group">
-                      <label for="exp-fuel" class="form-label">Fuel/Gas</label>
-                      <input type="number" id="exp-fuel" class="form-input" placeholder="0" min="0" step="50" value="0">
-                      <p class="form-help">Estimate based on miles driven & MPG</p>
+                  <div class="form-group">
+                    <label for="exp-fuel" class="form-label">Fuel/Gas</label>
+                    <div style="position: relative;">
+                      <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--color-text-secondary);">$</span>
+                      <input type="number" id="exp-fuel" class="form-input expense-input" data-category="travel" style="padding-left: 24px;" placeholder="0" min="0" step="50" value="0">
                     </div>
+                  </div>
 
-                    <div class="form-group">
-                      <label for="exp-tolls" class="form-label">Tolls & Parking</label>
-                      <input type="number" id="exp-tolls" class="form-input" placeholder="50" min="0" step="10" value="0">
-                    </div>
-
-                    <div class="form-group">
-                      <label for="exp-memberships" class="form-label">Memberships (KOA, Passport America, etc.)</label>
-                      <input type="number" id="exp-memberships" class="form-input" placeholder="0" min="0" step="10" value="0">
+                  <div class="form-group">
+                    <label for="exp-tolls" class="form-label">Tolls & Memberships</label>
+                    <div style="position: relative;">
+                      <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--color-text-secondary);">$</span>
+                      <input type="number" id="exp-tolls" class="form-input expense-input" data-category="travel" style="padding-left: 24px;" placeholder="0" min="0" step="10" value="0">
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
 
-            <!-- Utilities & Services -->
-            <div class="collapsible-section open">
-              <div class="collapsible-header">
-                <h3 class="collapsible-title">Utilities & Services (4 fields)</h3>
-                <span class="collapsible-toggle">▼</span>
-              </div>
-              <div class="collapsible-content">
-                <div class="collapsible-body">
-                  <div class="grid grid-2">
-                    <div class="form-group">
-                      <label for="exp-internet" class="form-label">Internet/Cell Phone</label>
-                      <input type="number" id="exp-internet" class="form-input" placeholder="0" min="0" step="10" value="0">
-                      <p class="form-help">Check Starlink.com for current pricing</p>
+          <!-- Daily Living -->
+          <div class="collapsible-section" id="living-section">
+            <div class="collapsible-header">
+              <h3 class="collapsible-title">Daily Living <span id="living-total" style="color: var(--color-text-secondary); font-weight: normal;">($0)</span></h3>
+              <span class="collapsible-toggle">▼</span>
+            </div>
+            <div class="collapsible-content">
+              <div class="collapsible-body">
+                <div class="grid grid-2">
+                  <div class="form-group">
+                    <label for="exp-groceries" class="form-label">Groceries & Dining</label>
+                    <div style="position: relative;">
+                      <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--color-text-secondary);">$</span>
+                      <input type="number" id="exp-groceries" class="form-input expense-input" data-category="living" style="padding-left: 24px;" placeholder="0" min="0" step="50" value="0">
                     </div>
+                  </div>
 
-                    <div class="form-group">
-                      <label for="exp-propane" class="form-label">Propane</label>
-                      <input type="number" id="exp-propane" class="form-input" placeholder="50" min="0" step="10" value="0">
+                  <div class="form-group">
+                    <label for="exp-internet" class="form-label">Internet/Phone</label>
+                    <div style="position: relative;">
+                      <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--color-text-secondary);">$</span>
+                      <input type="number" id="exp-internet" class="form-input expense-input" data-category="living" style="padding-left: 24px;" placeholder="0" min="0" step="10" value="0">
                     </div>
+                  </div>
 
-                    <div class="form-group">
-                      <label for="exp-laundry" class="form-label">Laundry</label>
-                      <input type="number" id="exp-laundry" class="form-input" placeholder="40" min="0" step="5" value="0">
+                  <div class="form-group">
+                    <label for="exp-health" class="form-label">Health Insurance</label>
+                    <div style="position: relative;">
+                      <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--color-text-secondary);">$</span>
+                      <input type="number" id="exp-health" class="form-input expense-input" data-category="living" style="padding-left: 24px;" placeholder="0" min="0" step="50" value="0">
                     </div>
+                  </div>
 
-                    <div class="form-group">
-                      <label for="exp-utilities-other" class="form-label">Other Utilities</label>
-                      <input type="number" id="exp-utilities-other" class="form-input" placeholder="0" min="0" step="10" value="0">
+                  <div class="form-group">
+                    <label for="exp-medical" class="form-label">Medical/Prescriptions</label>
+                    <div style="position: relative;">
+                      <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--color-text-secondary);">$</span>
+                      <input type="number" id="exp-medical" class="form-input expense-input" data-category="living" style="padding-left: 24px;" placeholder="0" min="0" step="25" value="0">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="exp-entertainment" class="form-label">Entertainment</label>
+                    <div style="position: relative;">
+                      <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--color-text-secondary);">$</span>
+                      <input type="number" id="exp-entertainment" class="form-input expense-input" data-category="living" style="padding-left: 24px;" placeholder="0" min="0" step="25" value="0">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="exp-personal" class="form-label">Personal Care & Subscriptions</label>
+                    <div style="position: relative;">
+                      <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--color-text-secondary);">$</span>
+                      <input type="number" id="exp-personal" class="form-input expense-input" data-category="living" style="padding-left: 24px;" placeholder="0" min="0" step="10" value="0">
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
 
-            <!-- Living Expenses -->
-            <div class="collapsible-section open">
-              <div class="collapsible-header">
-                <h3 class="collapsible-title">Living Expenses (8 fields)</h3>
-                <span class="collapsible-toggle">▼</span>
-              </div>
-              <div class="collapsible-content">
-                <div class="collapsible-body">
-                  <div class="grid grid-2">
-                    <div class="form-group">
-                      <label for="exp-groceries" class="form-label">Groceries</label>
-                      <input type="number" id="exp-groceries" class="form-input" placeholder="500" min="0" step="50" value="0">
+          <!-- Other -->
+          <div class="collapsible-section" id="other-section">
+            <div class="collapsible-header">
+              <h3 class="collapsible-title">Other <span id="other-total" style="color: var(--color-text-secondary); font-weight: normal;">($0)</span></h3>
+              <span class="collapsible-toggle">▼</span>
+            </div>
+            <div class="collapsible-content">
+              <div class="collapsible-body">
+                <div class="grid grid-2">
+                  <div class="form-group">
+                    <label for="exp-emergency" class="form-label">Emergency Fund</label>
+                    <div style="position: relative;">
+                      <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--color-text-secondary);">$</span>
+                      <input type="number" id="exp-emergency" class="form-input expense-input" data-category="other" style="padding-left: 24px;" placeholder="0" min="0" step="50" value="0">
                     </div>
+                  </div>
 
-                    <div class="form-group">
-                      <label for="exp-dining" class="form-label">Dining Out</label>
-                      <input type="number" id="exp-dining" class="form-input" placeholder="200" min="0" step="25" value="0">
-                    </div>
-
-                    <div class="form-group">
-                      <label for="exp-health" class="form-label">Health Insurance</label>
-                      <input type="number" id="exp-health" class="form-input" placeholder="400" min="0" step="50" value="0">
-                    </div>
-
-                    <div class="form-group">
-                      <label for="exp-medical" class="form-label">Medical/Prescriptions</label>
-                      <input type="number" id="exp-medical" class="form-input" placeholder="100" min="0" step="25" value="0">
-                    </div>
-
-                    <div class="form-group">
-                      <label for="exp-entertainment" class="form-label">Entertainment/Activities</label>
-                      <input type="number" id="exp-entertainment" class="form-input" placeholder="200" min="0" step="25" value="0">
-                    </div>
-
-                    <div class="form-group">
-                      <label for="exp-pets" class="form-label">Pets</label>
-                      <input type="number" id="exp-pets" class="form-input" placeholder="100" min="0" step="25" value="0">
-                    </div>
-
-                    <div class="form-group">
-                      <label for="exp-personal" class="form-label">Personal Care</label>
-                      <input type="number" id="exp-personal" class="form-input" placeholder="75" min="0" step="10" value="0">
-                    </div>
-
-                    <div class="form-group">
-                      <label for="exp-subscriptions" class="form-label">Subscriptions (Netflix, etc.)</label>
-                      <input type="number" id="exp-subscriptions" class="form-input" placeholder="50" min="0" step="5" value="0">
+                  <div class="form-group">
+                    <label for="exp-other" class="form-label">Miscellaneous</label>
+                    <div style="position: relative;">
+                      <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--color-text-secondary);">$</span>
+                      <input type="number" id="exp-other" class="form-input expense-input" data-category="other" style="padding-left: 24px;" placeholder="0" min="0" step="25" value="0">
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-
-            <!-- Other -->
-            <div class="collapsible-section open">
-              <div class="collapsible-header">
-                <h3 class="collapsible-title">Other (2 fields)</h3>
-                <span class="collapsible-toggle">▼</span>
-              </div>
-              <div class="collapsible-content">
-                <div class="collapsible-body">
-                  <div class="grid grid-2">
-                    <div class="form-group">
-                      <label for="exp-emergency" class="form-label">Emergency Fund Contribution</label>
-                      <input type="number" id="exp-emergency" class="form-input" placeholder="200" min="0" step="50" value="0">
-                    </div>
-
-                    <div class="form-group">
-                      <label for="exp-other" class="form-label">Miscellaneous</label>
-                      <input type="number" id="exp-other" class="form-input" placeholder="100" min="0" step="25" value="0">
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </form>
+          </div>
         </div>
       </div>
 
       <!-- Budget Summary -->
-      <div class="card">
+      <div class="card mb-4">
         <div class="card-header">
-          <h2 class="card-title">Budget Summary</h2>
+          <h2 class="card-title">Summary</h2>
         </div>
         <div class="card-body">
           <div class="table-container">
@@ -379,8 +292,8 @@
               <thead>
                 <tr>
                   <th>Category</th>
-                  <th style="text-align: right;">Monthly Cost</th>
-                  <th style="text-align: right;">% of Total</th>
+                  <th style="text-align: right;">Amount</th>
+                  <th style="text-align: right;">Percent</th>
                 </tr>
               </thead>
               <tbody id="budget-summary-body">
@@ -388,61 +301,19 @@
               </tbody>
               <tfoot style="border-top: 2px solid var(--color-border); background-color: var(--color-background-alt);">
                 <tr>
-                  <td><strong>Total Monthly Expenses</strong></td>
-                  <td style="text-align: right;"><strong id="summary-total">$0.00</strong></td>
+                  <td><strong>Total Expenses</strong></td>
+                  <td style="text-align: right;"><strong id="summary-total">$0</strong></td>
                   <td style="text-align: right;"><strong>100%</strong></td>
                 </tr>
               </tfoot>
             </table>
           </div>
-
-          <div class="mt-4" id="budget-status">
-            <!-- Budget status message will appear here -->
-          </div>
         </div>
       </div>
 
-      <!-- Tips Section -->
-      <div class="section">
-        <h2 class="section-title">Budgeting Tips for RV Living</h2>
-
-        <div class="grid grid-3">
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Track Everything</h3>
-            </div>
-            <div class="card-body">
-              <p>
-                Keep receipts and track actual spending for 2-3 months. Your estimates may not match reality.
-                Adjust your budget based on real data.
-              </p>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Build an Emergency Fund</h3>
-            </div>
-            <div class="card-body">
-              <p>
-                RVs need repairs. Aim for $3,000-5,000 emergency fund minimum. Unexpected breakdowns
-                happen - be prepared!
-              </p>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Free Camping Options</h3>
-            </div>
-            <div class="card-body">
-              <p>
-                Use apps like iOverlander, FreeRoam, and Campendium to find free camping spots
-                (BLM land, national forests, Walmart parking, etc.)
-              </p>
-            </div>
-          </div>
-        </div>
+      <!-- Status Badge -->
+      <div id="budget-status-badge" style="text-align: center;">
+        <!-- Will be populated by JavaScript -->
       </div>
     </div>
   </main>

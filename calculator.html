@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="RV finance calculator to estimate affordability, monthly payments, and total cost of ownership.">
+  <meta name="description" content="Simple RV loan calculator - estimate monthly payments based on purchase price, down payment, interest rate, and loan term.">
   <meta name="robots" content="noindex, nofollow">
-  <title>RV Finance Calculator - RV Adventures</title>
+  <title>RV Loan Calculator - RV Adventures</title>
 
   <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'></text></svg>">
@@ -48,348 +48,166 @@
 
   <!-- Main Content -->
   <main id="main-content" class="page-content">
-    <h1 class="page-title">Winnebago Minnie Winnie 22R Calculator</h1>
-
-    <div class="calculator-container">
-      <!-- Minnie Winnie 22R Info Card -->
-      <div class="rv-info-card mb-4">
-        <div class="rv-info-header">
-          <h2> Your Target RV: Winnebago Minnie Winnie 22R</h2>
-        </div>
-        <div class="rv-info-body">
-          <div class="rv-specs">
-            <div class="rv-spec-item">
-              <strong>Class:</strong> C Motorhome
-            </div>
-            <div class="rv-spec-item">
-              <strong>Length:</strong> ~24-25 feet
-            </div>
-            <div class="rv-spec-item">
-              <strong>Sleeps:</strong> 4-5 people
-            </div>
-            <div class="rv-spec-item">
-              <strong>MPG:</strong> Est. 10-12
-            </div>
-          </div>
-          <div class="rv-pricing">
-            <div class="pricing-row">
-              <span class="pricing-label">Typical New Range:</span>
-              <span class="pricing-value">Research Current Pricing</span>
-            </div>
-            <div class="pricing-row">
-              <span class="pricing-label">Typical Used Range:</span>
-              <span class="pricing-value">Varies by Year/Condition</span>
-            </div>
-          </div>
-          <div class="alert alert-warning" style="margin-top: var(--space-3); font-size: var(--text-sm);">
-            <strong> Important:</strong> Use these quick-fill buttons as STARTING ESTIMATES only.
-            Always verify current market prices on RVTrader.com, Camping World, and local dealers.
-            Prices vary significantly by location, season, condition, and options.
-          </div>
-          <div class="rv-quick-fills">
-            <button type="button" class="btn btn-sm btn-outline" id="fill-new">Use Estimate: New RV</button>
-            <button type="button" class="btn btn-sm btn-outline" id="fill-used">Use Estimate: Used RV</button>
-          </div>
-        </div>
-      </div>
-
+    <div class="container" style="max-width: 800px; margin: 0 auto;">
+      <h1 class="page-title">RV Loan Calculator</h1>
       <p class="text-center text-secondary mb-4">
-        Calculate your exact affordability, monthly payments, and total cost of ownership
+        Estimate your monthly payments
       </p>
 
-      <form id="rv-calculator-form">
-        <!-- Purchase Details -->
-        <div class="card mb-4">
-          <div class="card-header">
-            <h2 class="card-title">Purchase Details</h2>
-          </div>
-          <div class="card-body">
-            <div class="form-group">
-              <label for="rv-price" class="form-label">RV Purchase Price ($)</label>
+      <!-- Calculator Inputs -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="form-group">
+            <label for="purchase-price" class="form-label">
+              Purchase Price
+            </label>
+            <div style="position: relative;">
+              <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--color-text-secondary);">$</span>
               <input
                 type="number"
-                id="rv-price"
+                id="purchase-price"
                 class="form-input"
+                style="padding-left: 24px;"
                 placeholder="75000"
                 min="0"
                 step="1000"
-                required
+                value="75000"
               >
-              <p class="form-help">Enter the total purchase price of the RV</p>
             </div>
+          </div>
 
-            <div class="form-group">
-              <label for="down-payment" class="form-label">Down Payment ($)</label>
+          <div class="form-group">
+            <label for="down-payment" class="form-label">
+              Down Payment
+              <span id="down-percent" style="color: var(--color-text-secondary); font-weight: normal;"></span>
+            </label>
+            <div style="position: relative;">
+              <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--color-text-secondary);">$</span>
               <input
                 type="number"
                 id="down-payment"
                 class="form-input"
+                style="padding-left: 24px;"
                 placeholder="15000"
                 min="0"
                 step="500"
-                required
+                value="15000"
               >
-              <p class="form-help">How much can you put down? (Typically 10-20%)</p>
-            </div>
-
-            <div class="form-group">
-              <label for="trade-in" class="form-label">Trade-In Value ($)</label>
-              <input
-                type="number"
-                id="trade-in"
-                class="form-input"
-                placeholder="0"
-                min="0"
-                step="500"
-                value="0"
-              >
-              <p class="form-help">Value of any vehicle you're trading in</p>
-            </div>
-
-            <div class="form-group">
-              <label for="sales-tax" class="form-label">Sales Tax Rate (%)</label>
-              <input
-                type="number"
-                id="sales-tax"
-                class="form-input"
-                placeholder="7.5"
-                min="0"
-                max="15"
-                step="0.1"
-                value="7.5"
-              >
-              <p class="form-help">Your state/local sales tax rate</p>
             </div>
           </div>
-        </div>
 
-        <!-- Loan Details -->
-        <div class="card mb-4">
-          <div class="card-header">
-            <h2 class="card-title">Loan Details</h2>
+          <div class="form-group">
+            <label for="loan-term" class="form-label">
+              Loan Term
+              <span id="term-display" style="color: var(--color-text-secondary); font-weight: normal;">(15 years)</span>
+            </label>
+            <input
+              type="range"
+              id="loan-term"
+              class="form-range"
+              min="5"
+              max="20"
+              step="1"
+              value="15"
+              style="width: 100%;"
+            >
+            <div style="display: flex; justify-content: space-between; font-size: var(--text-sm); color: var(--color-text-secondary); margin-top: var(--space-1);">
+              <span>5 years</span>
+              <span>10 years</span>
+              <span>15 years</span>
+              <span>20 years</span>
+            </div>
           </div>
-          <div class="card-body">
-            <div class="form-group">
-              <label for="interest-rate" class="form-label">Interest Rate (%)</label>
+
+          <div class="form-group">
+            <label for="interest-rate" class="form-label">
+              Interest Rate
+            </label>
+            <div style="position: relative;">
               <input
                 type="number"
                 id="interest-rate"
                 class="form-input"
+                style="padding-right: 24px;"
                 placeholder="6.5"
                 min="0"
                 max="20"
                 step="0.1"
-                required
+                value="6.5"
               >
-              <p class="form-help">Annual interest rate (RV loans typically 4-8%)</p>
+              <span style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--color-text-secondary);">%</span>
             </div>
-
-            <div class="form-group">
-              <label for="loan-term" class="form-label">Loan Term (Years)</label>
-              <select id="loan-term" class="form-select" required>
-                <option value="5">5 Years</option>
-                <option value="10">10 Years</option>
-                <option value="15" selected>15 Years</option>
-                <option value="20">20 Years</option>
-              </select>
-              <p class="form-help">How long do you want to finance?</p>
-            </div>
+            <p class="form-help">Typical RV loans: 4-8%</p>
           </div>
-        </div>
-
-        <!-- Ongoing Costs -->
-        <div class="card mb-4">
-          <div class="card-header">
-            <h2 class="card-title">Ongoing Monthly Costs</h2>
-            <p class="card-subtitle">Estimate your recurring expenses</p>
-          </div>
-          <div class="card-body">
-            <div class="form-group">
-              <label for="insurance" class="form-label">Insurance ($/month)</label>
-              <input
-                type="number"
-                id="insurance"
-                class="form-input"
-                placeholder="200"
-                min="0"
-                step="10"
-                value="200"
-              >
-              <p class="form-help">Typical RV insurance: $100-300/month</p>
-            </div>
-
-            <div class="form-group">
-              <label for="maintenance" class="form-label">Maintenance & Repairs ($/month)</label>
-              <input
-                type="number"
-                id="maintenance"
-                class="form-input"
-                placeholder="150"
-                min="0"
-                step="10"
-                value="150"
-              >
-              <p class="form-help">Set aside for maintenance, repairs, and upkeep</p>
-            </div>
-
-            <div class="form-group">
-              <label for="storage" class="form-label">Storage Fees ($/month)</label>
-              <input
-                type="number"
-                id="storage"
-                class="form-input"
-                placeholder="0"
-                min="0"
-                step="10"
-                value="0"
-              >
-              <p class="form-help">If not living in it full-time or need storage</p>
-            </div>
-          </div>
-        </div>
-
-        <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">
-          Calculate
-        </button>
-      </form>
-
-      <!-- Results Section -->
-      <div id="calculator-results" class="hidden">
-        <div class="divider"></div>
-
-        <h2 class="text-center mb-4" style="font-size: var(--text-2xl); color: var(--color-secondary);">Your Results</h2>
-
-        <div class="grid grid-2 mb-4">
-          <div class="calculator-result">
-            <div class="calculator-result-amount" id="monthly-payment">$0</div>
-            <div class="calculator-result-label">Monthly Loan Payment</div>
-          </div>
-
-          <div class="calculator-result">
-            <div class="calculator-result-amount" id="total-monthly">$0</div>
-            <div class="calculator-result-label">Total Monthly Cost</div>
-            <p style="font-size: var(--text-sm); opacity: 0.8; margin-top: var(--space-1);">
-              (Including insurance, maintenance, storage)
-            </p>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Cost Breakdown</h3>
-          </div>
-          <div class="card-body">
-            <div class="table-container">
-              <table>
-                <tbody>
-                  <tr>
-                    <td><strong>RV Purchase Price</strong></td>
-                    <td class="text-right" id="result-price">$0</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Down Payment</strong></td>
-                    <td class="text-right" id="result-down">$0</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Trade-In Value</strong></td>
-                    <td class="text-right" id="result-trade">$0</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Sales Tax</strong></td>
-                    <td class="text-right" id="result-tax">$0</td>
-                  </tr>
-                  <tr style="border-top: 2px solid var(--color-border);">
-                    <td><strong>Loan Amount</strong></td>
-                    <td class="text-right" id="result-loan">$0</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Total Interest Paid</strong></td>
-                    <td class="text-right" id="result-interest">$0</td>
-                  </tr>
-                  <tr style="border-top: 2px solid var(--color-border);">
-                    <td><strong>Total Cost of Ownership</strong></td>
-                    <td class="text-right" id="result-total">$0</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div class="mt-4">
-              <h4 style="margin-bottom: var(--space-2);">Monthly Cost Breakdown</h4>
-              <div class="progress mb-2">
-                <div class="progress-bar" id="payment-progress" style="width: 0%"></div>
-              </div>
-              <div style="font-size: var(--text-sm); color: var(--color-text-secondary);">
-                <div class="flex flex-between mb-1">
-                  <span>Loan Payment:</span>
-                  <span id="breakdown-payment">$0</span>
-                </div>
-                <div class="flex flex-between mb-1">
-                  <span>Insurance:</span>
-                  <span id="breakdown-insurance">$0</span>
-                </div>
-                <div class="flex flex-between mb-1">
-                  <span>Maintenance:</span>
-                  <span id="breakdown-maintenance">$0</span>
-                </div>
-                <div class="flex flex-between">
-                  <span>Storage:</span>
-                  <span id="breakdown-storage">$0</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="alert alert-info mt-4">
-          <strong> Tip:</strong> This calculator provides estimates. Actual costs may vary based on credit score,
-          lender terms, RV condition, and location. Always get pre-approved before making a purchase decision.
         </div>
       </div>
-    </div>
 
-    <!-- Tips Section -->
-    <div class="section">
-      <div class="container">
-        <h2 class="section-title">RV Financing Tips</h2>
-
-        <div class="grid grid-3">
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Down Payment</h3>
-            </div>
-            <div class="card-body">
-              <p>
-                A larger down payment (20% or more) can help you get better interest rates,
-                lower monthly payments, and potentially avoid being upside-down on your loan.
-              </p>
-            </div>
+      <!-- Monthly Payment Result -->
+      <div class="card mb-4" style="background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light)); border: none;">
+        <div class="card-body text-center">
+          <div style="font-size: var(--text-sm); color: var(--color-secondary); font-weight: var(--font-weight-semibold); text-transform: uppercase; letter-spacing: 1px; margin-bottom: var(--space-2);">
+            Your Monthly Payment
           </div>
-
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Interest Rates</h3>
-            </div>
-            <div class="card-body">
-              <p>
-                RV loan rates vary by credit score, loan term, and RV age. New RVs typically
-                get better rates (4-7%) than used RVs. Shop around with multiple lenders.
-              </p>
-            </div>
+          <div id="monthly-payment" style="font-size: 3.5rem; font-weight: var(--font-weight-bold); color: var(--color-secondary); line-height: 1;">
+            $0
           </div>
+        </div>
+      </div>
 
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Hidden Costs</h3>
-            </div>
-            <div class="card-body">
-              <p>
-                Don't forget: registration fees, campground memberships, fuel costs,
-                maintenance, winterization, and unexpected repairs. Budget for the unexpected!
-              </p>
+      <!-- Loan Summary -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h2 class="card-title">Loan Summary</h2>
+        </div>
+        <div class="card-body">
+          <div style="display: flex; justify-content: space-between; padding: var(--space-3) 0; border-bottom: 1px solid var(--color-border);">
+            <span style="color: var(--color-text-secondary);">Amount Financed</span>
+            <span style="font-weight: var(--font-weight-semibold); font-size: var(--text-lg);" id="amount-financed">$0</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: var(--space-3) 0; border-bottom: 1px solid var(--color-border);">
+            <span style="color: var(--color-text-secondary);">Total Interest Paid</span>
+            <span style="font-weight: var(--font-weight-semibold); font-size: var(--text-lg);" id="total-interest">$0</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: var(--space-3) 0;">
+            <span style="color: var(--color-text-secondary);">Total Amount Paid</span>
+            <span style="font-weight: var(--font-weight-bold); font-size: var(--text-lg); color: var(--color-primary);" id="total-paid">$0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Schedule (Collapsible) -->
+      <div class="card">
+        <div class="collapsible-section" id="schedule-section">
+          <div class="collapsible-header">
+            <h3 class="collapsible-title">Payment Schedule</h3>
+            <span class="collapsible-toggle">▼</span>
+          </div>
+          <div class="collapsible-content">
+            <div class="collapsible-body">
+              <div class="table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Year</th>
+                      <th style="text-align: right;">Principal</th>
+                      <th style="text-align: right;">Interest</th>
+                      <th style="text-align: right;">Balance</th>
+                    </tr>
+                  </thead>
+                  <tbody id="schedule-body">
+                    <!-- Populated by JavaScript -->
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- Tips -->
+      <div class="alert alert-info mt-4">
+        <strong>Tip:</strong> A larger down payment reduces your monthly payment and total interest paid.
+        Aim for 20% down if possible to get better loan terms.
       </div>
     </div>
   </main>
