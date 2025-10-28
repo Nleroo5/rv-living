@@ -993,7 +993,7 @@ window.addNationalParkToDestinations = async function(destId) {
     addedDate: new Date().toISOString()
   });
 
-  saveDestinations();
+  await saveDestinations();
   renderDestinations();
   renderFolders();
   updateMap();
