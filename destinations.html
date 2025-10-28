@@ -228,7 +228,7 @@
       <div class="card mb-4">
         <div class="card-header">
           <h2 class="card-title">Destination Map</h2>
-          <p class="card-subtitle">All destinations - Green: Visited | Red: Bucketlist | Blue: National Parks</p>
+          <p class="card-subtitle">All destinations - Green: Visited | Blue: National Parks</p>
         </div>
         <div class="card-body" style="padding: 0;">
           <div id="map" class="map-container"></div>
@@ -291,8 +291,11 @@
               <button class="btn btn-outline btn-small mb-2" id="export-btn" style="width: 100%;">
                 Export Data
               </button>
-              <button class="btn btn-outline btn-small" id="import-btn" style="width: 100%;">
+              <button class="btn btn-outline btn-small mb-2" id="import-btn" style="width: 100%;">
                 Import Data
+              </button>
+              <button class="btn btn-outline btn-small" id="clear-all-btn" style="width: 100%; color: var(--color-danger); border-color: var(--color-danger);">
+                Clear All Destinations
               </button>
               <input type="file" id="import-input" accept=".json" style="display: none;">
             </div>

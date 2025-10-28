@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="RV preparation checklist with file uploads and document management.">
+  <meta name="description" content="RV preparation guide: packing checklist and task timeline.">
   <meta name="robots" content="noindex, nofollow">
-  <title>Preparation Checklist - RV Adventures</title>
+  <title>Preparation Guide - RV Adventures</title>
 
   <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'></text></svg>">
@@ -15,6 +15,275 @@
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/main.css">
+
+  <style>
+    .prep-tabs {
+      display: flex;
+      gap: var(--space-2);
+      margin-bottom: var(--space-4);
+      border-bottom: 2px solid var(--color-border);
+    }
+
+    .prep-tab {
+      padding: var(--space-3) var(--space-4);
+      background: none;
+      border: none;
+      font-size: var(--text-lg);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s;
+    }
+
+    .prep-tab:hover {
+      color: var(--color-primary);
+    }
+
+    .prep-tab.active {
+      color: var(--color-primary);
+      border-bottom-color: var(--color-primary);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+      max-height: calc(100vh - 250px);
+      overflow-y: auto;
+      padding-right: var(--space-2);
+    }
+
+    .prep-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: var(--space-4);
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .prep-sidebar {
+      position: sticky;
+      top: 80px;
+      height: fit-content;
+    }
+
+    .accordion-section {
+      border: 1px solid var(--color-border);
+      border-radius: var(--border-radius);
+      margin-bottom: var(--space-3);
+      overflow: hidden;
+    }
+
+    .accordion-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-3);
+      background: var(--color-background);
+      cursor: pointer;
+      font-weight: var(--font-weight-semibold);
+      transition: background 0.2s;
+    }
+
+    .accordion-header:hover {
+      background: var(--color-background-secondary);
+    }
+
+    .accordion-header .icon {
+      font-size: var(--text-xl);
+      margin-right: var(--space-2);
+    }
+
+    .accordion-toggle {
+      transition: transform 0.2s;
+    }
+
+    .accordion-header.active .accordion-toggle {
+      transform: rotate(180deg);
+    }
+
+    .accordion-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+
+    .accordion-body.open {
+      max-height: 600px;
+      overflow-y: auto;
+      transition: max-height 0.5s ease-in;
+    }
+
+    .accordion-content {
+      padding: var(--space-3);
+      border-top: 1px solid var(--color-border);
+    }
+
+    .item-row {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-2);
+      padding: var(--space-2) 0;
+      border-bottom: 1px solid var(--color-border-light);
+    }
+
+    .item-row:last-child {
+      border-bottom: none;
+    }
+
+    .item-checkbox {
+      margin-top: 2px;
+      cursor: pointer;
+    }
+
+    .item-content {
+      flex: 1;
+    }
+
+    .item-title {
+      font-weight: var(--font-weight-medium);
+      margin-bottom: var(--space-1);
+    }
+
+    .item-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: var(--text-xs);
+      font-weight: var(--font-weight-semibold);
+      margin-right: var(--space-1);
+    }
+
+    .badge-essential {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--color-error);
+    }
+
+    .badge-recommended {
+      background: rgba(245, 158, 11, 0.1);
+      color: var(--color-accent);
+    }
+
+    .badge-optional {
+      background: rgba(107, 114, 128, 0.1);
+      color: var(--color-text-secondary);
+    }
+
+    .item-actions {
+      display: flex;
+      gap: var(--space-1);
+    }
+
+    .delete-btn {
+      background: none;
+      border: none;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      padding: var(--space-1);
+      font-size: var(--text-lg);
+      line-height: 1;
+      transition: color 0.2s;
+    }
+
+    .delete-btn:hover {
+      color: var(--color-error);
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: var(--space-6);
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 10px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--color-border);
+    }
+
+    .timeline-phase {
+      position: relative;
+      margin-bottom: var(--space-6);
+    }
+
+    .timeline-marker {
+      position: absolute;
+      left: -44px;
+      top: 8px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      border: 3px solid white;
+      box-shadow: 0 0 0 2px var(--color-primary);
+    }
+
+    .phase-header {
+      font-size: var(--text-xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-primary);
+      margin-bottom: var(--space-3);
+    }
+
+    .task-card {
+      background: white;
+      border: 1px solid var(--color-border);
+      border-radius: var(--border-radius);
+      padding: var(--space-3);
+      margin-bottom: var(--space-3);
+    }
+
+    .task-header {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-2);
+      margin-bottom: var(--space-2);
+    }
+
+    .task-title {
+      flex: 1;
+      font-weight: var(--font-weight-semibold);
+      font-size: var(--text-base);
+    }
+
+    .task-meta {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-2);
+    }
+
+    .task-steps {
+      font-size: var(--text-sm);
+      margin-top: var(--space-2);
+      padding-left: var(--space-4);
+    }
+
+    .task-steps li {
+      margin-bottom: var(--space-1);
+    }
+
+    @media (max-width: 1024px) {
+      .prep-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .prep-sidebar {
+        position: relative;
+        top: 0;
+      }
+
+      .prep-tabs {
+        overflow-x: auto;
+      }
+    }
+  </style>
 </head>
 <body>
   <a href="#main-content" class="sr-only">Skip to main content</a>
@@ -39,7 +308,7 @@
       <div class="nav-menu">
         <a href="index.html" class="nav-link">Home</a>
         <a href="calculator.html" class="nav-link">RV Calculator</a>
-        <a href="checklist.html" class="nav-link active">Prep Checklist</a>
+        <a href="checklist.html" class="nav-link active">Prep Guide</a>
         <a href="destinations.html" class="nav-link">Destinations</a>
         <a href="budget.html" class="nav-link">Budget Tracker</a>
       </div>
@@ -48,309 +317,148 @@
 
   <!-- Main Content -->
   <main id="main-content" class="page-content">
-    <h1 class="page-title">RV Preparation Checklist</h1>
+    <div class="container" style="max-width: 1400px;">
+      <h1 class="page-title">RV Preparation Guide</h1>
 
-    <div class="container" style="max-width: 900px; margin: 0 auto;">
-
-      <!-- Quick Start Essentials -->
-      <div class="card mb-4" style="border: 2px solid var(--color-primary);">
-        <div class="card-header" style="background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));">
-          <h2 class="card-title" style="color: white; margin: 0;"> Quick-Add Comprehensive Checklists</h2>
-        </div>
-        <div class="card-body">
-          <div class="alert alert-info mb-4">
-            <strong> Quick Start:</strong> Click categories below to pre-load comprehensive checklists for your Feb 28, 2026 departure.
-            Tailored for full-time RV living with remote work!
-          </div>
-
-          <div class="grid grid-2" style="gap: var(--space-3);">
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title" style="font-size: var(--text-base); margin: 0;"> Essential RV Gear</h3>
-              </div>
-              <div class="card-body">
-                <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-2);">
-                  Must-have items for Minnie Winnie 22R
-                </p>
-                <button class="btn btn-primary btn-sm quick-add-category-btn" id="load-essentials-btn" style="width: 100%;">
-                  Add 13 Items
-                </button>
-              </div>
-            </div>
-
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title" style="font-size: var(--text-base); margin: 0;"> RV Checks</h3>
-              </div>
-              <div class="card-body">
-                <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-2);">
-                  Maintenance & setup tasks
-                </p>
-                <button class="btn btn-primary btn-sm quick-add-category-btn" id="load-minnie-winnie-btn" style="width: 100%;">
-                  Add 8 Items
-                </button>
-              </div>
-            </div>
-
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title" style="font-size: var(--text-base); margin: 0;"> Legal & Docs</h3>
-              </div>
-              <div class="card-body">
-                <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-2);">
-                  Registration, insurance, mail
-                </p>
-                <button class="btn btn-primary btn-sm quick-add-category-btn" id="load-legal-btn" style="width: 100%;">
-                  Add 12 Items
-                </button>
-              </div>
-            </div>
-
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title" style="font-size: var(--text-base); margin: 0;">💼 Remote Work</h3>
-              </div>
-              <div class="card-body">
-                <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-2);">
-                  Internet & office setup
-                </p>
-                <button class="btn btn-primary btn-sm quick-add-category-btn" id="load-remote-work-btn" style="width: 100%;">
-                  Add 10 Items
-                </button>
-              </div>
-            </div>
-
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title" style="font-size: var(--text-base); margin: 0;">🏠 Move Out</h3>
-              </div>
-              <div class="card-body">
-                <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-2);">
-                  Storage & decluttering
-                </p>
-                <button class="btn btn-primary btn-sm quick-add-category-btn" id="load-move-out-btn" style="width: 100%;">
-                  Add 15 Items
-                </button>
-              </div>
-            </div>
-
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title" style="font-size: var(--text-base); margin: 0;">🏥 Health</h3>
-              </div>
-              <div class="card-body">
-                <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-2);">
-                  Medical & prescriptions
-                </p>
-                <button class="btn btn-primary btn-sm quick-add-category-btn" id="load-health-btn" style="width: 100%;">
-                  Add 8 Items
-                </button>
-              </div>
-            </div>
-
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title" style="font-size: var(--text-base); margin: 0;"> Route Plan</h3>
-              </div>
-              <div class="card-body">
-                <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-2);">
-                  Trip & camping prep
-                </p>
-                <button class="btn btn-primary btn-sm quick-add-category-btn" id="load-route-btn" style="width: 100%;">
-                  Add 9 Items
-                </button>
-              </div>
-            </div>
-
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title" style="font-size: var(--text-base); margin: 0;">🎯 Final Week</h3>
-              </div>
-              <div class="card-body">
-                <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-2);">
-                  Last-minute tasks
-                </p>
-                <button class="btn btn-primary btn-sm quick-add-category-btn" id="load-final-week-btn" style="width: 100%;">
-                  Add 10 Items
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-4 text-center">
-            <button class="btn btn-accent" id="load-all-categories-btn" style="font-weight: var(--font-weight-bold);">
-               Add EVERYTHING (85+ items total)
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="card mb-4">
-        <div class="card-body text-center">
-          <div class="flex flex-center gap-4 flex-wrap">
-            <div>
-              <div style="font-size: var(--text-3xl); font-weight: var(--font-weight-bold); color: var(--color-primary);" id="checklist-stats-completed">0</div>
-              <p class="text-secondary">Completed</p>
-            </div>
-            <div>
-              <div style="font-size: var(--text-3xl); font-weight: var(--font-weight-bold); color: var(--color-accent);" id="checklist-stats-remaining">0</div>
-              <p class="text-secondary">Remaining</p>
-            </div>
-            <div>
-              <div style="font-size: var(--text-3xl); font-weight: var(--font-weight-bold); color: var(--color-secondary);" id="checklist-stats-total">0</div>
-              <p class="text-secondary">Total Items</p>
-            </div>
-          </div>
-          <div class="mt-4 flex flex-center gap-2 flex-wrap">
-            <button class="btn btn-small btn-outline" id="export-checklist-btn">Export Checklist</button>
-            <button class="btn btn-small btn-outline" id="import-checklist-btn">Import Checklist</button>
-            <input type="file" id="import-checklist-input" accept=".json" style="display: none;">
-          </div>
-          <div class="progress mt-4">
-            <div class="progress-bar" id="checklist-progress-bar" style="width: 0%"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Add New Item Form -->
-      <div class="card mb-4">
-        <div class="card-header">
-          <h2 class="card-title">Add New Item</h2>
-        </div>
-        <div class="card-body">
-          <form id="add-checklist-form">
-            <div class="form-group">
-              <label for="item-title" class="form-label">Item Title</label>
-              <input
-                type="text"
-                id="item-title"
-                class="form-input"
-                placeholder="e.g., Buy camping chairs"
-                required
-              >
-            </div>
-
-            <div class="form-group">
-              <label for="item-description" class="form-label">Description (optional)</label>
-              <textarea
-                id="item-description"
-                class="form-textarea"
-                placeholder="Add notes, links, or details..."
-              ></textarea>
-            </div>
-
-            <div class="form-group">
-              <label for="item-category" class="form-label">Category</label>
-              <select id="item-category" class="form-select">
-                <option value="purchase">To Purchase</option>
-                <option value="organize">To Organize</option>
-                <option value="sell">To Sell/Donate</option>
-                <option value="research">Research Needed</option>
-                <option value="documents">Documents/Paperwork</option>
-                <option value="maintenance">RV Maintenance</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="item-priority" class="form-label">Priority</label>
-              <select id="item-priority" class="form-select">
-                <option value="low">Low</option>
-                <option value="medium" selected>Medium</option>
-                <option value="high">High</option>
-              </select>
-            </div>
-
-            <button type="submit" class="btn btn-primary" style="width: 100%;">
-              Add to Checklist
-            </button>
-          </form>
-        </div>
-      </div>
-
-      <!-- Search & Filters -->
+      <!-- Stats Bar -->
       <div class="card mb-4">
         <div class="card-body">
-          <div class="form-group mb-3">
-            <input type="text" id="checklist-search" class="form-input" placeholder="Search checklist items...">
-          </div>
-          <div class="flex flex-wrap gap-2 flex-center mb-3">
-            <button class="btn btn-small btn-outline filter-btn active" data-filter="all">All</button>
-            <button class="btn btn-small btn-outline filter-btn" data-filter="purchase">To Purchase</button>
-            <button class="btn btn-small btn-outline filter-btn" data-filter="organize">To Organize</button>
-            <button class="btn btn-small btn-outline filter-btn" data-filter="sell">To Sell</button>
-            <button class="btn btn-small btn-outline filter-btn" data-filter="research">Research</button>
-            <button class="btn btn-small btn-outline filter-btn" data-filter="documents">Documents</button>
-            <button class="btn btn-small btn-outline filter-btn" data-filter="completed">Completed</button>
-          </div>
-          <div class="form-group">
-            <label for="checklist-sort" class="form-label">Sort by:</label>
-            <select id="checklist-sort" class="form-select">
-              <option value="date-desc">Newest First</option>
-              <option value="date-asc">Oldest First</option>
-              <option value="title-asc">Title (A-Z)</option>
-              <option value="title-desc">Title (Z-A)</option>
-              <option value="priority-high">High Priority First</option>
-              <option value="completed">Completed First</option>
-              <option value="incomplete">Incomplete First</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <!-- Checklist Items -->
-      <div class="card">
-        <div class="card-header">
-          <h2 class="card-title">Your Checklist</h2>
-        </div>
-        <div class="card-body">
-          <ul class="checklist" id="checklist-container">
-            <!-- Checklist items will be dynamically inserted here -->
-            <li class="text-center text-secondary" id="empty-message" style="padding: var(--space-6);">
-              No items yet. Add your first checklist item above!
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- File Upload Section -->
-      <div class="card mt-4">
-        <div class="card-header">
-          <h2 class="card-title">Document Storage</h2>
-          <p class="card-subtitle">Upload and organize important files (RV manuals, receipts, insurance, etc.)</p>
-        </div>
-        <div class="card-body">
-          <div class="file-upload" id="file-upload-zone">
-            <input
-              type="file"
-              id="file-upload-input"
-              class="file-upload-input"
-              multiple
-              accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt"
-            >
-            <div class="file-upload-icon">📁</div>
-            <div class="file-upload-text">
-              <p><strong>Click to upload</strong> or drag and drop</p>
-              <p class="text-secondary" style="font-size: var(--text-sm);">
-                PDF, DOC, JPG, PNG, TXT (Max 5MB per file)
-              </p>
+          <div class="flex flex-center gap-4 flex-wrap text-center">
+            <div>
+              <div style="font-size: var(--text-2xl); font-weight: var(--font-weight-bold); color: var(--color-primary);" id="packing-stats">0/0</div>
+              <p class="text-secondary" style="font-size: var(--text-sm);">Packing Items</p>
+            </div>
+            <div>
+              <div style="font-size: var(--text-2xl); font-weight: var(--font-weight-bold); color: var(--color-accent);" id="tasks-stats">0/0</div>
+              <p class="text-secondary" style="font-size: var(--text-sm);">Tasks Complete</p>
+            </div>
+            <div>
+              <div style="font-size: var(--text-2xl); font-weight: var(--font-weight-bold); color: var(--color-secondary);" id="days-countdown">120</div>
+              <p class="text-secondary" style="font-size: var(--text-sm);">Days Until Feb 28</p>
             </div>
           </div>
+        </div>
+      </div>
 
-          <div class="file-list" id="file-list">
-            <!-- Uploaded files will appear here -->
-          </div>
+      <!-- Tab Navigation -->
+      <div class="prep-tabs">
+        <button class="prep-tab active" data-tab="packing">
+          Packing Guide
+        </button>
+        <button class="prep-tab" data-tab="tasks">
+          Preparation Tasks
+        </button>
+      </div>
 
-          <div id="storage-info" class="mt-4">
-            <!-- Storage meter will appear here -->
-          </div>
+      <!-- Tab Content: Packing Guide -->
+      <div class="tab-content active" id="packing-tab">
+        <div class="prep-layout">
+          <!-- Sidebar -->
+          <aside class="prep-sidebar">
+            <div class="card mb-3">
+              <div class="card-header">
+                <h3 class="card-title" style="font-size: var(--text-base); margin: 0;">Add Item</h3>
+              </div>
+              <div class="card-body">
+                <form id="add-packing-form">
+                  <div class="form-group">
+                    <input type="text" id="packing-item-title" class="form-input" placeholder="Item name..." required>
+                  </div>
+                  <div class="form-group">
+                    <select id="packing-item-priority" class="form-select">
+                      <option value="essential">Essential</option>
+                      <option value="recommended" selected>Recommended</option>
+                      <option value="optional">Optional</option>
+                    </select>
+                  </div>
+                  <button type="submit" class="btn btn-primary btn-small" style="width: 100%;">Add Item</button>
+                </form>
+              </div>
+            </div>
 
-          <div class="alert alert-info mt-4">
-            <strong> Note:</strong> Files are stored locally in your browser. For permanent storage,
-            consider uploading important documents to Google Drive or Dropbox and adding links to your checklist items.
+            <div class="card">
+              <div class="card-body">
+                <input type="text" id="packing-search" class="form-input mb-2" placeholder="Search items...">
+                <div class="form-group">
+                  <select id="packing-filter" class="form-select">
+                    <option value="all">All Items</option>
+                    <option value="essential">Essential Only</option>
+                    <option value="recommended">Recommended Only</option>
+                    <option value="optional">Optional Only</option>
+                    <option value="unchecked">Unchecked Only</option>
+                  </select>
+                </div>
+                <button class="btn btn-outline btn-small" id="export-packing-btn" style="width: 100%;">Export List</button>
+              </div>
+            </div>
+          </aside>
+
+          <!-- Main Content -->
+          <div class="main-content">
+            <div id="packing-accordion">
+              <!-- Accordion sections will be rendered here -->
+            </div>
           </div>
         </div>
       </div>
+
+      <!-- Tab Content: Preparation Tasks -->
+      <div class="tab-content" id="tasks-tab">
+        <div class="prep-layout">
+          <!-- Sidebar -->
+          <aside class="prep-sidebar">
+            <div class="card mb-3">
+              <div class="card-header">
+                <h3 class="card-title" style="font-size: var(--text-base); margin: 0;">Add Task</h3>
+              </div>
+              <div class="card-body">
+                <form id="add-task-form">
+                  <div class="form-group">
+                    <input type="text" id="task-title" class="form-input" placeholder="Task name..." required>
+                  </div>
+                  <div class="form-group">
+                    <textarea id="task-description" class="form-textarea" placeholder="Description (optional)" rows="2"></textarea>
+                  </div>
+                  <div class="form-group">
+                    <select id="task-phase" class="form-select">
+                      <option value="phase1">6-4 Months Before</option>
+                      <option value="phase2">3-2 Months Before</option>
+                      <option value="phase3">1 Month Before</option>
+                      <option value="departure">Departure Day</option>
+                    </select>
+                  </div>
+                  <button type="submit" class="btn btn-primary btn-small" style="width: 100%;">Add Task</button>
+                </form>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-body">
+                <input type="text" id="tasks-search" class="form-input mb-2" placeholder="Search tasks...">
+                <div class="form-group">
+                  <select id="tasks-filter" class="form-select">
+                    <option value="all">All Tasks</option>
+                    <option value="phase1">Phase 1</option>
+                    <option value="phase2">Phase 2</option>
+                    <option value="phase3">Phase 3</option>
+                    <option value="departure">Departure Day</option>
+                    <option value="incomplete">Incomplete Only</option>
+                  </select>
+                </div>
+                <button class="btn btn-outline btn-small" id="export-tasks-btn" style="width: 100%;">Export Tasks</button>
+              </div>
+            </div>
+          </aside>
+
+          <!-- Main Content: Timeline -->
+          <div class="main-content">
+            <div class="timeline" id="tasks-timeline">
+              <!-- Timeline phases will be rendered here -->
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </main>
 
@@ -370,7 +478,7 @@
           <div class="footer-links">
             <a href="index.html" class="footer-link">Home</a>
             <a href="calculator.html" class="footer-link">RV Calculator</a>
-            <a href="checklist.html" class="footer-link">Prep Checklist</a>
+            <a href="checklist.html" class="footer-link">Prep Guide</a>
             <a href="destinations.html" class="footer-link">Destinations</a>
             <a href="budget.html" class="footer-link">Budget Tracker</a>
           </div>
@@ -393,6 +501,6 @@
   <!-- JavaScript -->
   <script src="js/utils.js"></script>
   <script src="js/components.js"></script>
-  <script src="js/checklist.js"></script>
+  <script src="js/checklist-new.js"></script>
 </body>
 </html>

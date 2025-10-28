@@ -92,10 +92,8 @@ function addMarker(dest, color, isUserDestination) {
       ${dest.rvCamping ? '<p style="margin: 4px 0; font-size: 13px;">RV Camping Available</p>' : ''}
       ${dest.bestSeason ? `<p style="margin: 4px 0; font-size: 13px;">Best: ${dest.bestSeason}</p>` : ''}
       ${isUserDestination
-        ? (dest.visited
-            ? `<button onclick="viewDestinationDetails('${dest.id}')" style="margin-top: 8px; padding: 4px 12px; background: var(--color-success); color: white; border: none; border-radius: 4px; cursor: pointer;">Visited</button>`
-            : `<button onclick="viewDestinationDetails('${dest.id}')" style="margin-top: 8px; padding: 4px 12px; background: var(--color-primary); color: white; border: none; border-radius: 4px; cursor: pointer;">View Details</button>`)
-        : `<button onclick="addNationalParkToDestinations('${dest.id}')" style="margin-top: 8px; padding: 4px 12px; background: var(--color-primary); color: white; border: none; border-radius: 4px; cursor: pointer;">Add to Bucketlist</button>`
+        ? `<button onclick="viewDestinationDetails('${dest.id}')" style="margin-top: 8px; padding: 4px 12px; background: var(--color-success); color: white; border: none; border-radius: 4px; cursor: pointer;">Visited</button>`
+        : `<button onclick="addNationalParkToDestinations('${dest.id}')" style="margin-top: 8px; padding: 4px 12px; background: var(--color-primary); color: white; border: none; border-radius: 4px; cursor: pointer;">Add to My Destinations</button>`
       }
     </div>
   `;
@@ -175,6 +173,7 @@ function setupEventListeners() {
     document.getElementById('import-input').click();
   });
   document.getElementById('import-input').addEventListener('change', importDestinations);
+  document.getElementById('clear-all-btn').addEventListener('click', clearAllDestinations);
 
   // Discover tab - region selector
   document.getElementById('region-selector').addEventListener('change', (e) => {
@@ -494,11 +493,76 @@ async function deleteDestination(destId) {
 // View destination details (called from map popup)
 window.viewDestinationDetails = function(destId) {
   const dest = destinations.find(d => d.id === destId);
-  if (dest) {
-    // Scroll to the destination card
-    renderDestinations();
-    // Could enhance this to highlight the specific card
-  }
+  if (!dest) return;
+
+  const modalContent = `
+    <div style="max-width: 600px;">
+      <h4 style="margin: 0 0 var(--space-2) 0; color: var(--color-primary);">${dest.name}</h4>
+      <p style="margin: 0 0 var(--space-3) 0; color: var(--color-text-secondary);">${dest.state}</p>
+
+      ${dest.rvCamping ? `
+        <div style="margin-bottom: var(--space-3);">
+          <strong>RV Camping:</strong>
+          <p style="margin: var(--space-1) 0 0 0; color: var(--color-text-secondary);">${dest.rvCampingDetails || 'Available'}</p>
+        </div>
+      ` : ''}
+
+      ${dest.bestSeason ? `
+        <div style="margin-bottom: var(--space-3);">
+          <strong>Best Season:</strong>
+          <p style="margin: var(--space-1) 0 0 0; color: var(--color-text-secondary);">${dest.bestSeason}</p>
+        </div>
+      ` : ''}
+
+      ${dest.mustSee ? `
+        <div style="margin-bottom: var(--space-3);">
+          <strong>Must See:</strong>
+          <p style="margin: var(--space-1) 0 0 0; color: var(--color-text-secondary);">${dest.mustSee}</p>
+        </div>
+      ` : ''}
+
+      ${dest.estimatedCost ? `
+        <div style="margin-bottom: var(--space-3);">
+          <strong>Estimated Cost:</strong>
+          <p style="margin: var(--space-1) 0 0 0; color: var(--color-text-secondary);">${dest.estimatedCost}</p>
+        </div>
+      ` : ''}
+
+      <div style="margin-top: var(--space-4);">
+        <label for="destination-notes" style="display: block; font-weight: var(--font-weight-semibold); margin-bottom: var(--space-2);">
+          Your Notes:
+        </label>
+        <textarea
+          id="destination-notes"
+          rows="6"
+          style="width: 100%; padding: var(--space-2); border: 1px solid var(--color-border); border-radius: var(--border-radius); font-family: inherit; font-size: var(--text-base); resize: vertical;"
+          placeholder="Add your personal notes about this destination..."
+        >${dest.notes || ''}</textarea>
+      </div>
+    </div>
+  `;
+
+  const modal = createModal(`Visited: ${dest.name}`, modalContent, [
+    { text: 'Save Notes', action: 'save', class: 'btn-primary' },
+    { text: 'Close', action: 'close', class: 'btn-outline' }
+  ]);
+
+  const buttons = modal.querySelectorAll('[data-action]');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (btn.dataset.action === 'save') {
+        const notes = modal.querySelector('#destination-notes').value;
+        dest.notes = notes;
+        saveDestinations();
+        showToast('Notes saved successfully!', 'success');
+        modal.remove();
+      } else if (btn.dataset.action === 'close') {
+        modal.remove();
+      }
+    });
+  });
+
+  document.body.appendChild(modal);
 };
 
 // Export destinations
@@ -513,6 +577,20 @@ async function importDestinations(e) {
     await DataManager.importData(file);
   }
   e.target.value = '';
+}
+
+// Clear all destinations
+function clearAllDestinations() {
+  if (confirm('Are you sure you want to clear ALL destinations and folders? This cannot be undone!')) {
+    destinations = [];
+    folders = [];
+    saveDestinations();
+    saveFolders();
+    renderDestinations();
+    renderFolders();
+    updateMap();
+    alert('All destinations and folders have been cleared.');
+  }
 }
 
 // Load/Save functions
@@ -717,10 +795,10 @@ window.addNationalParkToDestinations = async function(destId) {
     return;
   }
 
-  // Add to destinations (not visited by default - will be red pin)
+  // Add to destinations (automatically marked as visited - will be green pin)
   destinations.push({
     ...destination,
-    visited: false,
+    visited: true,
     folder: null,
     addedDate: new Date().toISOString()
   });

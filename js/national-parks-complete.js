@@ -17,8 +17,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'South Rim viewpoints, Desert View Watchtower, sunrise/sunset, hiking Bright Angel Trail',
     estimatedCost: '$30/night camping + $35 vehicle entry (7-day pass)',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'zion-np',
@@ -34,8 +32,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Angels Landing hike (permit required), The Narrows, Zion Canyon Scenic Drive, Emerald Pools',
     estimatedCost: '$30/night camping + $35 vehicle entry (7-day pass)',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'bryce-canyon-np',
@@ -51,8 +47,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Sunrise/Sunset Points, Bryce Amphitheater, Queens Garden Trail, Navajo Loop',
     estimatedCost: '$30/night camping + $35 vehicle entry (7-day pass)',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'arches-np',
@@ -68,8 +62,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Delicate Arch, Landscape Arch, Devils Garden, Windows Section, Balanced Rock',
     estimatedCost: 'Moab RV parks $40-70/night + $35 vehicle entry (7-day pass)',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'canyonlands-np',
@@ -85,8 +77,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Mesa Arch, Grand View Point, Island in the Sky, The Needles, Green River Overlook',
     estimatedCost: 'Moab RV parks $40-70/night + $30 vehicle entry (7-day pass)',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'capitol-reef-np',
@@ -102,8 +92,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Scenic Drive, Capitol Gorge, Hickman Bridge Trail, Fruita orchards, petroglyphs',
     estimatedCost: '$20/night camping + $20 vehicle entry (7-day pass)',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'petrified-forest-np',
@@ -119,8 +107,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Petrified wood, Painted Desert, Blue Mesa, Newspaper Rock petroglyphs, Crystal Forest',
     estimatedCost: '$25 vehicle entry (7-day pass). Holbrook camping $25-40/night',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'saguaro-np',
@@ -136,8 +122,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Giant saguaro cacti, Cactus Forest Drive, Signal Hill petroglyphs, desert sunsets',
     estimatedCost: '$25 vehicle entry (7-day pass). Tucson RV parks $35-60/night',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'white-sands-np',
@@ -153,8 +137,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'White gypsum sand dunes, Dunes Drive, sledding down dunes, sunset',
     estimatedCost: '$25 vehicle entry (7-day pass). Alamogordo RV parks $30-50/night',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'carlsbad-caverns-np',
@@ -170,8 +152,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Big Room cave tour, Natural Entrance trail, bat flight program (summer evenings)',
     estimatedCost: '$15 per person cave entry. RV parks $25-45/night',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'guadalupe-mountains-np',
@@ -187,8 +167,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Guadalupe Peak (highest point in Texas), Devils Hall, McKittrick Canyon fall colors',
     estimatedCost: '$15/night camping + $10 per person entry (7-day pass)',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'big-bend-np',
@@ -204,8 +182,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Chisos Basin, Santa Elena Canyon, Rio Grande, hot springs, stargazing',
     estimatedCost: '$30/night camping + $30 vehicle entry (7-day pass)',
     notes: '',
-    visited: false,
-    folder: null
   },
 
   // ROCKY MOUNTAINS
@@ -223,8 +199,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Old Faithful, Grand Prismatic Spring, Yellowstone Lake, wildlife watching (bison, elk, bears)',
     estimatedCost: '$35/night camping + $35 vehicle entry (7-day pass)',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'grand-teton-np',
@@ -240,8 +214,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Teton Range views, Jenny Lake, Snake River, Oxbow Bend, Mormon Row',
     estimatedCost: '$35/night camping + $35 vehicle entry (7-day pass)',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'rocky-mountain-np',
@@ -257,8 +229,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Trail Ridge Road, Bear Lake, Emerald Lake, Alpine Visitor Center, wildlife (elk, bighorn sheep)',
     estimatedCost: '$30/night camping + $30 vehicle entry (7-day pass). Timed entry $2',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'glacier-np',
@@ -274,8 +244,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Going-to-the-Sun Road, Many Glacier, Grinnell Glacier, Lake McDonald, Hidden Lake',
     estimatedCost: '$23-28/night camping + $35 vehicle entry (7-day pass)',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'mesa-verde-np',
@@ -291,8 +259,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Cliff Palace, Balcony House, Spruce Tree House, ancient Puebloan cliff dwellings',
     estimatedCost: '$45/night camping with hookups + $30 vehicle entry (7-day pass)',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'black-canyon-np',
@@ -308,8 +274,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Painted Wall (tallest cliff in Colorado), Gunnison Point, Warner Point, South Rim Road',
     estimatedCost: '$20/night camping + $30 vehicle entry (7-day pass)',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'great-sand-dunes-np',
@@ -325,8 +289,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'North Americas tallest sand dunes, Medano Creek (flows May-June), sandboarding/sledding',
     estimatedCost: '$20/night camping + $25 vehicle entry (7-day pass)',
     notes: '',
-    visited: false,
-    folder: null
   },
 
   // PACIFIC NORTHWEST & WEST COAST
@@ -344,8 +306,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Half Dome, El Capitan, Yosemite Falls, Glacier Point, Mariposa Grove',
     estimatedCost: '$36/night camping + $35 vehicle entry (7-day pass)',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'sequoia-np',
@@ -361,8 +321,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'General Sherman Tree (largest tree), Giant Forest, Moro Rock, Crystal Cave, Tunnel Log',
     estimatedCost: '$22/night camping + $35 vehicle entry (7-day pass)',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'kings-canyon-np',
@@ -378,8 +336,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Kings Canyon Scenic Byway, Grants Grove (General Grant Tree), Cedar Grove, Zumwalt Meadow',
     estimatedCost: '$22/night camping + $35 vehicle entry (includes Sequoia)',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'death-valley-np',
@@ -395,8 +351,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Badwater Basin (lowest point in NA), Zabriskie Point, Artists Palette, Mesquite Flat Sand Dunes',
     estimatedCost: '$18-36/night camping + $30 vehicle entry (7-day pass)',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'joshua-tree-np',
@@ -412,8 +366,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Joshua trees, Cholla Cactus Garden, Skull Rock, Keys View, rock climbing areas',
     estimatedCost: '$20/night camping + $30 vehicle entry (7-day pass)',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'channel-islands-np',
@@ -429,8 +381,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Island hiking, sea caves, wildlife (seals, sea lions, dolphins), snorkeling, kayaking',
     estimatedCost: 'Free entry. Boat transportation $60-80 per person. Island camping $15/night',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'pinnacles-np',
@@ -446,8 +396,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Talus caves, rock formations, condor viewing, High Peaks Trail',
     estimatedCost: '$36/night camping with hookups + $30 vehicle entry (7-day pass)',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'redwood-np',
@@ -463,8 +411,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Tallest trees on Earth, Lady Bird Johnson Grove, Fern Canyon, coastal drives, Roosevelt elk',
     estimatedCost: '$35/night camping + Free park entry',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'lassen-volcanic-np',
@@ -480,8 +426,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Lassen Peak, Bumpass Hell hydrothermal area, Manzanita Lake, Cinder Cone',
     estimatedCost: '$26/night camping + $30 vehicle entry (7-day pass)',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'crater-lake-np',
@@ -497,8 +441,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Crater Lake (deepest lake in US), Rim Drive, Wizard Island, Phantom Ship, sunrise/sunset',
     estimatedCost: '$31/night camping + $30 vehicle entry (7-day pass)',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'mount-rainier-np',
@@ -514,8 +456,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Paradise (wildflower meadows), Sunrise, Reflection Lakes, Grove of the Patriarchs',
     estimatedCost: '$20-25/night camping + $30 vehicle entry (7-day pass)',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'north-cascades-np',
@@ -531,8 +471,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'North Cascades Scenic Highway, Diablo Lake, Ross Lake, alpine scenery, glaciers',
     estimatedCost: '$16/night camping + Free park entry',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'olympic-np',
@@ -548,8 +486,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Hoh Rainforest, Hurricane Ridge, Rialto Beach, Sol Duc Falls, Lake Crescent',
     estimatedCost: '$20-24/night camping + $30 vehicle entry (7-day pass)',
     notes: '',
-    visited: false,
-    folder: null
   },
 
   // EAST COAST
@@ -567,8 +503,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Cadillac Mountain sunrise, Park Loop Road, Thunder Hole, Jordan Pond, carriage roads',
     estimatedCost: '$30/night camping + $30 vehicle entry (7-day pass)',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'shenandoah-np',
@@ -584,8 +518,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Skyline Drive (105 miles), Old Rag Mountain, Dark Hollow Falls, Hawksbill Summit',
     estimatedCost: '$30/night camping + $30 vehicle entry (7-day pass)',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'great-smoky-np',
@@ -601,8 +533,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Cades Cove loop, Clingmans Dome, Laurel Falls, Roaring Fork Motor Trail',
     estimatedCost: '$25/night camping. NO ENTRANCE FEE!',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'new-river-gorge-np',
@@ -618,8 +548,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'New River Gorge Bridge, whitewater rafting, Grandview overlook, Endless Wall Trail',
     estimatedCost: 'Free entry. Private RV parks $30-50/night',
     notes: '',
-    visited: false,
-    folder: null
   },
 
   // SOUTHEAST
@@ -637,8 +565,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Boardwalk Loop Trail, old-growth bottomland forest, kayaking Cedar Creek, fireflies (May-June)',
     estimatedCost: 'Free entry. Columbia RV parks $35-55/night',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'biscayne-np',
@@ -654,8 +580,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Boat tours, snorkeling/diving coral reefs, mangrove forests, Boca Chita Key lighthouse',
     estimatedCost: 'Free entry. Boat tours $45-100. Island camping $25/night',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'everglades-np',
@@ -671,8 +595,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Anhinga Trail (gator viewing), Shark Valley tram tour, boat tours, Flamingo area',
     estimatedCost: '$20/night camping + $30 vehicle entry (7-day pass)',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'dry-tortugas-np',
@@ -688,8 +610,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Fort Jefferson, snorkeling, birding, pristine waters, tropical fish',
     estimatedCost: 'Free entry. Ferry $190-250 per person. Camping $15/night',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'mammoth-cave-np',
@@ -705,8 +625,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Worlds longest cave system (400+ miles), cave tours, Green River, historic cave entrance',
     estimatedCost: '$25-40/night camping + Cave tours $6-60',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'hot-springs-np',
@@ -722,8 +640,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Historic Bathhouse Row, thermal springs, Grand Promenade, Hot Springs Mountain Tower',
     estimatedCost: 'Free entry. Bathhouse services $20-80. RV parks $35-55/night',
     notes: '',
-    visited: false,
-    folder: null
   },
 
   // MIDWEST
@@ -741,8 +657,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Badlands Loop Road, Notch Trail, fossil exhibits, bison, bighorn sheep, prairie dogs',
     estimatedCost: '$18/night camping + $30 vehicle entry (7-day pass)',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'wind-cave-np',
@@ -758,8 +672,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Cave tours (boxwork formations unique to Wind Cave), bison herd, prairie landscape',
     estimatedCost: '$18/night camping + Cave tours $12-30',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'theodore-roosevelt-np',
@@ -775,8 +687,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Scenic Loop Drive, Painted Canyon, wild horses, bison, prairie dog towns, Teddy Roosevelt history',
     estimatedCost: '$14/night camping + $30 vehicle entry (7-day pass)',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'voyageurs-np',
@@ -792,8 +702,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Boat tours, kayaking, fishing, northern lights, stargazing, winter ice roads',
     estimatedCost: 'Free entry. Boat rentals $50-150/day. Nearby RV parks $35-60/night',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'isle-royale-np',
@@ -809,8 +717,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Backpacking trails, kayaking, moose and wolf watching, fishing, solitude',
     estimatedCost: 'Free entry. Ferry $70-150 per person. Camping $4/person/night',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'indiana-dunes-np',
@@ -826,8 +732,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Lake Michigan beaches, sand dunes, hiking trails, birding',
     estimatedCost: 'Free entry. State park camping $30-45/night',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'gateway-arch-np',
@@ -843,8 +747,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Gateway Arch tram ride to top, Museum of Westward Expansion, riverfront',
     estimatedCost: 'Free entry. Arch tram $12-17 per person. St. Louis RV parks $40-70/night',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'cuyahoga-valley-np',
@@ -860,8 +762,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Brandywine Falls, Towpath Trail, scenic railroad, Ledges Trail, fall colors',
     estimatedCost: 'Free entry. Nearby RV parks $35-60/night',
     notes: '',
-    visited: false,
-    folder: null
   },
 
   // ALASKA
@@ -879,8 +779,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Mount Denali (tallest peak in North America), wildlife (grizzlies, caribou, wolves), bus tours',
     estimatedCost: '$20-30/night camping + $15 per person entry (7-day pass)',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'glacier-bay-np',
@@ -896,8 +794,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Tidewater glaciers, whale watching, kayaking, boat tours, calving glaciers',
     estimatedCost: 'Free entry. Boat tours $200-500. Camping free (permit required)',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'kenai-fjords-np',
@@ -913,8 +809,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Exit Glacier, boat tours (glaciers, whales, puffins), Harding Icefield, wildlife',
     estimatedCost: 'Free entry. Boat tours $150-300. Seward RV parks $40-70/night',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'katmai-np',
@@ -930,8 +824,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Brown bears fishing at Brooks Falls, Valley of Ten Thousand Smokes, salmon runs',
     estimatedCost: 'Free entry. Flights $500-800 per person. Camping $12/person/night (lottery)',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'lake-clark-np',
@@ -947,8 +839,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Brown bears, fishing, glaciers, volcanoes, pristine wilderness',
     estimatedCost: 'Free entry. Flights $400-800 per person. Camping free',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'wrangell-st-elias-np',
@@ -964,8 +854,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Largest national park (6x size of Yellowstone), Root Glacier, historic Kennecott Mine, mountains',
     estimatedCost: 'Free entry. Camping free. Kennecott tour $35',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'gates-of-arctic-np',
@@ -981,8 +869,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Pristine wilderness, Brooks Range, caribou migrations, backcountry experience',
     estimatedCost: 'Free entry. Flights $500-1000+ per person. Camping free',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'kobuk-valley-np',
@@ -998,8 +884,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Great Kobuk Sand Dunes (Arctic sand dunes), caribou migration, Kobuk River',
     estimatedCost: 'Free entry. Flights $600-1000+ per person. Camping free',
     notes: '',
-    visited: false,
-    folder: null
   },
 
   // US TERRITORIES
@@ -1017,8 +901,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Trunk Bay snorkeling, Cinnamon Bay Beach, historic plantation ruins, hiking trails',
     estimatedCost: 'Free entry. Campground $30-50/night',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'american-samoa-np',
@@ -1034,8 +916,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Tropical rainforest, coral reefs, Samoan culture, flying foxes (fruit bats), pristine beaches',
     estimatedCost: 'Free entry. Homestays $30-50/night. Flights expensive',
     notes: '',
-    visited: false,
-    folder: null
   },
 
   // HAWAII
@@ -1053,8 +933,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Sunrise from summit (10,023ft - reservation required), volcanic crater, hiking, stargazing',
     estimatedCost: 'Free camping (permit required) + $30 vehicle entry (3-day pass) + $1 sunrise reservation',
     notes: '',
-    visited: false,
-    folder: null
   },
   {
     id: 'hawaii-volcanoes-np',
@@ -1070,8 +948,6 @@ const NATIONAL_PARKS_COMPLETE = [
     mustSee: 'Kilauea Caldera, active lava flows (when erupting), Thurston Lava Tube, Chain of Craters Road',
     estimatedCost: '$15/night camping + $30 vehicle entry (7-day pass)',
     notes: '',
-    visited: false,
-    folder: null
   }
 ];
 
