@@ -557,33 +557,71 @@ async function editDestination(destId) {
   mediaInput.addEventListener('change', async (e) => {
     const files = Array.from(e.target.files);
 
+    if (files.length === 0) return;
+
+    // Show uploading toast
+    showToast(`Uploading ${files.length} file${files.length > 1 ? 's' : ''}...`, 'info');
+
+    let uploadedCount = 0;
+    let failedCount = 0;
+
     for (const file of files) {
-      // Check file size (max 10MB)
-      if (file.size > 10 * 1024 * 1024) {
-        showToast(`${file.name} is too large. Max 10MB per file.`, 'error');
+      // Check file size (max 50MB for videos, 10MB for images)
+      const maxSize = file.type.startsWith('video/') ? 50 * 1024 * 1024 : 10 * 1024 * 1024;
+      if (file.size > maxSize) {
+        showToast(`${file.name} is too large. Max ${maxSize / 1024 / 1024}MB.`, 'error');
+        failedCount++;
         continue;
       }
 
-      // Read file as base64
-      const reader = new FileReader();
-      reader.onload = async (event) => {
-        const mediaData = {
-          type: file.type,
-          name: file.name,
-          data: event.target.result, // base64 data
-          uploadedAt: new Date().toISOString()
-        };
-
-        // Add to destination media
-        dest.media.push(mediaData);
-
-        // Save and refresh modal
-        await saveDestinations();
-        modal.remove();
-        editDestination(destId); // Reopen with updated media
-      };
-      reader.readAsDataURL(file);
+      try {
+        // Upload to Firebase Storage
+        if (window.FirebaseDB && window.FirebaseDB.uploadMedia) {
+          const mediaData = await window.FirebaseDB.uploadMedia(file, destId);
+          dest.media.push(mediaData);
+          uploadedCount++;
+        } else {
+          // Fallback to base64 for small files (< 1MB)
+          if (file.size < 1024 * 1024) {
+            const reader = new FileReader();
+            await new Promise((resolve) => {
+              reader.onload = (event) => {
+                const mediaData = {
+                  type: file.type,
+                  name: file.name,
+                  data: event.target.result,
+                  uploadedAt: new Date().toISOString()
+                };
+                dest.media.push(mediaData);
+                uploadedCount++;
+                resolve();
+              };
+              reader.readAsDataURL(file);
+            });
+          } else {
+            showToast(`${file.name} too large without Firebase Storage enabled`, 'error');
+            failedCount++;
+          }
+        }
+      } catch (error) {
+        console.error('Error uploading file:', error);
+        showToast(`Failed to upload ${file.name}`, 'error');
+        failedCount++;
+      }
     }
+
+    // Save and refresh modal
+    if (uploadedCount > 0) {
+      await saveDestinations();
+      showToast(`${uploadedCount} file${uploadedCount > 1 ? 's' : ''} uploaded successfully!`, 'success');
+    }
+
+    if (failedCount > 0) {
+      showToast(`${failedCount} file${failedCount > 1 ? 's' : ''} failed to upload`, 'error');
+    }
+
+    modal.remove();
+    editDestination(destId); // Reopen with updated media
   });
 
   // Handle action buttons
@@ -637,6 +675,18 @@ window.deleteDestinationMediaFromEdit = async function(destId, mediaIndex) {
   const dest = destinations.find(d => d.id === destId);
   if (!dest || !dest.media) return;
 
+  const mediaItem = dest.media[mediaIndex];
+
+  // Delete from Firebase Storage if it has a path
+  if (mediaItem.path && window.FirebaseDB && window.FirebaseDB.deleteMedia) {
+    try {
+      await window.FirebaseDB.deleteMedia(mediaItem.path);
+    } catch (error) {
+      console.error('Error deleting media from Firebase Storage:', error);
+    }
+  }
+
+  // Remove from array
   dest.media.splice(mediaIndex, 1);
   await saveDestinations();
 
