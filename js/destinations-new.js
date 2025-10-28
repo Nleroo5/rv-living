@@ -93,7 +93,7 @@ function addMarker(dest, color, isUserDestination) {
       ${dest.bestSeason ? `<p style="margin: 4px 0; font-size: 13px;">Best: ${dest.bestSeason}</p>` : ''}
       ${isUserDestination
         ? `<button onclick="viewDestinationDetails('${dest.id}')" style="margin-top: 8px; padding: 4px 12px; background: var(--color-success); color: white; border: none; border-radius: 4px; cursor: pointer;">Visited</button>`
-        : `<button onclick="addNationalParkToDestinations('${dest.id}')" style="margin-top: 8px; padding: 4px 12px; background: var(--color-primary); color: white; border: none; border-radius: 4px; cursor: pointer;">Add to My Destinations</button>`
+        : `<button onclick="addNationalParkToDestinations('${dest.id}')" style="margin-top: 8px; padding: 4px 12px; background: var(--color-success); color: white; border: none; border-radius: 4px; cursor: pointer;">Visited</button>`
       }
     </div>
   `;
