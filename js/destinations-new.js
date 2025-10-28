@@ -14,36 +14,12 @@ let currentDiscoverType = 'all';
 let nationalParksData = []; // Will hold all 63 National Parks
 let discoverDestinations = []; // Will hold 200+ discover destinations (non-NP)
 
-// DEBUG: Temporary fix function - call from console to fix existing destinations
-window.fixVisitedStatus = async function() {
-  console.log('[FIX] Fixing visited status for all destinations...');
-  destinations.forEach(d => {
-    console.log(`  - ${d.name}: changing visited from ${d.visited} to true`);
-    d.visited = true;
-    if (!d.visitedDate) {
-      d.visitedDate = new Date().toISOString();
-    }
-  });
-  await saveDestinations();
-  renderDestinations();
-  updateMap();
-  renderVisitedDestinations();
-  console.log('[FIX] Done! All destinations marked as visited.');
-};
-
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', async () => {
   await loadDestinations();
   await loadFolders();
   loadNationalParks();
   loadDiscoverDestinations();
-
-  // DEBUG: Check current destinations
-  console.log('[DEBUG] Loaded destinations:', destinations.length);
-  destinations.forEach(d => {
-    console.log(`  - ${d.name}: visited=${d.visited} (type: ${typeof d.visited})`);
-  });
-
   initializeMap();
   setupEventListeners();
   setupTabSwitching();
@@ -87,14 +63,11 @@ function updateMap() {
   // Get filtered user destinations
   const filtered = getFilteredDestinations();
 
-  console.log('updateMap: Total destinations:', destinations.length, 'Filtered:', filtered.length);
-
   // Add markers for user's destinations
   filtered.forEach(dest => {
     if (dest.latitude && dest.longitude) {
       // Green for visited, Red for bucketlist
       const color = dest.visited ? '#10b981' : '#ef4444';
-      console.log('Rendering pin for:', dest.name, 'visited:', dest.visited, 'color:', color);
       addMarker(dest, color, true);
     }
   });
@@ -269,14 +242,10 @@ function setupTabSwitching() {
 function getFilteredDestinations() {
   let filtered = destinations;
 
-  console.log('getFilteredDestinations: currentFolder:', currentFolder, 'currentTypeFilter:', currentTypeFilter, 'currentRegionFilter:', currentRegionFilter);
-
   // Filter by folder
   if (currentFolder === 'bucketlist') {
-    console.log('Filtering out visited destinations (bucketlist mode)');
     filtered = filtered.filter(d => !d.visited);
   } else if (currentFolder !== 'all') {
-    console.log('Filtering by folder:', currentFolder);
     filtered = filtered.filter(d => d.folder === currentFolder);
   }
 
@@ -1009,7 +978,6 @@ window.addNationalParkToDestinations = async function(destId) {
   // Check if already exists - if so, update it to visited instead of skipping
   const existingIndex = destinations.findIndex(d => d.id === destId);
   if (existingIndex !== -1) {
-    console.log('[DEBUG] Destination already exists, updating to visited=true');
     destinations[existingIndex].visited = true;
     destinations[existingIndex].visitedDate = new Date().toISOString();
 
@@ -1025,7 +993,6 @@ window.addNationalParkToDestinations = async function(destId) {
   }
 
   // Add to destinations (automatically marked as visited - will be green pin)
-  // Create new object without spreading destination to avoid any visited:false in source data
   const newDest = {
     id: destination.id,
     name: destination.name,
@@ -1040,20 +1007,14 @@ window.addNationalParkToDestinations = async function(destId) {
     mustSee: destination.mustSee,
     estimatedCost: destination.estimatedCost,
     notes: destination.notes || '',
-    visited: true,  // MUST be boolean true for green pins
+    visited: true,
     folder: null,
     addedDate: new Date().toISOString(),
     visitedDate: new Date().toISOString()
   };
 
-  console.log('[DEBUG] Adding destination:', newDest.name, 'with visited:', newDest.visited, 'type:', typeof newDest.visited);
   destinations.push(newDest);
-
   await saveDestinations();
-
-  // Verify it was added correctly
-  const addedDest = destinations.find(d => d.id === destId);
-  console.log('[DEBUG] After save, found in array:', addedDest?.name, 'visited:', addedDest?.visited, 'type:', typeof addedDest?.visited);
 
   renderDestinations();
   renderFolders();
@@ -1141,14 +1102,7 @@ function renderVisitedDestinations() {
   const grid = document.getElementById('visited-grid');
   const emptyState = document.getElementById('visited-empty');
 
-  console.log('[DEBUG] renderVisitedDestinations: Total destinations:', destinations.length);
-  destinations.forEach(d => {
-    if (d.visited) {
-      console.log('[DEBUG]  - Visited destination:', d.name, 'visited:', d.visited, 'type:', typeof d.visited);
-    }
-  });
-
-  // Filter only visited destinations (use truthy check instead of strict equality)
+  // Filter only visited destinations
   const visitedDestinations = destinations.filter(d => d.visited === true);
   
   grid.innerHTML = '';
