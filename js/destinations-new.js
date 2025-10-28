@@ -8,13 +8,21 @@ let currentFolder = 'all';
 let currentTypeFilter = 'all';
 let currentRegionFilter = 'all';
 let currentSearch = '';
+let currentTab = 'my-destinations';
+let currentDiscoverRegion = '';
+let currentDiscoverType = 'all';
+let nationalParksData = []; // Will hold all 63 National Parks
+let discoverDestinations = []; // Will hold 200+ discover destinations (non-NP)
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
   loadDestinations();
   loadFolders();
+  loadNationalParks();
+  loadDiscoverDestinations();
   initializeMap();
   setupEventListeners();
+  setupTabSwitching();
   renderFolders();
   renderDestinations();
   updateMap();
@@ -33,46 +41,70 @@ function initializeMap() {
   }).addTo(map);
 }
 
-// Update map with current destinations
+// Update map with current destinations and National Parks
 function updateMap() {
   // Clear existing markers
   markers.forEach(marker => map.removeLayer(marker));
   markers = [];
 
-  // Get filtered destinations
-  const filtered = getFilteredDestinations();
+  // Always add all 63 National Parks as blue pins (unless they're in user's destinations)
+  nationalParksData.forEach(park => {
+    if (park.latitude && park.longitude) {
+      // Check if this National Park is in user's destinations
+      const userDest = destinations.find(d => d.id === park.id);
 
-  // Add markers for each destination
-  filtered.forEach(dest => {
-    if (dest.latitude && dest.longitude) {
-      const icon = L.divIcon({
-        className: 'custom-marker',
-        html: `<div style="background-color: ${dest.visited ? '#10b981' : '#3b82f6'}; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>`,
-        iconSize: [12, 12],
-        iconAnchor: [6, 6]
-      });
-
-      const marker = L.marker([dest.latitude, dest.longitude], { icon })
-        .bindPopup(`
-          <div style="min-width: 200px;">
-            <h4 style="margin: 0 0 8px 0; font-weight: bold;">${dest.name}</h4>
-            <p style="margin: 0 0 4px 0; color: #666; font-size: 14px;">${dest.state}</p>
-            ${dest.rvCamping ? '<p style="margin: 4px 0; font-size: 13px;">✓ RV Camping Available</p>' : ''}
-            ${dest.bestSeason ? `<p style="margin: 4px 0; font-size: 13px;">Best: ${dest.bestSeason}</p>` : ''}
-            <button onclick="viewDestinationDetails('${dest.id}')" style="margin-top: 8px; padding: 4px 12px; background: var(--color-primary); color: white; border: none; border-radius: 4px; cursor: pointer;">View Details</button>
-          </div>
-        `)
-        .addTo(map);
-
-      markers.push(marker);
+      // Skip if user has added this park (it will be rendered with their chosen color)
+      if (!userDest) {
+        addMarker(park, '#3b82f6', false); // Blue for National Parks
+      }
     }
   });
 
-  // Adjust map bounds if there are markers
-  if (markers.length > 0) {
-    const group = L.featureGroup(markers);
-    map.fitBounds(group.getBounds().pad(0.1));
-  }
+  // Get filtered user destinations
+  const filtered = getFilteredDestinations();
+
+  // Add markers for user's destinations
+  filtered.forEach(dest => {
+    if (dest.latitude && dest.longitude) {
+      // Green for visited, Red for wishlist
+      const color = dest.visited ? '#10b981' : '#ef4444';
+      addMarker(dest, color, true);
+    }
+  });
+
+  // Don't auto-fit bounds - keep US view so users can see all pins
+  // Users can zoom/pan manually
+}
+
+// Helper function to add a marker to the map
+function addMarker(dest, color, isUserDestination) {
+  const icon = L.divIcon({
+    className: 'custom-marker',
+    html: `<div style="background-color: ${color}; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>`,
+    iconSize: [12, 12],
+    iconAnchor: [6, 6]
+  });
+
+  const popupContent = `
+    <div style="min-width: 200px;">
+      <h4 style="margin: 0 0 8px 0; font-weight: bold;">${dest.name}</h4>
+      <p style="margin: 0 0 4px 0; color: #666; font-size: 14px;">${dest.state}</p>
+      ${dest.rvCamping ? '<p style="margin: 4px 0; font-size: 13px;">RV Camping Available</p>' : ''}
+      ${dest.bestSeason ? `<p style="margin: 4px 0; font-size: 13px;">Best: ${dest.bestSeason}</p>` : ''}
+      ${isUserDestination
+        ? (dest.visited
+            ? `<button onclick="viewDestinationDetails('${dest.id}')" style="margin-top: 8px; padding: 4px 12px; background: var(--color-success); color: white; border: none; border-radius: 4px; cursor: pointer;">Visited</button>`
+            : `<button onclick="viewDestinationDetails('${dest.id}')" style="margin-top: 8px; padding: 4px 12px; background: var(--color-primary); color: white; border: none; border-radius: 4px; cursor: pointer;">View Details</button>`)
+        : `<button onclick="addNationalParkToDestinations('${dest.id}')" style="margin-top: 8px; padding: 4px 12px; background: var(--color-primary); color: white; border: none; border-radius: 4px; cursor: pointer;">Add to Bucketlist</button>`
+      }
+    </div>
+  `;
+
+  const marker = L.marker([dest.latitude, dest.longitude], { icon })
+    .bindPopup(popupContent)
+    .addTo(map);
+
+  markers.push(marker);
 }
 
 // Setup event listeners
@@ -143,6 +175,68 @@ function setupEventListeners() {
     document.getElementById('import-input').click();
   });
   document.getElementById('import-input').addEventListener('change', importDestinations);
+
+  // Discover tab - region selector
+  document.getElementById('region-selector').addEventListener('change', (e) => {
+    currentDiscoverRegion = e.target.value;
+    renderDiscoverDestinations();
+  });
+  
+  // Visited tab - sort selector
+  document.getElementById('visited-sort').addEventListener('change', (e) => {
+    renderVisitedDestinations();
+  });
+
+  // Discover tab - type filters
+  document.getElementById('discover-filters').addEventListener('click', (e) => {
+    if (e.target.classList.contains('tag-filter')) {
+      currentDiscoverType = e.target.dataset.discoverType;
+
+      // Update active state
+      document.querySelectorAll('#discover-filters .tag-filter').forEach(tag => {
+        tag.classList.remove('active');
+      });
+      e.target.classList.add('active');
+
+      renderDiscoverDestinations();
+    }
+  });
+}
+
+// Setup tab switching
+function setupTabSwitching() {
+  const tabButtons = document.querySelectorAll('.tab-btn');
+
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tabName = btn.dataset.tab;
+
+      // Update active tab button
+      tabButtons.forEach(b => {
+        b.classList.remove('active');
+        b.style.borderBottom = '3px solid transparent';
+        b.style.color = 'var(--color-text-secondary)';
+      });
+      btn.classList.add('active');
+      btn.style.borderBottom = '3px solid var(--color-primary)';
+      btn.style.color = 'inherit';
+
+      // Show/hide tab content
+      document.getElementById('my-destinations-tab').style.display =
+        tabName === 'my-destinations' ? 'block' : 'none';
+      document.getElementById('discover-tab').style.display =
+        tabName === 'discover' ? 'block' : 'none';
+      document.getElementById('visited-tab').style.display =
+        tabName === 'visited' ? 'block' : 'none';
+
+      currentTab = tabName;
+      
+      // Render visited tab content when switching to it
+      if (tabName === 'visited') {
+        renderVisitedDestinations();
+      }
+    });
+  });
 }
 
 // Get filtered destinations
@@ -392,6 +486,7 @@ async function deleteDestination(destId) {
     renderDestinations();
     renderFolders();
     updateMap();
+    renderDiscoverDestinations(); // Refresh Discover tab to show deleted destination again
     showToast('Destination deleted', 'info');
   }
 }
@@ -436,3 +531,393 @@ function loadFolders() {
 function saveFolders() {
   Storage.set('folders', folders);
 }
+
+function loadNationalParks() {
+  // Load complete National Parks database if available
+  if (typeof NATIONAL_PARKS_COMPLETE !== 'undefined') {
+    nationalParksData = NATIONAL_PARKS_COMPLETE;
+  } else if (typeof SAMPLE_DESTINATIONS !== 'undefined') {
+    // Fallback to sample data
+    nationalParksData = SAMPLE_DESTINATIONS.filter(d => d.type === 'national-park');
+  } else {
+    nationalParksData = [];
+  }
+}
+
+function loadDiscoverDestinations() {
+  // Load discover destinations database (non-National Parks)
+  if (typeof ALL_DISCOVER_DESTINATIONS !== 'undefined') {
+    discoverDestinations = ALL_DISCOVER_DESTINATIONS;
+    console.log(`Loaded ${discoverDestinations.length} discover destinations`);
+  } else if (typeof DISCOVER_DESTINATIONS !== 'undefined') {
+    discoverDestinations = DISCOVER_DESTINATIONS;
+    console.log(`Loaded ${discoverDestinations.length} discover destinations (fallback)`);
+  } else {
+    discoverDestinations = [];
+    console.log('No discover destinations loaded');
+  }
+}
+
+// Render Discover tab recommendations
+function renderDiscoverDestinations() {
+  const grid = document.getElementById('recommended-grid');
+  const emptyState = document.getElementById('discover-empty');
+
+  // If no region selected, show empty state
+  if (!currentDiscoverRegion) {
+    grid.style.display = 'none';
+    emptyState.style.display = 'block';
+    return;
+  }
+
+  // Use ONLY Discover destinations (NOT National Parks - those are only in Bucketlist)
+  let allDestinations = [...discoverDestinations];
+
+  // FILTER OUT destinations already in Bucketlist
+  allDestinations = allDestinations.filter(d => {
+    return !destinations.find(userDest => userDest.id === d.id);
+  });
+
+  let filtered = allDestinations;
+
+  // Filter by specific state or region
+  if (currentDiscoverRegion) {
+    // List of valid regions
+    const regions = ['southwest', 'pacific-northwest', 'rocky-mountains', 'midwest', 'southeast', 'east-coast', 'alaska', 'hawaii', 'territories'];
+
+    if (regions.includes(currentDiscoverRegion.toLowerCase())) {
+      // Filter by region
+      filtered = filtered.filter(d => d.region === currentDiscoverRegion.toLowerCase());
+    } else {
+      // Filter by state/province name (check if state contains the search term)
+      filtered = filtered.filter(d =>
+        d.state.toLowerCase().includes(currentDiscoverRegion.toLowerCase())
+      );
+    }
+  }
+
+  // Filter by type (no National Parks - those are only in Bucketlist)
+  if (currentDiscoverType === 'state-park') {
+    filtered = filtered.filter(d => d.type === 'state-park');
+  } else if (currentDiscoverType === 'city') {
+    filtered = filtered.filter(d => d.type === 'city');
+  } else if (currentDiscoverType === 'attraction') {
+    filtered = filtered.filter(d => d.type === 'attraction');
+  } else if (currentDiscoverType === 'scenic') {
+    filtered = filtered.filter(d => d.type === 'scenic');
+  }
+
+  grid.innerHTML = '';
+
+  if (filtered.length === 0) {
+    grid.style.display = 'none';
+    emptyState.style.display = 'block';
+    emptyState.querySelector('h3').textContent = 'No destinations found';
+    emptyState.querySelector('p').textContent = 'Try selecting a different region or filter';
+    return;
+  }
+
+  grid.style.display = 'grid';
+  emptyState.style.display = 'none';
+
+  filtered.forEach(dest => {
+    const card = createRecommendationCard(dest);
+    grid.appendChild(card);
+  });
+}
+
+// Create recommendation card for Discover tab
+function createRecommendationCard(dest) {
+  const card = document.createElement('div');
+  card.className = 'destination-card';
+
+  // Check if already in user's destinations
+  const alreadyAdded = destinations.find(d => d.id === dest.id);
+
+  card.innerHTML = `
+    <div class="destination-header">
+      <h3 class="destination-title">${sanitizeHTML(dest.name)}</h3>
+      <p class="destination-location">${sanitizeHTML(dest.state)}</p>
+    </div>
+
+    <div class="destination-tags">
+      <span class="destination-tag">${getTypeLabel(dest.type)}</span>
+      ${dest.region ? `<span class="destination-tag">${getRegionLabel(dest.region)}</span>` : ''}
+      ${alreadyAdded ? '<span class="destination-tag" style="background-color: #10b981; color: white;">In Bucketlist</span>' : ''}
+    </div>
+
+    <div class="destination-info">
+      ${dest.rvCamping ? `
+        <div class="info-row">
+          <span class="info-label">RV Camping</span>
+          <span class="info-value">${sanitizeHTML(dest.rvCampingDetails || 'Available')}</span>
+        </div>
+      ` : ''}
+
+      ${dest.bestSeason ? `
+        <div class="info-row">
+          <span class="info-label">Best Season</span>
+          <span class="info-value">${sanitizeHTML(dest.bestSeason)}</span>
+        </div>
+      ` : ''}
+
+      ${dest.estimatedCost ? `
+        <div class="info-row">
+          <span class="info-label">Est. Cost</span>
+          <span class="info-value">${sanitizeHTML(dest.estimatedCost)}</span>
+        </div>
+      ` : ''}
+    </div>
+
+    ${dest.mustSee ? `
+      <div style="margin-bottom: var(--space-3); padding: var(--space-2); background: var(--color-background-alt); border-radius: var(--radius-md);">
+        <p style="font-weight: var(--font-weight-semibold); font-size: var(--text-sm); margin-bottom: var(--space-1);">Must See:</p>
+        <p style="font-size: var(--text-sm); color: var(--color-text-secondary);">${sanitizeHTML(dest.mustSee)}</p>
+      </div>
+    ` : ''}
+
+    ${dest.notes ? `
+      <div style="margin-bottom: var(--space-3);">
+        <p style="font-weight: var(--font-weight-semibold); font-size: var(--text-sm); margin-bottom: var(--space-1);">Notes:</p>
+        <p style="font-size: var(--text-sm); color: var(--color-text-secondary);">${sanitizeHTML(dest.notes)}</p>
+      </div>
+    ` : ''}
+
+    <div style="display: flex; gap: var(--space-2); margin-top: auto; flex-wrap: wrap;">
+      ${!alreadyAdded ? `
+        <button class="btn btn-small btn-primary" onclick="addNationalParkToDestinations('${dest.id}')">
+          Add to Bucketlist
+        </button>
+        <button class="btn btn-small btn-outline" onclick="addToFolderFromDiscover('${dest.id}')">
+          Add to Folder...
+        </button>
+      ` : `
+        <button class="btn btn-small btn-outline" disabled>
+          Already Added
+        </button>
+      `}
+    </div>
+  `;
+
+  return card;
+}
+
+// Add destination to user's list from map or Discover tab
+window.addNationalParkToDestinations = async function(destId) {
+  // Find in National Parks or Discover destinations
+  let destination = nationalParksData.find(p => p.id === destId);
+  if (!destination) {
+    destination = discoverDestinations.find(d => d.id === destId);
+  }
+  if (!destination) return;
+
+  // Check if already exists
+  if (destinations.find(d => d.id === destId)) {
+    showToast('This destination is already in your list', 'info');
+    return;
+  }
+
+  // Add to destinations (not visited by default - will be red pin)
+  destinations.push({
+    ...destination,
+    visited: false,
+    folder: null,
+    addedDate: new Date().toISOString()
+  });
+
+  saveDestinations();
+  renderDestinations();
+  renderFolders();
+  updateMap();
+  renderDiscoverDestinations(); // Refresh Discover tab to show "Already Added"
+  showToast(`${destination.name} added to your destinations!`, 'success');
+};
+
+// Add to folder from Discover tab
+window.addToFolderFromDiscover = async function(destId) {
+  // Find in National Parks or Discover destinations
+  let destination = nationalParksData.find(p => p.id === destId);
+  if (!destination) {
+    destination = discoverDestinations.find(d => d.id === destId);
+  }
+  if (!destination) return;
+
+  // Check if already exists
+  if (destinations.find(d => d.id === destId)) {
+    showToast('This destination is already in your list', 'info');
+    return;
+  }
+
+  // Show folder selection
+  if (folders.length === 0) {
+    showToast('Create a folder first before adding to folder', 'info');
+    return;
+  }
+
+  const folderOptions = folders.map(f => `<option value="${f.id}">${f.name}</option>`).join('');
+  const modal = createModal('Add to Folder', `
+    <p style="margin-bottom: var(--space-3);">Add <strong>${sanitizeHTML(destination.name)}</strong> to which folder?</p>
+    <select id="folder-select" class="form-select">
+      <option value="">Select folder...</option>
+      ${folderOptions}
+    </select>
+  `, [
+    { text: 'Cancel', class: 'btn-outline', action: 'cancel' },
+    { text: 'Add', class: 'btn-primary', action: 'add' }
+  ]);
+
+  const buttons = modal.querySelectorAll('[data-action]');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const action = btn.dataset.action;
+
+      if (action === 'add') {
+        const folderId = modal.querySelector('#folder-select').value;
+        if (!folderId) {
+          showToast('Please select a folder', 'error');
+          return;
+        }
+
+        // Add to destinations with folder
+        destinations.push({
+          ...destination,
+          visited: false,
+          folder: folderId,
+          addedDate: new Date().toISOString()
+        });
+
+        saveDestinations();
+        renderDestinations();
+        renderFolders();
+        updateMap();
+        renderDiscoverDestinations();
+
+        const folder = folders.find(f => f.id === folderId);
+        showToast(`${destination.name} added to ${folder.name}!`, 'success');
+      }
+
+      modal.remove();
+    });
+  });
+};
+
+// Render visited destinations
+function renderVisitedDestinations() {
+  const grid = document.getElementById('visited-grid');
+  const emptyState = document.getElementById('visited-empty');
+  
+  // Filter only visited destinations
+  const visitedDestinations = destinations.filter(d => d.visited === true);
+  
+  grid.innerHTML = '';
+  
+  if (visitedDestinations.length === 0) {
+    grid.style.display = 'none';
+    emptyState.style.display = 'block';
+    return;
+  }
+  
+  grid.style.display = 'grid';
+  emptyState.style.display = 'none';
+  
+  // Sort visited destinations based on select value
+  const sortSelect = document.getElementById('visited-sort');
+  const sortValue = sortSelect ? sortSelect.value : 'date-desc';
+  
+  let sorted = [...visitedDestinations];
+  switch (sortValue) {
+    case 'date-desc':
+      sorted.sort((a, b) => new Date(b.visitedDate || b.addedDate) - new Date(a.visitedDate || a.addedDate));
+      break;
+    case 'date-asc':
+      sorted.sort((a, b) => new Date(a.visitedDate || a.addedDate) - new Date(b.visitedDate || b.addedDate));
+      break;
+    case 'name':
+      sorted.sort((a, b) => a.name.localeCompare(b.name));
+      break;
+    case 'state':
+      sorted.sort((a, b) => a.state.localeCompare(b.state));
+      break;
+  }
+  
+  sorted.forEach(dest => {
+    const card = createVisitedCard(dest);
+    grid.appendChild(card);
+  });
+}
+
+// Create visited destination card
+function createVisitedCard(dest) {
+  const card = document.createElement('div');
+  card.className = 'destination-card';
+  
+  card.innerHTML = `
+    <div class="destination-header">
+      <h3 class="destination-title">${sanitizeHTML(dest.name)}</h3>
+      <p class="destination-location">${sanitizeHTML(dest.state)}</p>
+    </div>
+    
+    <div class="destination-tags">
+      <span class="destination-tag">${getTypeLabel(dest.type)}</span>
+      ${dest.region ? `<span class="destination-tag">${getRegionLabel(dest.region)}</span>` : ''}
+      <span class="destination-tag" style="background-color: #10b981; color: white;">Visited</span>
+    </div>
+    
+    <div class="destination-info">
+      ${dest.visitedDate ? `
+        <div class="info-row">
+          <span class="info-label">Visited Date</span>
+          <span class="info-value">${new Date(dest.visitedDate).toLocaleDateString()}</span>
+        </div>
+      ` : ''}
+      
+      ${dest.rating ? `
+        <div class="info-row">
+          <span class="info-label">Rating</span>
+          <span class="info-value">${'★'.repeat(dest.rating)}${'☆'.repeat(5 - dest.rating)}</span>
+        </div>
+      ` : ''}
+      
+      ${dest.notes ? `
+        <div class="info-row">
+          <span class="info-label">Notes</span>
+          <span class="info-value">${sanitizeHTML(dest.notes)}</span>
+        </div>
+      ` : ''}
+    </div>
+    
+    <div style="display: flex; gap: var(--space-2); margin-top: var(--space-3);">
+      <button class="btn btn-outline btn-small" onclick="editDestination('${dest.id}')">
+        Edit
+      </button>
+      <button class="btn btn-outline btn-small" onclick="toggleVisited('${dest.id}')">
+        Mark as Not Visited
+      </button>
+    </div>
+  `;
+  
+  return card;
+}
+
+// Toggle visited status
+window.toggleVisited = function(id) {
+  const dest = destinations.find(d => d.id === id);
+  if (dest) {
+    dest.visited = !dest.visited;
+    if (dest.visited) {
+      if (!dest.visitedDate) {
+        dest.visitedDate = new Date().toISOString();
+      }
+      // Clear notes when marking as visited so user can write fresh visit notes
+      dest.notes = '';
+    }
+    saveDestinations();
+    renderDestinations();
+    renderFolders();
+    updateMap();
+    if (currentTab === 'visited') {
+      renderVisitedDestinations();
+    }
+    showToast(`${dest.name} marked as ${dest.visited ? 'visited' : 'not visited'}`, 'success');
+  }
+};

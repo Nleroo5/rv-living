@@ -228,15 +228,34 @@
       <div class="card mb-4">
         <div class="card-header">
           <h2 class="card-title">Destination Map</h2>
-          <p class="card-subtitle">All your destinations plotted on an interactive map</p>
+          <p class="card-subtitle">All destinations - Green: Visited | Red: Bucketlist | Blue: National Parks</p>
         </div>
         <div class="card-body" style="padding: 0;">
           <div id="map" class="map-container"></div>
         </div>
       </div>
 
-      <!-- Main Layout -->
-      <div class="destinations-layout">
+      <!-- Tab Navigation -->
+      <div class="card mb-4">
+        <div class="card-header" style="border-bottom: 1px solid var(--color-border); padding-bottom: 0;">
+          <div style="display: flex; gap: var(--space-4);">
+            <button class="tab-btn active" data-tab="my-destinations" style="padding: var(--space-3); border: none; background: none; cursor: pointer; border-bottom: 3px solid var(--color-primary); font-weight: var(--font-weight-semibold);">
+              Bucketlist Destinations
+            </button>
+            <button class="tab-btn" data-tab="discover" style="padding: var(--space-3); border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; font-weight: var(--font-weight-semibold); color: var(--color-text-secondary);">
+              Discover Places
+            </button>
+            <button class="tab-btn" data-tab="visited" style="padding: var(--space-3); border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; font-weight: var(--font-weight-semibold); color: var(--color-text-secondary);">
+              Visited
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bucketlist Destinations Tab -->
+      <div id="my-destinations-tab" class="tab-content">
+        <!-- Main Layout -->
+        <div class="destinations-layout">
         <!-- Sidebar - Folders -->
         <aside class="sidebar">
           <div class="card">
@@ -295,6 +314,7 @@
                   <span class="tag-filter" data-type="state-park">State Parks</span>
                   <span class="tag-filter" data-type="city">Cities</span>
                   <span class="tag-filter" data-type="attraction">Attractions</span>
+                  <span class="tag-filter" data-type="scenic">Scenic Routes</span>
                 </div>
               </div>
 
@@ -304,10 +324,12 @@
                   <span class="tag-filter active" data-region="all">All</span>
                   <span class="tag-filter" data-region="southwest">Southwest</span>
                   <span class="tag-filter" data-region="pacific-northwest">Pacific Northwest</span>
+                  <span class="tag-filter" data-region="rocky-mountains">Rocky Mountains</span>
                   <span class="tag-filter" data-region="east-coast">East Coast</span>
                   <span class="tag-filter" data-region="southeast">Southeast</span>
                   <span class="tag-filter" data-region="midwest">Midwest</span>
-                  <span class="tag-filter" data-region="rocky-mountains">Rocky Mountains</span>
+                  <span class="tag-filter" data-region="alaska">Alaska</span>
+                  <span class="tag-filter" data-region="hawaii">Hawaii</span>
                 </div>
               </div>
 
@@ -332,6 +354,117 @@
           </div>
         </div>
       </div>
+      </div>
+      <!-- End Bucketlist Destinations Tab -->
+
+      <!-- Discover Tab -->
+      <div id="discover-tab" class="tab-content" style="display: none;">
+        <div class="card mb-4">
+          <div class="card-body">
+            <h3 style="margin-bottom: var(--space-3);">Browse Destinations by Region</h3>
+
+            <!-- Region/State Selector -->
+            <div class="form-group mb-4">
+              <label for="region-selector" class="form-label">Select Region or State</label>
+              <select id="region-selector" class="form-select" style="max-width: 400px;">
+                <option value="">Choose a region...</option>
+                <optgroup label="Regions">
+                  <option value="southwest">Southwest</option>
+                  <option value="pacific-northwest">Pacific Northwest</option>
+                  <option value="rocky-mountains">Rocky Mountains</option>
+                  <option value="midwest">Midwest</option>
+                  <option value="southeast">Southeast</option>
+                  <option value="east-coast">East Coast</option>
+                  <option value="alaska">Alaska</option>
+                  <option value="hawaii">Hawaii</option>
+                </optgroup>
+                <optgroup label="States (USA)">
+                  <option value="arizona">Arizona</option>
+                  <option value="california">California</option>
+                  <option value="colorado">Colorado</option>
+                  <option value="florida">Florida</option>
+                  <option value="maine">Maine</option>
+                  <option value="montana">Montana</option>
+                  <option value="nevada">Nevada</option>
+                  <option value="new mexico">New Mexico</option>
+                  <option value="oregon">Oregon</option>
+                  <option value="texas">Texas</option>
+                  <option value="utah">Utah</option>
+                  <option value="washington">Washington</option>
+                  <option value="wyoming">Wyoming</option>
+                </optgroup>
+                <optgroup label="Canada">
+                  <option value="british columbia">British Columbia</option>
+                  <option value="alberta">Alberta</option>
+                  <option value="ontario">Ontario</option>
+                  <option value="quebec">Quebec</option>
+                </optgroup>
+              </select>
+            </div>
+
+            <!-- Type Filters -->
+            <div style="margin-bottom: var(--space-3);">
+              <label style="font-weight: var(--font-weight-semibold); font-size: var(--text-sm); margin-bottom: var(--space-2); display: block;">Filter by Type</label>
+              <div class="tag-filters" id="discover-filters">
+                <span class="tag-filter active" data-discover-type="all">All</span>
+                <span class="tag-filter" data-discover-type="city">Cities</span>
+                <span class="tag-filter" data-discover-type="state-park">State Parks</span>
+                <span class="tag-filter" data-discover-type="attraction">Attractions</span>
+                <span class="tag-filter" data-discover-type="scenic">Scenic Routes</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recommended Destinations Grid -->
+        <div class="destination-grid" id="recommended-grid">
+          <!-- Recommended destinations will be rendered here -->
+        </div>
+
+        <!-- Empty State for Discover -->
+        <div class="card text-center" id="discover-empty" style="display: none;">
+          <div class="card-body" style="padding: var(--space-8);">
+            <h3 style="margin-bottom: var(--space-2);">Select a Region</h3>
+            <p class="text-secondary">Choose a region above to see recommended destinations</p>
+          </div>
+        </div>
+      </div>
+      <!-- End Discover Tab -->
+
+      <!-- Visited Tab -->
+      <div id="visited-tab" class="tab-content" style="display: none;">
+        <div class="card mb-4">
+          <div class="card-body">
+            <h3 style="margin-bottom: var(--space-3);">Your Visited Destinations</h3>
+            
+            <!-- Sort and Filter Options -->
+            <div class="form-group mb-3">
+              <label for="visited-sort" class="form-label">Sort by</label>
+              <select id="visited-sort" class="form-select" style="max-width: 300px;">
+                <option value="date-desc">Most Recent Visit</option>
+                <option value="date-asc">Oldest Visit</option>
+                <option value="name">Name (A-Z)</option>
+                <option value="state">State</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visited Destinations Grid -->
+        <div class="destination-grid" id="visited-grid">
+          <!-- Visited destinations will be rendered here -->
+        </div>
+
+        <!-- Empty State for Visited -->
+        <div class="card text-center" id="visited-empty" style="display: none;">
+          <div class="card-body" style="padding: var(--space-8);">
+            <h3 style="margin-bottom: var(--space-2);">No visited destinations yet</h3>
+            <p class="text-secondary">Mark destinations as visited from your bucketlist!</p>
+          </div>
+        </div>
+      </div>
+      <!-- End Visited Tab -->
+
     </div>
   </main>
 
@@ -348,22 +481,8 @@
   <!-- JavaScript -->
   <script src="js/utils.js"></script>
   <script src="js/components.js"></script>
-  <script src="js/destinations-sample-data.js"></script>
+  <script src="js/national-parks-complete.js"></script>
+  <script src="js/discover-destinations.js"></script>
   <script src="js/destinations-new.js"></script>
-
-  <script>
-    // Load sample data if destinations are empty
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        if (destinations.length === 0 && typeof SAMPLE_DESTINATIONS !== 'undefined') {
-          destinations = SAMPLE_DESTINATIONS.map(d => ({...d}));
-          saveDestinations();
-          renderDestinations();
-          renderFolders();
-          updateMap();
-        }
-      }, 100);
-    });
-  </script>
 </body>
 </html>
