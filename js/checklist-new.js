@@ -578,6 +578,261 @@ const PACKING_CATEGORIES = [
       { title: 'RV owner manual', priority: 'essential' },
       { title: 'Appliance manuals for RV equipment', priority: 'recommended' }
     ]
+  },
+  {
+    id: 'pets',
+    name: 'Pets & Animal Care',
+    icon: 'Pets',
+    items: [
+      { title: 'Pet food 30 day supply', priority: 'essential' },
+      { title: 'Pet food storage container airtight', priority: 'recommended' },
+      { title: 'Pet treats variety pack', priority: 'recommended' },
+      { title: 'Food bowls stainless steel 2 pack', priority: 'essential' },
+      { title: 'Water bowls 2 pack', priority: 'essential' },
+      { title: 'Automatic pet feeder timed', priority: 'optional' },
+      { title: 'Pet water fountain filtered', priority: 'optional' },
+      { title: 'Leash standard 6 ft', priority: 'essential' },
+      { title: 'Leash retractable 16 ft', priority: 'recommended' },
+      { title: 'Collar with ID tags current', priority: 'essential' },
+      { title: 'Harness for walking', priority: 'recommended' },
+      { title: 'Spare collar and leash set', priority: 'recommended' },
+      { title: 'Pet carrier travel crate', priority: 'essential' },
+      { title: 'Pet bed washable', priority: 'essential' },
+      { title: 'Pet blankets 3 pack', priority: 'recommended' },
+      { title: 'Litter box covered', priority: 'essential' },
+      { title: 'Litter clumping 25 lb', priority: 'essential' },
+      { title: 'Litter scoop metal', priority: 'essential' },
+      { title: 'Litter disposal bags', priority: 'essential' },
+      { title: 'Poop bags dispenser with 200 bags', priority: 'essential' },
+      { title: 'Pet grooming brush', priority: 'recommended' },
+      { title: 'Pet nail clippers', priority: 'recommended' },
+      { title: 'Pet shampoo gentle formula', priority: 'recommended' },
+      { title: 'Pet towels quick dry 2 pack', priority: 'recommended' },
+      { title: 'Flea and tick prevention medication', priority: 'essential' },
+      { title: 'Pet medications prescription with refills', priority: 'essential' },
+      { title: 'Pet first aid kit', priority: 'essential' },
+      { title: 'Pet thermometer digital', priority: 'recommended' },
+      { title: 'Vet records and vaccination certificates', priority: 'essential' },
+      { title: 'Pet microchip registration info', priority: 'essential' },
+      { title: 'Photos of pet for lost posters', priority: 'recommended' },
+      { title: 'Pet seatbelt or car harness', priority: 'recommended' },
+      { title: 'Pet ramp for RV steps', priority: 'optional' },
+      { title: 'Portable pet playpen outdoor', priority: 'optional' },
+      { title: 'Pet tie-out stake and cable', priority: 'recommended' },
+      { title: 'Pet toys variety pack', priority: 'recommended' },
+      { title: 'Chew toys durable', priority: 'recommended' },
+      { title: 'Interactive puzzle toys', priority: 'optional' },
+      { title: 'Catnip or cat toys', priority: 'optional' },
+      { title: 'Pet waste disposal system', priority: 'recommended' },
+      { title: 'Pet cooling mat for summer', priority: 'recommended' },
+      { title: 'Pet heating pad for winter', priority: 'recommended' },
+      { title: 'Pet life jacket for water activities', priority: 'optional' },
+      { title: 'GPS pet tracker collar attachment', priority: 'recommended' },
+      { title: 'Emergency pet contact list laminated', priority: 'essential' }
+    ]
+  },
+  {
+    id: 'tools',
+    name: 'Tools & Maintenance',
+    icon: 'Tools',
+    items: [
+      { title: 'Socket set metric and SAE', priority: 'essential' },
+      { title: 'Wrench set adjustable 3 piece', priority: 'essential' },
+      { title: 'Wrench set combination', priority: 'recommended' },
+      { title: 'Screwdriver set Phillips and flathead', priority: 'essential' },
+      { title: 'Allen wrench set hex keys', priority: 'essential' },
+      { title: 'Pliers needle nose', priority: 'essential' },
+      { title: 'Pliers channel lock', priority: 'recommended' },
+      { title: 'Pliers vise grip locking', priority: 'recommended' },
+      { title: 'Wire cutters diagonal', priority: 'recommended' },
+      { title: 'Hammer claw 16 oz', priority: 'essential' },
+      { title: 'Utility knife with extra blades', priority: 'essential' },
+      { title: 'Measuring tape 25 ft', priority: 'essential' },
+      { title: 'Level torpedo 9 inch', priority: 'recommended' },
+      { title: 'Cordless drill with bits', priority: 'recommended' },
+      { title: 'Drill bit set metal and wood', priority: 'recommended' },
+      { title: 'Saw folding hand saw', priority: 'recommended' },
+      { title: 'Hacksaw with extra blades', priority: 'recommended' },
+      { title: 'File set metal', priority: 'optional' },
+      { title: 'Sandpaper assorted grits', priority: 'recommended' },
+      { title: 'WD-40 lubricant spray', priority: 'essential' },
+      { title: 'Silicone spray lubricant', priority: 'recommended' },
+      { title: 'Penetrating oil for rusty bolts', priority: 'recommended' },
+      { title: 'Grease gun with grease', priority: 'optional' },
+      { title: 'Sealant RV roof and seam silicone', priority: 'essential' },
+      { title: 'Putty knife flexible', priority: 'recommended' },
+      { title: 'Caulk gun heavy duty', priority: 'recommended' },
+      { title: 'Epoxy two-part adhesive', priority: 'recommended' },
+      { title: 'Super glue gel formula', priority: 'recommended' },
+      { title: 'Electrical tape black roll', priority: 'essential' },
+      { title: 'Wire connectors assorted pack', priority: 'recommended' },
+      { title: 'Electrical wire 12 gauge 25 ft', priority: 'optional' },
+      { title: 'Multimeter digital voltage tester', priority: 'recommended' },
+      { title: 'Circuit tester outlet tester', priority: 'essential' },
+      { title: 'Flashlight magnetic work light', priority: 'recommended' },
+      { title: 'Inspection mirror telescoping', priority: 'optional' },
+      { title: 'Shop towels roll blue', priority: 'recommended' },
+      { title: 'Degreaser heavy duty spray', priority: 'recommended' },
+      { title: 'Funnel set various sizes', priority: 'recommended' },
+      { title: 'Oil drain pan 5 quart', priority: 'optional' },
+      { title: 'Grease for slide-outs and jacks', priority: 'essential' },
+      { title: 'Tire sealant emergency repair', priority: 'recommended' },
+      { title: 'Fuse puller tool', priority: 'recommended' },
+      { title: 'Hose repair kit quick connect', priority: 'recommended' },
+      { title: 'PVC pipe repair coupling', priority: 'optional' },
+      { title: 'Weatherstripping adhesive foam', priority: 'recommended' },
+      { title: 'Touch-up paint for RV exterior', priority: 'recommended' },
+      { title: 'Paint brush 2 inch', priority: 'optional' },
+      { title: 'Spray paint clear coat', priority: 'optional' },
+      { title: 'Tool box portable organizer', priority: 'essential' },
+      { title: 'Tool bag canvas heavy duty', priority: 'recommended' }
+    ]
+  },
+  {
+    id: 'entertainment',
+    name: 'Entertainment & Hobbies',
+    icon: 'Entertainment',
+    items: [
+      { title: 'Books paperback or hardcover 10 pack', priority: 'recommended' },
+      { title: 'E-books downloaded library', priority: 'recommended' },
+      { title: 'Magazines subscriptions or issues', priority: 'optional' },
+      { title: 'Journal blank for writing', priority: 'recommended' },
+      { title: 'Pens pencils writing supplies', priority: 'essential' },
+      { title: 'Sketchpad or drawing pad', priority: 'optional' },
+      { title: 'Art supplies colored pencils markers', priority: 'optional' },
+      { title: 'Watercolor paint set travel size', priority: 'optional' },
+      { title: 'Craft supplies yarn knitting needles', priority: 'optional' },
+      { title: 'Sewing kit with thread', priority: 'recommended' },
+      { title: 'Portable sewing machine compact', priority: 'optional' },
+      { title: 'Puzzle 1000 piece', priority: 'optional' },
+      { title: 'Board games classic 5 pack', priority: 'recommended' },
+      { title: 'Card games UNO poker deck', priority: 'recommended' },
+      { title: 'Dominoes set', priority: 'optional' },
+      { title: 'Dice set for games', priority: 'optional' },
+      { title: 'Portable game console Nintendo Switch', priority: 'optional' },
+      { title: 'Game controllers extra', priority: 'optional' },
+      { title: 'Video games cartridges 10 pack', priority: 'optional' },
+      { title: 'Guitar acoustic travel size', priority: 'optional' },
+      { title: 'Ukulele with case', priority: 'optional' },
+      { title: 'Harmonica key of C', priority: 'optional' },
+      { title: 'Music stand folding', priority: 'optional' },
+      { title: 'Sheet music or tabs', priority: 'optional' },
+      { title: 'Yoga mat non-slip', priority: 'recommended' },
+      { title: 'Yoga blocks foam 2 pack', priority: 'optional' },
+      { title: 'Resistance bands exercise set', priority: 'recommended' },
+      { title: 'Dumbbells adjustable pair', priority: 'optional' },
+      { title: 'Jump rope speed rope', priority: 'optional' },
+      { title: 'Meditation cushion zafu', priority: 'optional' },
+      { title: 'Bird watching guide regional', priority: 'optional' },
+      { title: 'Star gazing app or planisphere', priority: 'optional' },
+      { title: 'Telescope compact beginner', priority: 'optional' },
+      { title: 'Photography equipment lenses filters', priority: 'optional' },
+      { title: 'GoPro mounts and accessories', priority: 'optional' },
+      { title: 'Gardening supplies small pots seeds', priority: 'optional' },
+      { title: 'Portable easel for painting', priority: 'optional' },
+      { title: 'Coloring books adult', priority: 'optional' },
+      { title: 'Model building kits', priority: 'optional' },
+      { title: 'Crossword puzzle books', priority: 'optional' }
+    ]
+  },
+  {
+    id: 'office-work',
+    name: 'Office Supplies & Work',
+    icon: 'Office',
+    items: [
+      { title: 'Desk portable folding', priority: 'recommended' },
+      { title: 'Office chair ergonomic compact', priority: 'essential' },
+      { title: 'Laptop stand adjustable', priority: 'recommended' },
+      { title: 'Monitor arm mount', priority: 'optional' },
+      { title: 'Ergonomic keyboard wireless', priority: 'recommended' },
+      { title: 'Ergonomic mouse vertical', priority: 'recommended' },
+      { title: 'Mouse pad with wrist rest', priority: 'recommended' },
+      { title: 'Desk lamp LED adjustable', priority: 'essential' },
+      { title: 'Ring light for video calls', priority: 'recommended' },
+      { title: 'Green screen backdrop portable', priority: 'optional' },
+      { title: 'Noise canceling headphones over-ear', priority: 'essential' },
+      { title: 'Microphone boom arm', priority: 'optional' },
+      { title: 'Pop filter for microphone', priority: 'optional' },
+      { title: 'Notebook for meetings 3 pack', priority: 'recommended' },
+      { title: 'Planner daily or weekly', priority: 'recommended' },
+      { title: 'Sticky notes multi-color pack', priority: 'recommended' },
+      { title: 'Highlighters 4 color set', priority: 'recommended' },
+      { title: 'Markers dry erase with eraser', priority: 'optional' },
+      { title: 'Whiteboard small portable', priority: 'optional' },
+      { title: 'File folders letter size 25 pack', priority: 'recommended' },
+      { title: 'Binders 3-ring 1 inch 5 pack', priority: 'optional' },
+      { title: 'Paper clips and binder clips', priority: 'recommended' },
+      { title: 'Stapler with extra staples', priority: 'recommended' },
+      { title: 'Hole punch 3-hole', priority: 'optional' },
+      { title: 'Scissors office 8 inch', priority: 'recommended' },
+      { title: 'Tape dispenser with tape', priority: 'recommended' },
+      { title: 'Desk organizer drawer', priority: 'recommended' },
+      { title: 'Cable management clips', priority: 'essential' },
+      { title: 'Document scanner portable', priority: 'optional' },
+      { title: 'Shredder micro-cut portable', priority: 'optional' },
+      { title: 'Calendar desk or wall', priority: 'recommended' },
+      { title: 'Business cards current supply', priority: 'optional' },
+      { title: 'Envelopes letter size 50 pack', priority: 'optional' },
+      { title: 'Stamps USPS forever 20 pack', priority: 'recommended' },
+      { title: 'Return address labels', priority: 'optional' },
+      { title: 'Calculator basic or scientific', priority: 'recommended' },
+      { title: 'Ruler 12 inch', priority: 'optional' },
+      { title: 'Correction tape or fluid', priority: 'optional' },
+      { title: 'Letter opener', priority: 'optional' },
+      { title: 'Lap desk cushioned', priority: 'recommended' }
+    ]
+  },
+  {
+    id: 'kids-baby',
+    name: 'Kids & Baby Items',
+    icon: 'Kids',
+    items: [
+      { title: 'Diapers 2 month supply', priority: 'essential' },
+      { title: 'Wipes baby 10 pack', priority: 'essential' },
+      { title: 'Diaper bag backpack style', priority: 'essential' },
+      { title: 'Changing pad portable', priority: 'essential' },
+      { title: 'Diaper rash cream tube', priority: 'essential' },
+      { title: 'Baby bottles 6 pack', priority: 'essential' },
+      { title: 'Bottle brush cleaning', priority: 'essential' },
+      { title: 'Formula or baby food supply', priority: 'essential' },
+      { title: 'Sippy cups 4 pack', priority: 'essential' },
+      { title: 'Baby bibs 10 pack', priority: 'essential' },
+      { title: 'Pacifiers 4 pack with cases', priority: 'recommended' },
+      { title: 'Teething toys safe BPA free', priority: 'recommended' },
+      { title: 'Baby monitor video with app', priority: 'essential' },
+      { title: 'Pack n play portable crib', priority: 'essential' },
+      { title: 'Crib sheets 3 pack', priority: 'essential' },
+      { title: 'Baby blankets swaddle 4 pack', priority: 'essential' },
+      { title: 'Sleep sacks wearable blankets', priority: 'recommended' },
+      { title: 'White noise machine portable', priority: 'recommended' },
+      { title: 'Night light soft glow', priority: 'recommended' },
+      { title: 'Baby bathtub collapsible', priority: 'essential' },
+      { title: 'Baby shampoo and wash', priority: 'essential' },
+      { title: 'Baby lotion fragrance free', priority: 'recommended' },
+      { title: 'Hooded towels 2 pack', priority: 'recommended' },
+      { title: 'Thermometer baby forehead', priority: 'essential' },
+      { title: 'Baby medicine Tylenol Motrin', priority: 'essential' },
+      { title: 'Nail clippers baby safety', priority: 'essential' },
+      { title: 'Hairbrush soft bristle', priority: 'recommended' },
+      { title: 'Car seat infant and toddler', priority: 'essential' },
+      { title: 'Stroller compact folding', priority: 'essential' },
+      { title: 'Baby carrier or wrap', priority: 'recommended' },
+      { title: 'High chair portable clip-on', priority: 'essential' },
+      { title: 'Toys age appropriate variety', priority: 'recommended' },
+      { title: 'Books board books 10 pack', priority: 'recommended' },
+      { title: 'Activity mat play gym', priority: 'optional' },
+      { title: 'Bouncer or swing portable', priority: 'optional' },
+      { title: 'Gate safety for RV doorway', priority: 'recommended' },
+      { title: 'Outlet covers childproof', priority: 'essential' },
+      { title: 'Cabinet locks adhesive', priority: 'essential' },
+      { title: 'Kids clothes 2 weeks worth', priority: 'essential' },
+      { title: 'Kids shoes sneakers and sandals', priority: 'essential' },
+      { title: 'Kids rain gear jacket and boots', priority: 'recommended' },
+      { title: 'Kids backpack with name tag', priority: 'recommended' },
+      { title: 'Sunscreen kids SPF 50', priority: 'essential' },
+      { title: 'Kids first aid kit', priority: 'recommended' },
+      { title: 'Laundry detergent baby gentle', priority: 'essential' }
+    ]
   }
 ];
 
@@ -910,6 +1165,82 @@ const TASK_PHASES = {
       {
         title: 'Confirm remote work arrangement with employer',
         description: 'Get written approval. Discuss any state tax implications.'
+      },
+      {
+        title: 'Research cellphone plans for travelers',
+        description: 'Compare AT&T, Verizon, T-Mobile coverage maps. Consider unlimited hotspot.'
+      },
+      {
+        title: 'Set up virtual mailbox or mail scanning service',
+        description: 'Services like Anytime Mailbox, Traveling Mailbox for digital mail.'
+      },
+      {
+        title: 'Review and update vehicle towing capacity',
+        description: 'Ensure tow vehicle can safely pull your RV. Check payload capacity.'
+      },
+      {
+        title: 'Install backup camera and monitoring system',
+        description: 'Wireless camera for blind spots. Makes parking much easier.'
+      },
+      {
+        title: 'Research solar panel installation options',
+        description: 'Get quotes for solar. Determine wattage needs for boondocking.'
+      },
+      {
+        title: 'Set up online banking and bill pay',
+        description: 'Ensure all bills can be paid remotely. Set up auto-pay where possible.'
+      },
+      {
+        title: 'Research full-time RV insurance providers',
+        description: 'Not all insurers cover full-timers. Need special liability coverage.'
+      },
+      {
+        title: 'Join Good Sam or AAA for roadside assistance',
+        description: 'Essential for RV breakdowns. Compare coverage and cost.'
+      },
+      {
+        title: 'Create digital copies of all important documents',
+        description: 'Scan and upload to cloud storage. Include insurance, titles, medical records.'
+      },
+      {
+        title: 'Research extended warranty for RV',
+        description: 'Compare Good Sam Extended Service Plan vs others. Read fine print.'
+      },
+      {
+        title: 'Plan first oil change location',
+        description: 'Find RV-friendly service centers along route. Book appointments.'
+      },
+      {
+        title: 'Inventory RV weight and load',
+        description: 'Weigh RV fully loaded. Ensure within GVWR and axle limits.'
+      },
+      {
+        title: 'Test all RV systems under load',
+        description: 'Run AC and heater simultaneously. Test electrical capacity.'
+      },
+      {
+        title: 'Research dump station locations',
+        description: 'Download Sanidumps app. Know where to dump along your route.'
+      },
+      {
+        title: 'Set up cloud storage for photos and work',
+        description: 'Ensure Google Drive, Dropbox, or iCloud has enough space.'
+      },
+      {
+        title: 'Research propane refill stations',
+        description: 'Not all gas stations fill RV tanks. Find certified locations.'
+      },
+      {
+        title: 'Install water filter system',
+        description: 'Inline filter for fresh water. Improves taste and protects plumbing.'
+      },
+      {
+        title: 'Create emergency evacuation plan',
+        description: 'Plan for fires, storms, medical emergencies. Know nearest hospitals.'
+      },
+      {
+        title: 'Research RV-friendly mechanics in each state',
+        description: 'Bookmark diesel mechanics, RV techs along planned route.'
       }
     ]
   },
@@ -957,6 +1288,86 @@ const TASK_PHASES = {
       {
         title: "Cancel subscriptions you won't need",
         description: 'Gym membership (unless national chain), local services.'
+      },
+      {
+        title: 'Research RV insurance options and get quotes',
+        description: 'Compare Progressive, National General, Good Sam. Get full-timer coverage.'
+      },
+      {
+        title: 'Install RV security system cameras',
+        description: 'Exterior cameras for safety. Motion sensors inside for when parked.'
+      },
+      {
+        title: 'Create emergency roadside assistance plan',
+        description: 'Good Sam, Coach-Net, or AAA Premier for RV towing coverage.'
+      },
+      {
+        title: 'Practice backing up and parking RV',
+        description: 'Go to empty parking lots. Practice with spotter using walkie-talkies.'
+      },
+      {
+        title: 'Research propane refill locations along route',
+        description: 'Find Costco, Flying J, RV parks that refill. Download PropaneFinder app.'
+      },
+      {
+        title: 'Install water pressure regulator and filters',
+        description: 'Protect RV plumbing. Get inline sediment filter and carbon filter.'
+      },
+      {
+        title: 'Create digital copies of all RV documents',
+        description: 'Scan registration, insurance, warranty, manuals. Store in cloud.'
+      },
+      {
+        title: 'Research dump station locations and apps',
+        description: 'Download Sanidumps app. Learn RV park dump station etiquette.'
+      },
+      {
+        title: 'Buy RV-specific tools and repair supplies',
+        description: 'Sewer hose repair kit, awning repair tape, tire plugs, fuses, bulbs.'
+      },
+      {
+        title: 'Join RV forums and Facebook groups',
+        description: 'Join RV Living, Full-Time RVers, RV Repair & Maintenance groups.'
+      },
+      {
+        title: 'Schedule final furniture pickup/donation',
+        description: 'Coordinate Habitat for Humanity, Buy Nothing, Goodwill pickups.'
+      },
+      {
+        title: 'Update emergency contacts with travel plans',
+        description: 'Give family itinerary. Set up Find My Friends location sharing.'
+      },
+      {
+        title: 'Research laundromat apps and locations',
+        description: 'Download Laundry Map. Find RV parks with washers/dryers.'
+      },
+      {
+        title: 'Get truck maintenance done',
+        description: 'Oil change, tire rotation, brake check. Prepare tow vehicle for travel.'
+      },
+      {
+        title: 'Buy National Parks guidebooks',
+        description: 'Get Moon USA National Parks guide. Download apps like NPS and AllTrails.'
+      },
+      {
+        title: 'Create monthly budget spreadsheet',
+        description: 'Track campgrounds, fuel, food, activities. Plan for $3000-4000/month.'
+      },
+      {
+        title: 'Order business cards with RV travel blog',
+        description: 'Network with other RVers. Include social media handles.'
+      },
+      {
+        title: 'Plan backup income streams',
+        description: 'Set up Etsy, Amazon FBA, freelance accounts for extra cash.'
+      },
+      {
+        title: 'Buy entertainment for travel days',
+        description: 'Download audiobooks, podcasts, music playlists for long drives.'
+      },
+      {
+        title: 'Research RV dump station discount memberships',
+        description: 'Passport America ($44/year), Good Sam ($29/year), Harvest Hosts ($99/year).'
       }
     ]
   },
@@ -1004,6 +1415,87 @@ const TASK_PHASES = {
       {
         title: 'Take final photos of RV',
         description: 'Document condition before departure for insurance.'
+      },
+      {
+        title: 'Fill propane tanks completely',
+        description: 'Top off all tanks before departure. Find nearest refill station.'
+      },
+      {
+        title: 'Fill fresh water tank',
+        description: 'Start with full tank. Test water pump and hot water heater.'
+      },
+      {
+        title: 'Empty black and gray water tanks',
+        description: 'Start journey with empty tanks. Clean sensors.'
+      },
+      {
+        title: 'Load all gear and secure loose items',
+        description: 'Pack bikes, kayaks, outdoor gear. Secure cabinets and drawers.'
+      },
+      {
+        title: 'Organize RV storage bays',
+        description: 'Label bins. Keep tools accessible. Heavy items low and forward.'
+      },
+      {
+        title: 'Set up RV for travel mode',
+        description: 'Retract awning, secure slide-outs, lock windows, stow antenna.',
+        steps: ['Retract slide-outs', 'Secure awning', 'Close all windows', 'Lock roof vents', 'Disconnect shore power']
+      },
+      {
+        title: 'Check all tire pressures',
+        description: 'RV and tow vehicle. Inflate to max cold PSI on sidewall.'
+      },
+      {
+        title: 'Test all lights and signals',
+        description: 'Check brake lights, turn signals, running lights on RV and truck.'
+      },
+      {
+        title: 'Charge all devices and power banks',
+        description: 'Phones, tablets, laptops, cameras, batteries. Start fully charged.'
+      },
+      {
+        title: 'Stock refrigerator and freezer',
+        description: 'Buy fresh food for first few days. Let fridge run 24hrs before loading.'
+      },
+      {
+        title: 'Install GPS and route to first campground',
+        description: 'Set truck GPS. Download offline maps. Print directions as backup.'
+      },
+      {
+        title: 'Do final walkthrough inspection',
+        description: 'Check all systems, locks, hatches. Make sure nothing left behind.'
+      },
+      {
+        title: 'Take before photos of apartment',
+        description: 'Document clean condition for security deposit return.'
+      },
+      {
+        title: 'Return apartment keys',
+        description: 'Get receipt for key return. Confirm final walkthrough date.'
+      },
+      {
+        title: 'Check weather forecast for route',
+        description: 'Look for storms, snow, extreme temperatures. Adjust route if needed.'
+      },
+      {
+        title: 'Pack toiletries and personal items',
+        description: 'Medications, toiletries, clothes for week 1. Keep essentials accessible.'
+      },
+      {
+        title: 'Set up RV bed with fresh linens',
+        description: 'Make bed. Organize bedroom. Test mattress comfort.'
+      },
+      {
+        title: 'Install child safety locks if needed',
+        description: 'Cabinet locks, outlet covers, stove knob covers for kids/pets.'
+      },
+      {
+        title: 'Create RV operations manual',
+        description: 'Document how to operate all systems. Keep in binder for reference.'
+      },
+      {
+        title: 'Buy ice for cooler',
+        description: 'Backup cooler for drinks and overflow. Restock as needed on road.'
       }
     ]
   },
@@ -1050,6 +1542,94 @@ const TASK_PHASES = {
       {
         title: 'Hit the road!',
         description: 'Your adventure begins! Drive safe and enjoy the journey.'
+      },
+      {
+        title: 'Do pre-trip inspection checklist',
+        description: 'Check engine oil, coolant, brake fluid. Walk around RV exterior.',
+        steps: ['Check engine fluids', 'Inspect tires for damage', 'Test brake lights', 'Verify hitch secure', 'Check mirror adjustments']
+      },
+      {
+        title: 'Empty trash and recycling',
+        description: 'Start fresh. Dispose of all trash before hitting road.'
+      },
+      {
+        title: 'Take commemorative first-day photos',
+        description: 'Photo in front of RV. Capture this milestone moment!'
+      },
+      {
+        title: 'Fill truck gas tank',
+        description: 'Start with full tank. Locate gas stations along route.'
+      },
+      {
+        title: 'Set up dashboard camera',
+        description: 'Front and rear dash cam for safety and memories.'
+      },
+      {
+        title: 'Program emergency contacts in phone',
+        description: 'Roadside assistance, RV dealer, family contacts. Have quick access.'
+      },
+      {
+        title: 'Load first-day playlist',
+        description: 'Queue up your favorite road trip music and podcasts.'
+      },
+      {
+        title: 'Check weather and traffic for route',
+        description: 'Avoid rush hour. Check for construction delays or closures.'
+      },
+      {
+        title: 'Verify campground reservation',
+        description: 'Call ahead to confirm. Get check-in time and site number.'
+      },
+      {
+        title: 'Lock up apartment for final time',
+        description: 'Return keys to landlord. Get receipt. Close this chapter!'
+      }
+    ]
+  },
+  firstMonth: {
+    name: 'First Month on the Road (March 2026)',
+    color: 'var(--color-info)',
+    tasks: [
+      {
+        title: 'Establish daily routine',
+        description: 'Create morning and evening routines. Find what works for your lifestyle.',
+        steps: ['Morning coffee/workout time', 'Work hours schedule', 'Meal prep routine', 'Evening wind-down']
+      },
+      {
+        title: 'Learn your RV systems deeply',
+        description: 'Practice dumping tanks, winterizing, and troubleshooting.'
+      },
+      {
+        title: 'Test boondocking for 2-3 days',
+        description: 'Dry camping without hookups. Learn power and water management.'
+      },
+      {
+        title: 'Join RV forums and Facebook groups',
+        description: 'Connect with full-time RVers. Ask questions, share experiences.'
+      },
+      {
+        title: 'Document expenses for first month',
+        description: 'Track all costs: fuel, campgrounds, food, repairs. Adjust budget.'
+      },
+      {
+        title: 'Take RV to a truck wash',
+        description: 'Get familiar with maintaining exterior. Inspect roof and seals.'
+      },
+      {
+        title: 'Find your favorite campground apps',
+        description: 'Test Campendium, Harvests Hosts, iOverlander. Learn which works best.'
+      },
+      {
+        title: 'Practice backing up and parking',
+        description: 'Find empty lot to practice. Use spotter, learn hand signals.'
+      },
+      {
+        title: 'Adjust packing - donate what you don\'t use',
+        description: 'After one month, you\'ll know what\'s essential. Lighten the load.'
+      },
+      {
+        title: 'Schedule first major maintenance check',
+        description: 'After 1000 miles or 30 days, check all systems professionally.'
       }
     ]
   }
