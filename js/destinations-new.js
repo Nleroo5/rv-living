@@ -467,9 +467,186 @@ async function toggleVisited(destId) {
 }
 
 // Edit destination (placeholder - will implement full edit dialog)
-function editDestination(destId) {
-  showToast('Edit feature coming soon', 'info');
+async function editDestination(destId) {
+  const dest = destinations.find(d => d.id === destId);
+  if (!dest) return;
+
+  // Initialize media array if it doesn't exist
+  if (!dest.media) {
+    dest.media = [];
+  }
+
+  // Generate media gallery HTML
+  const mediaGalleryHTML = dest.media && dest.media.length > 0 ? `
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: var(--space-2); margin-bottom: var(--space-3);">
+      ${dest.media.map((file, index) => {
+        const isVideo = file.type.startsWith('video/');
+        const mediaUrl = file.url || file.data;
+        return `
+          <div style="position: relative; border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; aspect-ratio: 1;">
+            ${isVideo ? `
+              <video src="${mediaUrl}" style="width: 100%; height: 100%; object-fit: cover;" controls></video>
+            ` : `
+              <img src="${mediaUrl}" alt="Photo" style="width: 100%; height: 100%; object-fit: cover;">
+            `}
+            <button
+              onclick="deleteDestinationMediaFromEdit('${destId}', ${index})"
+              style="position: absolute; top: 4px; right: 4px; background: rgba(239, 68, 68, 0.9); color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; line-height: 1;"
+              title="Delete"
+            >&times;</button>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  ` : '<p style="color: var(--color-text-secondary); font-size: var(--text-sm); margin-bottom: var(--space-3);">No photos or videos yet.</p>';
+
+  const modal = createModal(`Edit ${dest.name}`, `
+    <div style="margin-bottom: var(--space-4);">
+      <label style="display: block; font-weight: var(--font-weight-semibold); margin-bottom: var(--space-2);">Notes</label>
+      <textarea
+        id="edit-notes"
+        placeholder="Add your visit notes, memories, tips..."
+        style="width: 100%; min-height: 120px; padding: var(--space-2); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-family: inherit; resize: vertical;"
+      >${sanitizeHTML(dest.notes || '')}</textarea>
+    </div>
+
+    <div style="margin-bottom: var(--space-4);">
+      <label style="display: block; font-weight: var(--font-weight-semibold); margin-bottom: var(--space-2);">Rating (optional)</label>
+      <div style="display: flex; gap: var(--space-2);">
+        ${[1, 2, 3, 4, 5].map(rating => `
+          <button
+            type="button"
+            class="rating-btn"
+            data-rating="${rating}"
+            onclick="selectRating(${rating})"
+            style="background: ${(dest.rating || 0) >= rating ? 'var(--color-warning)' : 'var(--color-background-alt)'}; border: none; padding: var(--space-2); border-radius: var(--radius-md); cursor: pointer; font-size: var(--text-lg);"
+          >★</button>
+        `).join('')}
+      </div>
+    </div>
+
+    <div style="margin-bottom: var(--space-4);">
+      <label style="display: block; font-weight: var(--font-weight-semibold); margin-bottom: var(--space-2);">Photos & Videos</label>
+      ${mediaGalleryHTML}
+      <input
+        type="file"
+        id="edit-media-input"
+        accept="image/*,video/*"
+        multiple
+        style="display: none;"
+      />
+      <button
+        type="button"
+        class="btn btn-outline btn-small"
+        onclick="document.getElementById('edit-media-input').click()"
+      >
+        Add Photos/Videos
+      </button>
+    </div>
+  `, [
+    { text: 'Cancel', class: 'btn-outline', action: 'cancel' },
+    { text: 'Save', class: 'btn-primary', action: 'save' }
+  ]);
+
+  // Store current rating in modal for selection
+  modal.dataset.currentRating = dest.rating || 0;
+  modal.dataset.destId = destId;
+
+  // Handle media file selection
+  const mediaInput = modal.querySelector('#edit-media-input');
+  mediaInput.addEventListener('change', async (e) => {
+    const files = Array.from(e.target.files);
+
+    for (const file of files) {
+      // Check file size (max 10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        showToast(`${file.name} is too large. Max 10MB per file.`, 'error');
+        continue;
+      }
+
+      // Read file as base64
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        const mediaData = {
+          type: file.type,
+          name: file.name,
+          data: event.target.result, // base64 data
+          uploadedAt: new Date().toISOString()
+        };
+
+        // Add to destination media
+        dest.media.push(mediaData);
+
+        // Save and refresh modal
+        await saveDestinations();
+        modal.remove();
+        editDestination(destId); // Reopen with updated media
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Handle action buttons
+  const buttons = modal.querySelectorAll('[data-action]');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const action = btn.dataset.action;
+
+      if (action === 'save') {
+        const notes = modal.querySelector('#edit-notes').value;
+        const rating = parseInt(modal.dataset.currentRating) || 0;
+
+        // Update destination
+        dest.notes = notes;
+        dest.rating = rating;
+
+        await saveDestinations();
+        renderDestinations();
+        renderVisitedDestinations();
+        updateMap();
+
+        modal.remove();
+        showToast(`${dest.name} updated!`, 'success');
+      } else {
+        modal.remove();
+      }
+    });
+  });
 }
+
+// Helper function to select rating
+window.selectRating = function(rating) {
+  const modal = document.querySelector('.modal');
+  if (!modal) return;
+
+  modal.dataset.currentRating = rating;
+
+  // Update button styles
+  const buttons = modal.querySelectorAll('.rating-btn');
+  buttons.forEach((btn, index) => {
+    if (index < rating) {
+      btn.style.background = 'var(--color-warning)';
+    } else {
+      btn.style.background = 'var(--color-background-alt)';
+    }
+  });
+};
+
+// Delete media from edit modal
+window.deleteDestinationMediaFromEdit = async function(destId, mediaIndex) {
+  const dest = destinations.find(d => d.id === destId);
+  if (!dest || !dest.media) return;
+
+  dest.media.splice(mediaIndex, 1);
+  await saveDestinations();
+
+  // Reopen edit modal with updated media
+  const modal = document.querySelector('.modal');
+  if (modal) {
+    modal.remove();
+  }
+  editDestination(destId);
+};
 
 // Delete destination
 async function deleteDestination(destId) {
@@ -1173,15 +1350,42 @@ function createVisitedCard(dest) {
           <span class="info-value">${'★'.repeat(dest.rating)}${'☆'.repeat(5 - dest.rating)}</span>
         </div>
       ` : ''}
-      
-      ${dest.notes ? `
-        <div class="info-row">
-          <span class="info-label">Notes</span>
-          <span class="info-value">${sanitizeHTML(dest.notes)}</span>
-        </div>
-      ` : ''}
     </div>
-    
+
+    ${dest.notes ? `
+      <div style="margin-top: var(--space-3); padding: var(--space-3); background: var(--color-background-alt); border-radius: var(--radius-md);">
+        <p style="font-weight: var(--font-weight-semibold); font-size: var(--text-sm); margin-bottom: var(--space-2);">Notes</p>
+        <p style="font-size: var(--text-sm); color: var(--color-text-secondary); white-space: pre-wrap;">${sanitizeHTML(dest.notes)}</p>
+      </div>
+    ` : ''}
+
+    ${dest.media && dest.media.length > 0 ? `
+      <div style="margin-top: var(--space-3);">
+        <p style="font-weight: var(--font-weight-semibold); font-size: var(--text-sm); margin-bottom: var(--space-2);">${dest.media.length} Photo${dest.media.length !== 1 ? 's' : ''}/Video${dest.media.length !== 1 ? 's' : ''}</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: var(--space-1);">
+          ${dest.media.slice(0, 4).map((file, index) => {
+            const isVideo = file.type.startsWith('video/');
+            const mediaUrl = file.url || file.data;
+            return `
+              <div style="position: relative; border: 1px solid var(--color-border); border-radius: var(--radius-sm); overflow: hidden; aspect-ratio: 1; cursor: pointer;" onclick="viewDestinationDetails('${dest.id}')">
+                ${isVideo ? `
+                  <video src="${mediaUrl}" style="width: 100%; height: 100%; object-fit: cover;"></video>
+                  <div style="position: absolute; bottom: 4px; right: 4px; background: rgba(0,0,0,0.6); color: white; padding: 2px 4px; border-radius: 2px; font-size: 10px;">▶</div>
+                ` : `
+                  <img src="${mediaUrl}" alt="Photo" style="width: 100%; height: 100%; object-fit: cover;">
+                `}
+              </div>
+            `;
+          }).join('')}
+          ${dest.media.length > 4 ? `
+            <div style="border: 1px solid var(--color-border); border-radius: var(--radius-sm); aspect-ratio: 1; display: flex; align-items: center; justify-content: center; background: var(--color-background-alt); cursor: pointer; font-size: var(--text-sm); font-weight: var(--font-weight-semibold); color: var(--color-text-secondary);" onclick="viewDestinationDetails('${dest.id}')">
+              +${dest.media.length - 4}
+            </div>
+          ` : ''}
+        </div>
+      </div>
+    ` : ''}
+
     <div style="display: flex; gap: var(--space-2); margin-top: var(--space-3);">
       <button class="btn btn-outline btn-small" onclick="editDestination('${dest.id}')">
         Edit
