@@ -982,18 +982,44 @@ window.addNationalParkToDestinations = async function(destId) {
   }
   if (!destination) return;
 
-  // Check if already exists
-  if (destinations.find(d => d.id === destId)) {
-    showToast('This destination is already in your list', 'info');
+  // Check if already exists - if so, update it to visited instead of skipping
+  const existingIndex = destinations.findIndex(d => d.id === destId);
+  if (existingIndex !== -1) {
+    console.log('[DEBUG] Destination already exists, updating to visited=true');
+    destinations[existingIndex].visited = true;
+    destinations[existingIndex].visitedDate = new Date().toISOString();
+
+    await saveDestinations();
+    renderDestinations();
+    renderFolders();
+    updateMap();
+    if (currentTab === 'visited') {
+      renderVisitedDestinations();
+    }
+    showToast(`${destination.name} marked as visited!`, 'success');
     return;
   }
 
   // Add to destinations (automatically marked as visited - will be green pin)
+  // Create new object without spreading destination to avoid any visited:false in source data
   const newDest = {
-    ...destination,
-    visited: true,  // Explicitly set as boolean true
+    id: destination.id,
+    name: destination.name,
+    state: destination.state,
+    latitude: destination.latitude,
+    longitude: destination.longitude,
+    type: destination.type,
+    region: destination.region,
+    rvCamping: destination.rvCamping,
+    rvCampingDetails: destination.rvCampingDetails,
+    bestSeason: destination.bestSeason,
+    mustSee: destination.mustSee,
+    estimatedCost: destination.estimatedCost,
+    notes: destination.notes || '',
+    visited: true,  // MUST be boolean true for green pins
     folder: null,
-    addedDate: new Date().toISOString()
+    addedDate: new Date().toISOString(),
+    visitedDate: new Date().toISOString()
   };
 
   console.log('[DEBUG] Adding destination:', newDest.name, 'with visited:', newDest.visited, 'type:', typeof newDest.visited);
