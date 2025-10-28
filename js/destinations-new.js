@@ -15,9 +15,9 @@ let nationalParksData = []; // Will hold all 63 National Parks
 let discoverDestinations = []; // Will hold 200+ discover destinations (non-NP)
 
 // Initialize on page load
-document.addEventListener('DOMContentLoaded', () => {
-  loadDestinations();
-  loadFolders();
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadDestinations();
+  await loadFolders();
   loadNationalParks();
   loadDiscoverDestinations();
   initializeMap();
@@ -505,12 +505,13 @@ window.viewDestinationDetails = function(destId) {
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: var(--space-2); margin-top: var(--space-2);">
       ${dest.media.map((file, index) => {
         const isVideo = file.type.startsWith('video/');
+        const mediaUrl = file.url || file.data; // Use Firebase URL or base64 data
         return `
           <div style="position: relative; border: 1px solid var(--color-border); border-radius: var(--border-radius); overflow: hidden; aspect-ratio: 1;">
             ${isVideo ? `
-              <video src="${file.data}" style="width: 100%; height: 100%; object-fit: cover;"></video>
+              <video src="${mediaUrl}" style="width: 100%; height: 100%; object-fit: cover;"></video>
             ` : `
-              <img src="${file.data}" alt="Photo" style="width: 100%; height: 100%; object-fit: cover;">
+              <img src="${mediaUrl}" alt="Photo" style="width: 100%; height: 100%; object-fit: cover;">
             `}
             <button
               onclick="deleteDestinationMedia('${destId}', ${index})"
@@ -619,33 +620,47 @@ window.viewDestinationDetails = function(destId) {
     uploadBtn.textContent = 'Uploading...';
 
     for (const file of files) {
-      // Check file size (max 5MB to avoid localStorage issues)
-      if (file.size > 5 * 1024 * 1024) {
-        showToast(`${file.name} is too large (max 5MB)`, 'error');
+      // Check file size (max 10MB for Firebase Storage)
+      if (file.size > 10 * 1024 * 1024) {
+        showToast(`${file.name} is too large (max 10MB)`, 'error');
         continue;
       }
 
-      // Convert to base64
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        dest.media.push({
-          name: file.name,
-          type: file.type,
-          data: event.target.result,
-          uploadedAt: new Date().toISOString()
-        });
+      try {
+        let mediaData;
 
-        saveDestinations();
+        // Use Firebase Storage if available, otherwise fallback to base64
+        if (window.FirebaseDB) {
+          mediaData = await window.FirebaseDB.uploadMedia(file, destId);
+        } else {
+          // Fallback to base64
+          const reader = new FileReader();
+          const base64Data = await new Promise((resolve) => {
+            reader.onload = (event) => resolve(event.target.result);
+            reader.readAsDataURL(file);
+          });
+
+          mediaData = {
+            name: file.name,
+            type: file.type,
+            data: base64Data,
+            uploadedAt: new Date().toISOString()
+          };
+        }
+
+        dest.media.push(mediaData);
+        await saveDestinations();
 
         // Refresh the gallery
         const gallery = modal.querySelector('#media-gallery');
         const isVideo = file.type.startsWith('video/');
+        const mediaUrl = mediaData.url || mediaData.data;
         const newMediaHTML = `
           <div style="position: relative; border: 1px solid var(--color-border); border-radius: var(--border-radius); overflow: hidden; aspect-ratio: 1;">
             ${isVideo ? `
-              <video src="${event.target.result}" style="width: 100%; height: 100%; object-fit: cover;"></video>
+              <video src="${mediaUrl}" style="width: 100%; height: 100%; object-fit: cover;"></video>
             ` : `
-              <img src="${event.target.result}" alt="Photo" style="width: 100%; height: 100%; object-fit: cover;">
+              <img src="${mediaUrl}" alt="Photo" style="width: 100%; height: 100%; object-fit: cover;">
             `}
             <button
               onclick="deleteDestinationMedia('${destId}', ${dest.media.length - 1})"
@@ -664,9 +679,10 @@ window.viewDestinationDetails = function(destId) {
         }
 
         showToast('Media uploaded successfully!', 'success');
-      };
-
-      reader.readAsDataURL(file);
+      } catch (error) {
+        console.error('Error uploading media:', error);
+        showToast(`Failed to upload ${file.name}`, 'error');
+      }
     }
 
     // Reset button
@@ -695,7 +711,7 @@ window.viewDestinationDetails = function(destId) {
 };
 
 // Delete media from destination
-window.deleteDestinationMedia = function(destId, mediaIndex) {
+window.deleteDestinationMedia = async function(destId, mediaIndex) {
   if (!confirm('Are you sure you want to delete this photo/video?')) {
     return;
   }
@@ -703,9 +719,20 @@ window.deleteDestinationMedia = function(destId, mediaIndex) {
   const dest = destinations.find(d => d.id === destId);
   if (!dest || !dest.media) return;
 
-  // Remove the media item
+  const mediaItem = dest.media[mediaIndex];
+
+  // Delete from Firebase Storage if it has a path
+  if (mediaItem.path && window.FirebaseDB) {
+    try {
+      await window.FirebaseDB.deleteMedia(mediaItem.path);
+    } catch (error) {
+      console.error('Error deleting from Firebase Storage:', error);
+    }
+  }
+
+  // Remove the media item from array
   dest.media.splice(mediaIndex, 1);
-  saveDestinations();
+  await saveDestinations();
 
   // Re-open the modal to refresh the view
   viewDestinationDetails(destId);
@@ -741,20 +768,36 @@ function clearAllDestinations() {
 }
 
 // Load/Save functions
-function loadDestinations() {
-  destinations = Storage.get('destinations', []);
+async function loadDestinations() {
+  if (window.FirebaseDB) {
+    destinations = await window.FirebaseDB.loadDestinations();
+  } else {
+    destinations = Storage.get('destinations', []);
+  }
 }
 
-function saveDestinations() {
-  Storage.set('destinations', destinations);
+async function saveDestinations() {
+  if (window.FirebaseDB) {
+    await window.FirebaseDB.saveDestinations(destinations);
+  } else {
+    Storage.set('destinations', destinations);
+  }
 }
 
-function loadFolders() {
-  folders = Storage.get('folders', []);
+async function loadFolders() {
+  if (window.FirebaseDB) {
+    folders = await window.FirebaseDB.loadFolders();
+  } else {
+    folders = Storage.get('folders', []);
+  }
 }
 
-function saveFolders() {
-  Storage.set('folders', folders);
+async function saveFolders() {
+  if (window.FirebaseDB) {
+    await window.FirebaseDB.saveFolders(folders);
+  } else {
+    Storage.set('folders', folders);
+  }
 }
 
 function loadNationalParks() {
