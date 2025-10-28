@@ -164,14 +164,6 @@ function setLoading(element, isLoading) {
   }
 }
 
-// Confirm dialog helper
-function confirmDialog(message) {
-  return new Promise((resolve) => {
-    const result = window.confirm(message);
-    resolve(result);
-  });
-}
-
 // Modal helper (simple implementation)
 function createModal(title, content, buttons = []) {
   // Remove existing modal if any

@@ -7473,20 +7473,7 @@ const DISCOVER_DESTINATIONS = [
   },
 
   // CANADA - BRITISH COLUMBIA (3 new - bringing total from 1 to 4)
-];
 
-// Load additional destinations
-let ALL_DISCOVER_DESTINATIONS = [...DISCOVER_DESTINATIONS];
-
-// Function to load additional destinations
-function loadAdditionalDestinations() {
-  if (typeof ADDITIONAL_DISCOVER_DESTINATIONS !== 'undefined') {
-    ALL_DISCOVER_DESTINATIONS = [...DISCOVER_DESTINATIONS, ...ADDITIONAL_DISCOVER_DESTINATIONS];
-    console.log(`Total discover destinations loaded: ${ALL_DISCOVER_DESTINATIONS.length}`);
-
-// Export for use
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { DISCOVER_DESTINATIONS, ALL_DISCOVER_DESTINATIONS };
   // === NEW ADDITIONS - Focus on underrepresented states ===
 
   // MONTANA additions (currently 9, adding 15 more)
@@ -7619,7 +7606,7 @@ if (typeof module !== 'undefined' && module.exports) {
     type: 'attraction',
     region: 'rocky-mountains',
     rvCamping: true,
-    rvCamping Details: 'Bozeman KOA, Sunrise RV Park.',
+    rvCampingDetails: 'Bozeman KOA, Sunrise RV Park.',
     bestSeason: 'Year-round',
     mustSee: 'World-class dinosaur exhibits, planetarium, living history farm',
     estimatedCost: '$40-60/night',
@@ -9711,5 +9698,7 @@ if (typeof module !== 'undefined' && module.exports) {
 
 ];
 
-// Export the destinations array
-export default discoverDestinations;
+// Export for use in browser
+if (typeof window !== 'undefined') {
+  window.DISCOVER_DESTINATIONS = DISCOVER_DESTINATIONS;
+}
