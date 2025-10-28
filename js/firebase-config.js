@@ -37,8 +37,7 @@ window.FirebaseDB = {
       console.log('Destinations saved to Firebase');
       return true;
     } catch (error) {
-      console.error('Error saving destinations:', error);
-      // Fallback to localStorage
+      // Silently fall back to localStorage (Firebase not enabled yet)
       localStorage.setItem('destinations', JSON.stringify(destinations));
       return false;
     }
@@ -59,8 +58,7 @@ window.FirebaseDB = {
         return localData ? JSON.parse(localData) : [];
       }
     } catch (error) {
-      console.error('Error loading destinations:', error);
-      // Fallback to localStorage
+      // Silently fall back to localStorage (Firebase not enabled yet)
       const localData = localStorage.getItem('destinations');
       return localData ? JSON.parse(localData) : [];
     }
@@ -77,7 +75,7 @@ window.FirebaseDB = {
       console.log('Folders saved to Firebase');
       return true;
     } catch (error) {
-      console.error('Error saving folders:', error);
+      // Silently fall back to localStorage (Firebase not enabled yet)
       localStorage.setItem('folders', JSON.stringify(folders));
       return false;
     }
@@ -97,7 +95,7 @@ window.FirebaseDB = {
         return localData ? JSON.parse(localData) : [];
       }
     } catch (error) {
-      console.error('Error loading folders:', error);
+      // Silently fall back to localStorage (Firebase not enabled yet)
       const localData = localStorage.getItem('folders');
       return localData ? JSON.parse(localData) : [];
     }
