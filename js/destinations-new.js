@@ -471,172 +471,234 @@ async function editDestination(destId) {
   const dest = destinations.find(d => d.id === destId);
   if (!dest) return;
 
-  // Initialize media array if it doesn't exist
+  // Migrate old data structure to new visits array
+  if (!dest.visits && dest.visitedDate) {
+    dest.visits = [{
+      id: 'visit-' + Date.now(),
+      startDate: dest.visitedDate,
+      endDate: dest.visitedDate,
+      notes: dest.notes || '',
+      rating: dest.rating || 0,
+      media: dest.media || []
+    }];
+    dest.notes = '';
+    dest.media = [];
+  }
+
+  // Initialize visits array if it doesn't exist
+  if (!dest.visits) {
+    dest.visits = [];
+  }
+
+  // Initialize media arrays for each visit
+  dest.visits.forEach(visit => {
+    if (!visit.media) visit.media = [];
+  });
+
+  // Initialize general media array
   if (!dest.media) {
     dest.media = [];
   }
 
-  // Generate media gallery HTML
-  const mediaGalleryHTML = dest.media && dest.media.length > 0 ? `
-    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: var(--space-2); margin-bottom: var(--space-3);">
-      ${dest.media.map((file, index) => {
-        const isVideo = file.type.startsWith('video/');
-        const mediaUrl = file.url || file.data;
-        return `
-          <div style="position: relative; border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; aspect-ratio: 1;">
-            ${isVideo ? `
-              <video src="${mediaUrl}" style="width: 100%; height: 100%; object-fit: cover;" controls></video>
-            ` : `
-              <img src="${mediaUrl}" alt="Photo" style="width: 100%; height: 100%; object-fit: cover;">
-            `}
-            <button
-              onclick="deleteDestinationMediaFromEdit('${destId}', ${index})"
-              style="position: absolute; top: 4px; right: 4px; background: rgba(239, 68, 68, 0.9); color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; line-height: 1;"
-              title="Delete"
-            >&times;</button>
+  // Generate visits HTML
+  const visitsHTML = dest.visits.map((visit, visitIndex) => {
+    const nights = calculateNights(visit.startDate, visit.endDate);
+    const nightsLabel = nights === 0 ? 'Day trip' : `${nights} night${nights > 1 ? 's' : ''}`;
+
+    const visitMediaHTML = visit.media && visit.media.length > 0 ? `
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: var(--space-1); margin-top: var(--space-2);">
+        ${visit.media.map((file, mediaIndex) => {
+          const isVideo = file.type.startsWith('video/');
+          const mediaUrl = file.url || file.data;
+          return `
+            <div style="position: relative; border: 1px solid var(--color-border); border-radius: var(--radius-sm); overflow: hidden; aspect-ratio: 1;">
+              ${isVideo ? `
+                <video src="${mediaUrl}" style="width: 100%; height: 100%; object-fit: cover;"></video>
+              ` : `
+                <img src="${mediaUrl}" alt="Photo" style="width: 100%; height: 100%; object-fit: cover;">
+              `}
+              <button
+                onclick="deleteVisitMedia('${destId}', ${visitIndex}, ${mediaIndex})"
+                style="position: absolute; top: 2px; right: 2px; background: rgba(239, 68, 68, 0.9); color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 12px; line-height: 1;"
+                title="Delete"
+              >&times;</button>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    ` : '';
+
+    return `
+      <div class="visit-card" data-visit-index="${visitIndex}" style="background: var(--color-background-alt); padding: var(--space-3); border-radius: var(--radius-md); margin-bottom: var(--space-3);">
+        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: var(--space-2);">
+          <h4 style="margin: 0;">📅 Visit ${visitIndex + 1}</h4>
+          <button type="button" onclick="deleteVisit('${destId}', ${visitIndex})" class="btn btn-sm" style="background: var(--color-error); color: white; padding: 4px 8px; font-size: 12px;">Delete</button>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); margin-bottom: var(--space-2);">
+          <div>
+            <label style="display: block; font-size: var(--text-sm); font-weight: var(--font-weight-semibold); margin-bottom: 4px;">Start Date</label>
+            <input type="date" class="visit-start-date" data-visit-index="${visitIndex}" value="${visit.startDate}" style="width: 100%; padding: 8px; border: 1px solid var(--color-border); border-radius: var(--radius-sm);">
           </div>
-        `;
-      }).join('')}
-    </div>
-  ` : '<p style="color: var(--color-text-secondary); font-size: var(--text-sm); margin-bottom: var(--space-3);">No photos or videos yet.</p>';
+          <div>
+            <label style="display: block; font-size: var(--text-sm); font-weight: var(--font-weight-semibold); margin-bottom: 4px;">End Date</label>
+            <input type="date" class="visit-end-date" data-visit-index="${visitIndex}" value="${visit.endDate}" style="width: 100%; padding: 8px; border: 1px solid var(--color-border); border-radius: var(--radius-sm);">
+          </div>
+        </div>
+
+        <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-2);">${nightsLabel}</p>
+
+        <div style="margin-bottom: var(--space-2);">
+          <label style="display: block; font-size: var(--text-sm); font-weight: var(--font-weight-semibold); margin-bottom: 4px;">Rating</label>
+          <div style="display: flex; gap: 4px;">
+            ${[1, 2, 3, 4, 5].map(r => `
+              <button type="button" class="visit-rating-btn" data-visit-index="${visitIndex}" data-rating="${r}" onclick="selectVisitRating(${visitIndex}, ${r})" style="background: ${(visit.rating || 0) >= r ? 'var(--color-warning)' : 'var(--color-background)'}; border: 1px solid var(--color-border); padding: 4px 8px; border-radius: var(--radius-sm); cursor: pointer; font-size: 18px;">★</button>
+            `).join('')}
+          </div>
+        </div>
+
+        <div style="margin-bottom: var(--space-2);">
+          <label style="display: block; font-size: var(--text-sm); font-weight: var(--font-weight-semibold); margin-bottom: 4px;">Notes</label>
+          <textarea class="visit-notes" data-visit-index="${visitIndex}" placeholder="Notes about this visit..." style="width: 100%; min-height: 80px; padding: 8px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-family: inherit; resize: vertical;">${sanitizeHTML(visit.notes || '')}</textarea>
+        </div>
+
+        <div>
+          <label style="display: block; font-size: var(--text-sm); font-weight: var(--font-weight-semibold); margin-bottom: 4px;">Photos & Videos (${visit.media.length})</label>
+          ${visitMediaHTML}
+          <button type="button" onclick="document.getElementById('visit-media-${visitIndex}').click()" class="btn btn-sm btn-outline" style="margin-top: var(--space-2); font-size: 12px;">+ Add Photos/Videos</button>
+          <input type="file" id="visit-media-${visitIndex}" accept="image/*,video/*" multiple style="display: none;">
+        </div>
+      </div>
+    `;
+  }).join('');
 
   const modal = createModal(`Edit ${dest.name}`, `
-    <div style="margin-bottom: var(--space-4);">
-      <label style="display: block; font-weight: var(--font-weight-semibold); margin-bottom: var(--space-2);">Notes</label>
-      <textarea
-        id="edit-notes"
-        placeholder="Add your visit notes, memories, tips..."
-        style="width: 100%; min-height: 120px; padding: var(--space-2); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-family: inherit; resize: vertical;"
-      >${sanitizeHTML(dest.notes || '')}</textarea>
-    </div>
-
-    <div style="margin-bottom: var(--space-4);">
-      <label style="display: block; font-weight: var(--font-weight-semibold); margin-bottom: var(--space-2);">Rating (optional)</label>
-      <div style="display: flex; gap: var(--space-2);">
-        ${[1, 2, 3, 4, 5].map(rating => `
-          <button
-            type="button"
-            class="rating-btn"
-            data-rating="${rating}"
-            onclick="selectRating(${rating})"
-            style="background: ${(dest.rating || 0) >= rating ? 'var(--color-warning)' : 'var(--color-background-alt)'}; border: none; padding: var(--space-2); border-radius: var(--radius-md); cursor: pointer; font-size: var(--text-lg);"
-          >★</button>
-        `).join('')}
+    <div style="max-height: 60vh; overflow-y: auto; padding-right: var(--space-2);">
+      <div style="margin-bottom: var(--space-4);">
+        <label style="display: block; font-weight: var(--font-weight-semibold); margin-bottom: var(--space-2);">Overall Rating</label>
+        <div style="display: flex; gap: var(--space-1);">
+          ${[1, 2, 3, 4, 5].map(rating => `
+            <button type="button" class="overall-rating-btn" data-rating="${rating}" onclick="selectOverallRating(${rating})" style="background: ${(dest.rating || 0) >= rating ? 'var(--color-warning)' : 'var(--color-background-alt)'}; border: none; padding: var(--space-2); border-radius: var(--radius-md); cursor: pointer; font-size: var(--text-lg);">★</button>
+          `).join('')}
+        </div>
       </div>
-    </div>
 
-    <div style="margin-bottom: var(--space-4);">
-      <label style="display: block; font-weight: var(--font-weight-semibold); margin-bottom: var(--space-2);">Photos & Videos</label>
-      ${mediaGalleryHTML}
-      <input
-        type="file"
-        id="edit-media-input"
-        accept="image/*,video/*"
-        multiple
-        style="display: none;"
-      />
-      <button
-        type="button"
-        class="btn btn-outline btn-small"
-        onclick="document.getElementById('edit-media-input').click()"
-      >
-        Add Photos/Videos
-      </button>
+      <div style="margin-bottom: var(--space-4);">
+        <label style="display: block; font-weight: var(--font-weight-semibold); margin-bottom: var(--space-2);">General Notes</label>
+        <textarea id="edit-general-notes" placeholder="Overall notes about this destination..." style="width: 100%; min-height: 80px; padding: var(--space-2); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-family: inherit; resize: vertical;">${sanitizeHTML(dest.notes || '')}</textarea>
+      </div>
+
+      <div style="margin-bottom: var(--space-3); padding-top: var(--space-3); border-top: 2px solid var(--color-border);">
+        <h3 style="margin: 0 0 var(--space-3) 0; font-size: var(--text-lg);">Your Visits</h3>
+        <div id="visits-container">
+          ${visitsHTML || '<p style="color: var(--color-text-secondary); font-size: var(--text-sm);">No visits recorded yet.</p>'}
+        </div>
+        <button type="button" id="add-visit-btn" class="btn btn-outline" style="width: 100%;">+ Add Another Visit</button>
+      </div>
     </div>
   `, [
     { text: 'Cancel', class: 'btn-outline', action: 'cancel' },
-    { text: 'Save', class: 'btn-primary', action: 'save' }
+    { text: 'Save Changes', class: 'btn-primary', action: 'save' }
   ]);
 
-  // Store current rating in modal for selection
-  modal.dataset.currentRating = dest.rating || 0;
+  // Store dest ID for reference
   modal.dataset.destId = destId;
+  modal.dataset.overallRating = dest.rating || 0;
 
-  // Handle media file selection
-  const mediaInput = modal.querySelector('#edit-media-input');
-  mediaInput.addEventListener('change', async (e) => {
-    const files = Array.from(e.target.files);
+  // Handle "Add Another Visit" button
+  const addVisitBtn = modal.querySelector('#add-visit-btn');
+  addVisitBtn.addEventListener('click', () => {
+    const today = new Date().toISOString().split('T')[0];
+    const newVisit = {
+      id: 'visit-' + Date.now(),
+      startDate: today,
+      endDate: today,
+      notes: '',
+      rating: 0,
+      media: []
+    };
+    dest.visits.push(newVisit);
 
-    if (files.length === 0) return;
-
-    // Show uploading toast
-    showToast(`Uploading ${files.length} file${files.length > 1 ? 's' : ''}...`, 'info');
-
-    let uploadedCount = 0;
-    let failedCount = 0;
-
-    for (const file of files) {
-      // Check file size (max 50MB for videos, 10MB for images)
-      const maxSize = file.type.startsWith('video/') ? 50 * 1024 * 1024 : 10 * 1024 * 1024;
-      if (file.size > maxSize) {
-        showToast(`${file.name} is too large. Max ${maxSize / 1024 / 1024}MB.`, 'error');
-        failedCount++;
-        continue;
-      }
-
-      try {
-        // Upload to Firebase Storage
-        if (window.FirebaseDB && window.FirebaseDB.uploadMedia) {
-          const mediaData = await window.FirebaseDB.uploadMedia(file, destId);
-          dest.media.push(mediaData);
-          uploadedCount++;
-        } else {
-          // Fallback to base64 for small files (< 1MB)
-          if (file.size < 1024 * 1024) {
-            const reader = new FileReader();
-            await new Promise((resolve) => {
-              reader.onload = (event) => {
-                const mediaData = {
-                  type: file.type,
-                  name: file.name,
-                  data: event.target.result,
-                  uploadedAt: new Date().toISOString()
-                };
-                dest.media.push(mediaData);
-                uploadedCount++;
-                resolve();
-              };
-              reader.readAsDataURL(file);
-            });
-          } else {
-            showToast(`${file.name} too large without Firebase Storage enabled`, 'error');
-            failedCount++;
-          }
-        }
-      } catch (error) {
-        console.error('Error uploading file:', error);
-        showToast(`Failed to upload ${file.name}`, 'error');
-        failedCount++;
-      }
-    }
-
-    // Save and refresh modal
-    if (uploadedCount > 0) {
-      await saveDestinations();
-      showToast(`${uploadedCount} file${uploadedCount > 1 ? 's' : ''} uploaded successfully!`, 'success');
-    }
-
-    if (failedCount > 0) {
-      showToast(`${failedCount} file${failedCount > 1 ? 's' : ''} failed to upload`, 'error');
-    }
-
+    // Refresh modal
     modal.remove();
-    editDestination(destId); // Reopen with updated media
+    editDestination(destId);
   });
 
-  // Handle action buttons
+  // Handle visit media uploads
+  dest.visits.forEach((visit, visitIndex) => {
+    const mediaInput = modal.querySelector(`#visit-media-${visitIndex}`);
+    if (mediaInput) {
+      mediaInput.addEventListener('change', async (e) => {
+        const files = Array.from(e.target.files);
+        if (files.length === 0) return;
+
+        showToast(`Uploading ${files.length} file${files.length > 1 ? 's' : ''}...`, 'info');
+
+        let uploadedCount = 0;
+        for (const file of files) {
+          const maxSize = file.type.startsWith('video/') ? 50 * 1024 * 1024 : 10 * 1024 * 1024;
+          if (file.size > maxSize) {
+            showToast(`${file.name} is too large.`, 'error');
+            continue;
+          }
+
+          try {
+            if (window.FirebaseDB && window.FirebaseDB.uploadMedia) {
+              const mediaData = await window.FirebaseDB.uploadMedia(file, destId);
+              visit.media.push(mediaData);
+              uploadedCount++;
+            } else if (file.size < 1024 * 1024) {
+              const reader = new FileReader();
+              await new Promise((resolve) => {
+                reader.onload = (event) => {
+                  visit.media.push({
+                    type: file.type,
+                    name: file.name,
+                    data: event.target.result,
+                    uploadedAt: new Date().toISOString()
+                  });
+                  uploadedCount++;
+                  resolve();
+                };
+                reader.readAsDataURL(file);
+              });
+            }
+          } catch (error) {
+            console.error('Error uploading:', error);
+          }
+        }
+
+        if (uploadedCount > 0) {
+          await saveDestinations();
+          showToast(`${uploadedCount} file${uploadedCount > 1 ? 's' : ''} uploaded!`, 'success');
+          modal.remove();
+          editDestination(destId);
+        }
+      });
+    }
+  });
+
+  // Handle save button
   const buttons = modal.querySelectorAll('[data-action]');
   buttons.forEach(btn => {
     btn.addEventListener('click', async () => {
       const action = btn.dataset.action;
 
       if (action === 'save') {
-        const notes = modal.querySelector('#edit-notes').value;
-        const rating = parseInt(modal.dataset.currentRating) || 0;
+        // Update general notes
+        dest.notes = modal.querySelector('#edit-general-notes').value;
+        dest.rating = parseInt(modal.dataset.overallRating) || 0;
 
-        // Update destination
-        dest.notes = notes;
-        dest.rating = rating;
+        // Update all visits with current values from inputs
+        dest.visits.forEach((visit, visitIndex) => {
+          const startInput = modal.querySelector(`.visit-start-date[data-visit-index="${visitIndex}"]`);
+          const endInput = modal.querySelector(`.visit-end-date[data-visit-index="${visitIndex}"]`);
+          const notesInput = modal.querySelector(`.visit-notes[data-visit-index="${visitIndex}"]`);
+
+          if (startInput) visit.startDate = startInput.value;
+          if (endInput) visit.endDate = endInput.value;
+          if (notesInput) visit.notes = notesInput.value;
+        });
 
         await saveDestinations();
         renderDestinations();
@@ -652,15 +714,24 @@ async function editDestination(destId) {
   });
 }
 
-// Helper function to select rating
-window.selectRating = function(rating) {
+// Helper function to calculate nights between dates
+function calculateNights(startDate, endDate) {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  const diffTime = Math.abs(end - start);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return diffDays;
+}
+
+// Helper function to select overall rating
+window.selectOverallRating = function(rating) {
   const modal = document.querySelector('.modal');
   if (!modal) return;
 
-  modal.dataset.currentRating = rating;
+  modal.dataset.overallRating = rating;
 
   // Update button styles
-  const buttons = modal.querySelectorAll('.rating-btn');
+  const buttons = modal.querySelectorAll('.overall-rating-btn');
   buttons.forEach((btn, index) => {
     if (index < rating) {
       btn.style.background = 'var(--color-warning)';
@@ -668,6 +739,105 @@ window.selectRating = function(rating) {
       btn.style.background = 'var(--color-background-alt)';
     }
   });
+};
+
+// Helper function to select visit rating
+window.selectVisitRating = function(visitIndex, rating) {
+  const modal = document.querySelector('.modal');
+  if (!modal) return;
+
+  const destId = modal.dataset.destId;
+  const dest = destinations.find(d => d.id === destId);
+  if (!dest || !dest.visits[visitIndex]) return;
+
+  // Update the visit rating
+  dest.visits[visitIndex].rating = rating;
+
+  // Update button styles
+  const buttons = modal.querySelectorAll(`.visit-rating-btn[data-visit-index="${visitIndex}"]`);
+  buttons.forEach((btn) => {
+    const btnRating = parseInt(btn.dataset.rating);
+    if (btnRating <= rating) {
+      btn.style.background = 'var(--color-warning)';
+    } else {
+      btn.style.background = 'var(--color-background)';
+    }
+  });
+};
+
+// Delete a visit
+window.deleteVisit = async function(destId, visitIndex) {
+  const dest = destinations.find(d => d.id === destId);
+  if (!dest || !dest.visits) return;
+
+  if (dest.visits.length === 1) {
+    showToast('Cannot delete the only visit. Delete the destination instead.', 'error');
+    return;
+  }
+
+  const confirmed = await confirmDialog(`Delete this visit? All photos and notes for this visit will be removed.`);
+  if (!confirmed) return;
+
+  const visit = dest.visits[visitIndex];
+
+  // Delete media from Firebase Storage
+  if (visit.media && window.FirebaseDB && window.FirebaseDB.deleteMedia) {
+    for (const mediaItem of visit.media) {
+      if (mediaItem.path) {
+        try {
+          await window.FirebaseDB.deleteMedia(mediaItem.path);
+        } catch (error) {
+          console.error('Error deleting media:', error);
+        }
+      }
+    }
+  }
+
+  // Remove visit from array
+  dest.visits.splice(visitIndex, 1);
+  await saveDestinations();
+
+  // Refresh modal
+  const modal = document.querySelector('.modal');
+  if (modal) {
+    modal.remove();
+  }
+  editDestination(destId);
+  showToast('Visit deleted', 'success');
+};
+
+// Delete media from a visit
+window.deleteVisitMedia = async function(destId, visitIndex, mediaIndex) {
+  const dest = destinations.find(d => d.id === destId);
+  if (!dest || !dest.visits[visitIndex] || !dest.visits[visitIndex].media) return;
+
+  const mediaItem = dest.visits[visitIndex].media[mediaIndex];
+
+  // Delete from Firebase Storage if it has a path
+  if (mediaItem.path && window.FirebaseDB && window.FirebaseDB.deleteMedia) {
+    try {
+      await window.FirebaseDB.deleteMedia(mediaItem.path);
+    } catch (error) {
+      console.error('Error deleting media from Firebase Storage:', error);
+    }
+  }
+
+  // Remove from array
+  dest.visits[visitIndex].media.splice(mediaIndex, 1);
+  await saveDestinations();
+
+  // Reopen edit modal with updated media
+  const modal = document.querySelector('.modal');
+  if (modal) {
+    modal.remove();
+  }
+  editDestination(destId);
+};
+
+// Old rating function - keep for backwards compatibility
+window.selectRating = function(rating) {
+  // Redirect to overall rating
+  window.selectOverallRating(rating);
 };
 
 // Delete media from edit modal
@@ -1373,31 +1543,65 @@ function renderVisitedDestinations() {
 function createVisitedCard(dest) {
   const card = document.createElement('div');
   card.className = 'destination-card';
-  
+
+  // Calculate visit statistics
+  let visitCount = 0;
+  let totalNights = 0;
+  let lastVisitDate = null;
+  let allMedia = [];
+
+  if (dest.visits && dest.visits.length > 0) {
+    visitCount = dest.visits.length;
+    dest.visits.forEach(visit => {
+      const nights = calculateNights(visit.startDate, visit.endDate);
+      totalNights += nights;
+      if (!lastVisitDate || new Date(visit.endDate) > new Date(lastVisitDate)) {
+        lastVisitDate = visit.endDate;
+      }
+      if (visit.media) {
+        allMedia = [...allMedia, ...visit.media];
+      }
+    });
+  } else if (dest.visitedDate) {
+    // Old data structure
+    visitCount = 1;
+    lastVisitDate = dest.visitedDate;
+    if (dest.media) {
+      allMedia = dest.media;
+    }
+  }
+
   card.innerHTML = `
     <div class="destination-header">
       <h3 class="destination-title">${sanitizeHTML(dest.name)}</h3>
       <p class="destination-location">${sanitizeHTML(dest.state)}</p>
     </div>
-    
+
     <div class="destination-tags">
       <span class="destination-tag">${getTypeLabel(dest.type)}</span>
       ${dest.region ? `<span class="destination-tag">${getRegionLabel(dest.region)}</span>` : ''}
       <span class="destination-tag" style="background-color: #10b981; color: white;">Visited</span>
     </div>
-    
+
     <div class="destination-info">
-      ${dest.visitedDate ? `
-        <div class="info-row">
-          <span class="info-label">Visited Date</span>
-          <span class="info-value">${new Date(dest.visitedDate).toLocaleDateString()}</span>
-        </div>
-      ` : ''}
-      
       ${dest.rating ? `
         <div class="info-row">
-          <span class="info-label">Rating</span>
+          <span class="info-label">Overall Rating</span>
           <span class="info-value">${'★'.repeat(dest.rating)}${'☆'.repeat(5 - dest.rating)}</span>
+        </div>
+      ` : ''}
+
+      ${visitCount > 0 ? `
+        <div class="info-row">
+          <span class="info-label">📅 Visits</span>
+          <span class="info-value">${visitCount} visit${visitCount > 1 ? 's' : ''}${totalNights > 0 ? ` • ${totalNights} night${totalNights > 1 ? 's' : ''}` : ''}</span>
+        </div>
+      ` : ''}
+
+      ${lastVisitDate ? `
+        <div class="info-row">
+          <span class="info-label">Last Visit</span>
+          <span class="info-value">${new Date(lastVisitDate).toLocaleDateString()}</span>
         </div>
       ` : ''}
     </div>
@@ -1409,15 +1613,15 @@ function createVisitedCard(dest) {
       </div>
     ` : ''}
 
-    ${dest.media && dest.media.length > 0 ? `
+    ${allMedia.length > 0 ? `
       <div style="margin-top: var(--space-3);">
-        <p style="font-weight: var(--font-weight-semibold); font-size: var(--text-sm); margin-bottom: var(--space-2);">${dest.media.length} Photo${dest.media.length !== 1 ? 's' : ''}/Video${dest.media.length !== 1 ? 's' : ''}</p>
+        <p style="font-weight: var(--font-weight-semibold); font-size: var(--text-sm); margin-bottom: var(--space-2);">📸 ${allMedia.length} Photo${allMedia.length !== 1 ? 's' : ''}/Video${allMedia.length !== 1 ? 's' : ''}</p>
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: var(--space-1);">
-          ${dest.media.slice(0, 4).map((file, index) => {
-            const isVideo = file.type.startsWith('video/');
+          ${allMedia.slice(0, 4).map((file, index) => {
+            const isVideo = file.type && file.type.startsWith('video/');
             const mediaUrl = file.url || file.data;
             return `
-              <div style="position: relative; border: 1px solid var(--color-border); border-radius: var(--radius-sm); overflow: hidden; aspect-ratio: 1; cursor: pointer;" onclick="viewDestinationDetails('${dest.id}')">
+              <div style="position: relative; border: 1px solid var(--color-border); border-radius: var(--radius-sm); overflow: hidden; aspect-ratio: 1; cursor: pointer;" onclick="editDestination('${dest.id}')">
                 ${isVideo ? `
                   <video src="${mediaUrl}" style="width: 100%; height: 100%; object-fit: cover;"></video>
                   <div style="position: absolute; bottom: 4px; right: 4px; background: rgba(0,0,0,0.6); color: white; padding: 2px 4px; border-radius: 2px; font-size: 10px;">▶</div>
@@ -1427,9 +1631,9 @@ function createVisitedCard(dest) {
               </div>
             `;
           }).join('')}
-          ${dest.media.length > 4 ? `
-            <div style="border: 1px solid var(--color-border); border-radius: var(--radius-sm); aspect-ratio: 1; display: flex; align-items: center; justify-content: center; background: var(--color-background-alt); cursor: pointer; font-size: var(--text-sm); font-weight: var(--font-weight-semibold); color: var(--color-text-secondary);" onclick="viewDestinationDetails('${dest.id}')">
-              +${dest.media.length - 4}
+          ${allMedia.length > 4 ? `
+            <div style="border: 1px solid var(--color-border); border-radius: var(--radius-sm); aspect-ratio: 1; display: flex; align-items: center; justify-content: center; background: var(--color-background-alt); cursor: pointer; font-size: var(--text-sm); font-weight: var(--font-weight-semibold); color: var(--color-text-secondary);" onclick="editDestination('${dest.id}')">
+              +${allMedia.length - 4}
             </div>
           ` : ''}
         </div>
